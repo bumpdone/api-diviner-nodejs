@@ -1,0 +1,4 @@
+type About {
+  name: String,
+  version: String
+}

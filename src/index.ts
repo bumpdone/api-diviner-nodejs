@@ -1,63 +1,68 @@
-import {ApolloServer, gql} from 'apollo-server'
-import * as fs from 'fs-extra'
-//import { inspect } from 'util'
+import { ApolloServer, gql, Config, CorsOptions } from 'apollo-server'
+import { IResolvers } from 'graphql-tools'
+import { listResolvers } from './resolvers/list'
+import { listMetaResolvers } from './resolvers/listmeta'
+import { blockResolvers } from './resolvers/block'
+import { importSchema } from 'graphql-import'
+import { Block } from './block'
+import { IntersectionList } from './lists/intersectionlist'
+import path from 'path'
+import { merge } from 'lodash'
+import { inspect } from 'util'
+import { About } from './about'
 
-async function init() {
-  const rootSchema = await fs.readFile(__dirname + '/root.graphql')
+export class XyoApi {
 
-  var accountFromAddress = (parent, args, context, info) => {
-    return {
-        address: args.address,
-        nodes: nodesFromAccount(args.address)
-    }
-  }
-
-  var nodeFromAddress = (parent, args, context, info) => {
-    return {
-        type: 'node',
-        address: args.address
-    }
-  }
-
-  var nodesFromAccount = (account) => {
-    return [
-      {
-        type: 'node',
-        address: '0x1'
-      },
-      {
-        type: 'node',
-        address: '0x2'
+  public resolvers: IResolvers =  merge([
+    {
+      Query: {
+        async about() {
+          console.log(`resolvers.Query.about`)
+          return new About("Diviner", "0.1.0")
+        },
+        async block(parent: any, args: any, context: any, info: any) {
+          console.log(`resolvers.Query.block: ${args.hash}`)
+          if (!args.hash) {
+            return new Block("0x0000", "0x0000")
+          }
+          return new Block(args.hash, "0x0001")
+        },
+        async intersections(addresses: [string]) {
+          return new IntersectionList(["0x00", "0x11"])
+        }
       }
-    ]
-  }
+    },
+    listResolvers(),
+    listMetaResolvers(),
+    blockResolvers()
+  ])
 
-  let typeDefs = gql(rootSchema.toString())
+  public server: ApolloServer
 
-  let resolvers = {
-    Query: {
-      account(root, args, context, info) {
-        return accountFromAddress(root, args, context, info)
-      },
-      node(root, args, context, info) {
-        return nodeFromAddress(root, args, context, info)
-      },
-      nodes(account) {
-        return nodesFromAccount(account)
-      }
+  constructor() {
+    const typeDefs = gql(this.buildSchema())
+
+    const context = ({ req }: {req: any}) => ({
+    })
+
+    const config: Config & { cors?: CorsOptions | boolean } = {
+      typeDefs,
+      resolvers: this.resolvers,
+      context
     }
+
+    this.server = new ApolloServer(config)
   }
 
-  let server = new ApolloServer( {typeDefs, resolvers} )
+  public start() {
+    this.server.listen().then(({ url }: {url: any}) => {
+      console.log(`🚀  Server ready at ${url}`)
+    })
+  }
 
-  server.listen().then(({ url }) => {
-    console.log(`🚀  Server ready at ${url}`);
-  });
-}
-
-try {
-  init()
-}
-catch(error) {
-  console.error(error)
+  private buildSchema() {
+    const schemaLocation = path.join('.', 'graphql', 'root.graphql')
+    const typeDefs = importSchema(schemaLocation)
+    return typeDefs
+  }
 }

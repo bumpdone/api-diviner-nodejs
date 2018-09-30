@@ -1,2 +1,0 @@
-cp ./src/*.graphql ./lib
-node ./lib/index.js

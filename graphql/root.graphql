@@ -1,0 +1,9 @@
+# import About from "about.graphql"
+# import Block from "block.graphql"
+# import IntersectionList from "intersectionlist.graphql"
+
+type Query {
+  about: About,
+  block(hash: String): Block,
+  intersections(addresses: [String]): IntersectionList
+}

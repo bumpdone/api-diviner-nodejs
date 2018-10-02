@@ -23,6 +23,7 @@
     "graphql": "^14.0.0",
     "graphql-import": "^0.7.1",
     "graphql-tools": "^4.0.0",
+    "ipfs": "^0.32.3",
     "lodash": "^4.17.11",
     "sdk-archivist-nodejs": "https://github.com/XYOracleNetwork/sdk-archivist-nodejs"
   },

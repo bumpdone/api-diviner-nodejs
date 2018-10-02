@@ -21,12 +21,14 @@ const intersectionlist_1 = require("./lists/intersectionlist");
 const path_1 = __importDefault(require("path"));
 const lodash_1 = require("lodash");
 const about_1 = require("./about");
+const ipfs_1 = __importDefault(require("ipfs"));
 class XyoApi {
     constructor() {
+        this.ipfs = ipfs_1.default.createNode();
         this.resolvers = lodash_1.merge([
             {
                 Query: {
-                    about() {
+                    about(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
                             console.log(`resolvers.Query.about`);
                             return new about_1.About("Diviner", "0.1.0");
@@ -36,9 +38,9 @@ class XyoApi {
                         return __awaiter(this, void 0, void 0, function* () {
                             console.log(`resolvers.Query.block: ${args.hash}`);
                             if (!args.hash) {
-                                return new block_2.Block("0x0000", "0x0000");
+                                return new block_2.Block("0x0000", "0x0000", context.ipfs);
                             }
-                            return new block_2.Block(args.hash, "0x0001");
+                            return new block_2.Block(args.hash, "0x0001", context.ipfs);
                         });
                     },
                     intersections(addresses) {
@@ -53,7 +55,9 @@ class XyoApi {
             block_1.blockResolvers()
         ]);
         const typeDefs = apollo_server_1.gql(this.buildSchema());
-        const context = ({ req }) => ({});
+        const context = ({ req }) => ({
+            ipfs: this.ipfs
+        });
         const config = {
             typeDefs,
             resolvers: this.resolvers,
@@ -62,7 +66,15 @@ class XyoApi {
         this.server = new apollo_server_1.ApolloServer(config);
     }
     start() {
-        this.server.listen().then(({ url }) => {
+        console.log(" --- START ---");
+        this.ipfs.on('ready', () => {
+            console.log('Ipfs is ready to use!');
+        });
+        this.ipfs.on('error', (error) => {
+            console.log('Something went terribly wrong!', error);
+        });
+        this.ipfs.on('start', () => console.log('Ipfs started!'));
+        this.server.listen(4001).then(({ url }) => {
             console.log(`🚀  Server ready at ${url}`);
         });
     }

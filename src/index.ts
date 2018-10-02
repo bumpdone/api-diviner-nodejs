@@ -10,22 +10,26 @@ import path from 'path'
 import { merge } from 'lodash'
 import { inspect } from 'util'
 import { About } from './about'
+import IPFS from 'ipfs'
 
 export class XyoApi {
+
+  public server: ApolloServer
+  public ipfs = IPFS.createNode()
 
   public resolvers: IResolvers =  merge([
     {
       Query: {
-        async about() {
+        async about(parent: any, args: any, context: any, info: any) {
           console.log(`resolvers.Query.about`)
           return new About("Diviner", "0.1.0")
         },
         async block(parent: any, args: any, context: any, info: any) {
           console.log(`resolvers.Query.block: ${args.hash}`)
           if (!args.hash) {
-            return new Block("0x0000", "0x0000")
+            return new Block("0x0000", "0x0000", context.ipfs)
           }
-          return new Block(args.hash, "0x0001")
+          return new Block(args.hash, "0x0001", context.ipfs)
         },
         async intersections(addresses: [string]) {
           return new IntersectionList(["0x00", "0x11"])
@@ -37,12 +41,11 @@ export class XyoApi {
     blockResolvers()
   ])
 
-  public server: ApolloServer
-
   constructor() {
     const typeDefs = gql(this.buildSchema())
 
     const context = ({ req }: {req: any}) => ({
+      ipfs: this.ipfs
     })
 
     const config: Config & { cors?: CorsOptions | boolean } = {
@@ -55,7 +58,20 @@ export class XyoApi {
   }
 
   public start() {
-    this.server.listen().then(({ url }: {url: any}) => {
+
+    console.log(" --- START ---")
+
+    this.ipfs.on('ready', () => {
+      console.log('Ipfs is ready to use!')
+    })
+
+    this.ipfs.on('error', (error: any) => {
+      console.log('Something went terribly wrong!', error)
+    })
+
+    this.ipfs.on('start', () => console.log('Ipfs started!'))
+
+    this.server.listen(4001).then(({ url }: {url: any}) => {
       console.log(`🚀  Server ready at ${url}`)
     })
   }

@@ -47,7 +47,7 @@ describe('ScscChain class', () => {
       ipfs
     })
     expect(scsc).to.be.an('object')
-  })
+  }).timeout(10000)
 
   it('should add item', async () => {
     expect(await scsc.addItem(Buffer.from("Hello"))).to.equal(true)

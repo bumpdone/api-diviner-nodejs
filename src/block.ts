@@ -1,10 +1,10 @@
-import IPFS from "ipfs"
+import { IPFS } from "ipfs"
 
 export class Block {
   public hash: string
   public bytes: string
-  public ipfs: IPFS.IPFS
-  constructor(hash: string, bytes: string, ipfs: IPFS.IPFS) {
+  public ipfs: IPFS
+  constructor(hash: string, bytes: string, ipfs: IPFS) {
     this.hash = hash
     this.bytes = bytes
     this.ipfs = ipfs

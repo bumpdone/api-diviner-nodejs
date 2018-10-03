@@ -1,9 +1,9 @@
+/// <reference path="../src/types/ipfs.d.ts" />
 import { ApolloServer } from 'apollo-server';
 import { IResolvers } from 'graphql-tools';
-import IPFS from 'ipfs';
 export declare class XyoApi {
     server: ApolloServer;
-    ipfs: IPFS.IPFS;
+    ipfs: 'ipfs'.IPFS;
     resolvers: IResolvers;
     constructor();
     start(): void;

@@ -21,10 +21,10 @@ const intersectionlist_1 = require("./lists/intersectionlist");
 const path_1 = __importDefault(require("path"));
 const lodash_1 = require("lodash");
 const about_1 = require("./about");
-const ipfs_1 = __importDefault(require("ipfs"));
+const ipfs_1 = require("ipfs");
 class XyoApi {
     constructor() {
-        this.ipfs = ipfs_1.default.createNode();
+        this.ipfs = ipfs_1.createNode();
         this.resolvers = lodash_1.merge([
             {
                 Query: {

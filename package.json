@@ -5,7 +5,7 @@
   "description": "Main Diviner Interface",
   "main": "dist/index.js",
   "scripts": {
-    "test": "node ./dist/index.js",
+    "test": "ts-mocha ./src/**/*.test.ts",
     "build": "yarn build-ts && yarn tslint",
     "build-ts": "tsc",
     "dist": "yarn install && tsc -p tsconfig.build.json && yarn tslint",
@@ -13,14 +13,17 @@
     "tslint-fix": "tslint -c tslint.json -p tsconfig.json --fix",
     "precommit": "echo \"Build must pass before committing\" && yarn build",
     "start": "yarn build && node ./dist/serve.js",
-    "killport": "kill $(lsof -t -i :4000)"
+    "killport": "kill $(lsof -t -i :4000)",
+    "killipfsport": "kill $(lsof -t -i :4003)"
   },
   "author": "Arie Trouw",
   "license": "ISC",
   "dependencies": {
-    "apollo-server": "^2.0.7",
+    "apollo-server": "^2.1.0",
+    "cids": "^0.5.5",
     "firebase-admin": "^6.0.0",
-    "graphql": "^14.0.0",
+    "gc-stats": "^1.2.0",
+    "graphql": "^14.0.2",
     "graphql-import": "^0.7.1",
     "graphql-tools": "^4.0.0",
     "ipfs": "^0.32.3",
@@ -30,14 +33,18 @@
   "devDependencies": {
     "@firebase/app-types": "^0.3.2",
     "@playlyfe/gql": "^2.6.0",
+    "@types/chai": "^4.1.6",
     "@types/express": "^4.16.0",
     "@types/express-graphql": "^0.6.1",
     "@types/fs-extra": "^5.0.4",
     "@types/graphql": "^14.0.1",
+    "@types/mocha": "^5.2.5",
     "@types/node": "^10.11.0",
-    "ethers": "^3.0.27",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "ts-mocha": "^2.0.0",
     "ts-node": "^7.0.1",
-    "tslint": "^5.11.0",
+    "tslint": "^5.10.0",
     "tslint-config-airbnb": "^5.9.2",
     "typescript": "^2.9.2"
   }

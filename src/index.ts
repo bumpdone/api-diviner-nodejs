@@ -10,12 +10,12 @@ import path from 'path'
 import { merge } from 'lodash'
 import { inspect } from 'util'
 import { About } from './about'
-import IPFS from 'ipfs'
+import { createNode } from 'ipfs'
 
 export class XyoApi {
 
   public server: ApolloServer
-  public ipfs = IPFS.createNode()
+  public ipfs = createNode()
 
   public resolvers: IResolvers =  merge([
     {

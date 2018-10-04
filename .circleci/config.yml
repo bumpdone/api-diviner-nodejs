@@ -15,10 +15,10 @@ jobs:
       # - image: circleci/mongo:3.4.4
 
     working_directory: ~/repo
-
-    - run: sudo apt-get update && sudo apt-get install yarn
     
     steps:
+
+      - run: sudo apt-get update && sudo apt-get install yarn
 
       - checkout
 

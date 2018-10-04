@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:10.11.0
+      - image: circleci/node:10.11.0-stretch
       
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -27,7 +27,7 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: npm run dist
+      - run: yarn dist
 
       - save_cache:
           paths:
@@ -35,7 +35,7 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
         
       # run tests!
-      - run: npm run test
+      - run: yarn test
 
 workflows:
   version: 2

@@ -397,9 +397,9 @@
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/@types/zen-observable/-/zen-observable-0.8.0.tgz#8b63ab7f1aa5321248aad5ac890a485656dcea4d"
 
-"@xyo-network/api-originchain-graphql@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@xyo-network/api-originchain-graphql/-/api-originchain-graphql-0.1.1.tgz#36925d2ec1ae2c1e6d1c35275997936e8efbb428"
+"@xyo-network/api-originchain-graphql@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@xyo-network/api-originchain-graphql/-/api-originchain-graphql-0.1.2.tgz#5aae09cf28e94345697b37a07e98759d4bbf52f0"
 
 "@xyo-network/sdk-core-nodejs@https://github.com/XYOracleNetwork/sdk-core-nodejs":
   version "0.1.0"

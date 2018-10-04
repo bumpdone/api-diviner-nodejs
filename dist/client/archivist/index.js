@@ -19,7 +19,7 @@ const apollo_cache_inmemory_1 = require("apollo-cache-inmemory");
 class ArchivistClient {
     constructor({ uri: string }) {
         this.uri = "";
-        Object.assign(this, { url: string });
+        Object.assign(this, { uri: string });
         const httpLink = apollo_link_http_1.createHttpLink({
             uri: this.uri,
             fetch: cross_fetch_1.default

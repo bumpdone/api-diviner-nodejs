@@ -12,10 +12,6 @@ jobs:
     
     steps:
 
-      - run: sudo apt-get update && sudo apt-get install yarn
-
-      - run: yarn cache clean
-
       - checkout
 
       # Download and cache dependencies

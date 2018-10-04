@@ -1,5 +1,5 @@
 import { IResolvers } from "graphql-tools"
-import { IntersectionList } from "../lists/intersectionlist"
+import { IntersectionList } from "../list/intersection"
 import { Intersection } from "../intersection"
 
 export function interseectionListResolvers(): IResolvers {

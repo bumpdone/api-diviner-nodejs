@@ -17,7 +17,8 @@ const listmeta_1 = require("./resolvers/listmeta");
 const block_1 = require("./resolvers/block");
 const graphql_import_1 = require("graphql-import");
 const block_2 = require("./block");
-const intersectionlist_1 = require("./lists/intersectionlist");
+const intersection_1 = require("./list/intersection");
+const intersection_2 = require("./question/intersection");
 const path_1 = __importDefault(require("path"));
 const lodash_1 = require("lodash");
 const about_1 = require("./about");
@@ -45,7 +46,14 @@ class XyoApi {
                     },
                     intersections(addresses) {
                         return __awaiter(this, void 0, void 0, function* () {
-                            return new intersectionlist_1.IntersectionList(["0x00", "0x11"]);
+                            return new intersection_1.IntersectionList(["0x00", "0x11"]);
+                        });
+                    }
+                },
+                Mutation: {
+                    questionHasIntersected(parent, args, context, info) {
+                        return __awaiter(this, void 0, void 0, function* () {
+                            return new intersection_2.IntersectionQuestion(args.partyOneAddresses, args.partTwoAddresses).publish();
                         });
                     }
                 }

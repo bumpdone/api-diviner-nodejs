@@ -14,6 +14,7 @@ class ScscChain {
         this.network = "";
         this.previousHash = "";
         this.address = "";
+        this.genesis = "";
         // this is private since we require validation before adding
         this.items = [];
         Object.assign(this, { contract, network, previousHash, address, ipfs });

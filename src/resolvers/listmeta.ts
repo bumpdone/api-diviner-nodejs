@@ -1,4 +1,4 @@
-import { ListMeta } from "../lists/listmeta"
+import { ListMeta } from "../list/listmeta"
 import { IResolvers } from "graphql-tools"
 
 export function listMetaResolvers(): IResolvers {

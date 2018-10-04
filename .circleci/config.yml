@@ -16,23 +16,25 @@ jobs:
 
     working_directory: ~/repo
 
+    - run: sudo apt-get update && sudo apt-get install yarn
+    
     steps:
 
       - checkout
 
       # Download and cache dependencies
-      #- restore_cache:
-      #    keys:
-      #    - v1-dependencies-{{ checksum "package.json" }}
-      #    # fallback to using the latest cache if no exact match is found
-      #    - v1-dependencies-
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
 
       - run: yarn dist
 
-      #- save_cache:
-      #    paths:
-      #      - node_modules
-      #    key: v1-dependencies-{{ checksum "package.json" }}
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
         
       # run tests!
       - run: yarn test

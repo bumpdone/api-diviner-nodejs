@@ -5,6 +5,8 @@
 # DIVINER API (api-diviner-nodejs)
 
 [![CircleCI](https://circleci.com/gh/XYOracleNetwork/api-diviner-nodejs/tree/master.svg?style=svg&circle-token=1e3979acebbd7de5d21d4cc99f2eb08694196d4f)](https://circleci.com/gh/XYOracleNetwork/api-diviner-nodejs/tree/master)
+[![Build Status](https://travis-ci.com/XYOracleNetwork/api-diviner-nodejs.svg?token=A85R2pDnngMDyWoqeLUG&branch=master)](https://travis-ci.com/XYOracleNetwork/api-diviner-nodejs)
+
 
 The main API for accessing a diviner on the XYO network information using GraphQL.
 

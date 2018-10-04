@@ -30,6 +30,7 @@
     "cids": "^0.5.5",
     "cross-fetch": "^2.2.2",
     "firebase-admin": "^6.0.0",
+    "gc-stats": "^1.2.0",
     "graphql": "^14.0.2",
     "graphql-import": "^0.7.1",
     "graphql-tag": "^2.10.0",

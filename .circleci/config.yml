@@ -18,9 +18,9 @@ jobs:
 
     steps:
 
-      - run: npm install yarn
-
       - checkout
+
+      - run: npm install yarn
 
       # Download and cache dependencies
       - restore_cache:

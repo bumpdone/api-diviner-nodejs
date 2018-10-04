@@ -17,6 +17,9 @@ jobs:
     working_directory: ~/repo
 
     steps:
+
+      - npm install yarn
+
       - checkout
 
       # Download and cache dependencies

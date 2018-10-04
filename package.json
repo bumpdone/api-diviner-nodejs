@@ -30,12 +30,16 @@
     "cids": "^0.5.5",
     "cross-fetch": "^2.2.2",
     "firebase-admin": "^6.0.0",
+    "gc-stats": "^1.2.0",
     "graphql": "^14.0.2",
     "graphql-import": "^0.7.1",
     "graphql-tag": "^2.10.0",
     "graphql-tools": "^4.0.0",
     "ipfs": "^0.32.3",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.11",
+    "node-gyp": "^3.8.0",
+    "node-pre-gyp": "^0.11.0",
+    "yarn": "^1.10.1"
   },
   "devDependencies": {
     "@firebase/app-types": "^0.3.2",

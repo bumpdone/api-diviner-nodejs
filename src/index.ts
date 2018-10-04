@@ -5,7 +5,8 @@ import { listMetaResolvers } from './resolvers/listmeta'
 import { blockResolvers } from './resolvers/block'
 import { importSchema } from 'graphql-import'
 import { Block } from './block'
-import { IntersectionList } from './lists/intersectionlist'
+import { IntersectionList } from './list/intersection'
+import { IntersectionQuestion } from './question/intersection'
 import path from 'path'
 import { merge } from 'lodash'
 import { inspect } from 'util'
@@ -33,6 +34,11 @@ export class XyoApi {
         },
         async intersections(addresses: [string]) {
           return new IntersectionList(["0x00", "0x11"])
+        }
+      },
+      Mutation: {
+        async questionHasIntersected(parent: any, args: any, context: any, info: any) {
+          return new IntersectionQuestion(args.partyOneAddresses, args.partTwoAddresses).publish()
         }
       }
     },

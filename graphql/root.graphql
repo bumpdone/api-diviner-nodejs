@@ -7,3 +7,7 @@ type Query {
   block(hash: String): Block,
   intersections(addresses: [String]): IntersectionList
 }
+
+type Mutation {
+  questionHasIntersected(partyOneAddresses: [String], partTwoAddresses: [String]): String
+}

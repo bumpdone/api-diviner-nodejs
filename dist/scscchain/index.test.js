@@ -51,7 +51,7 @@ describe('ScscChain class', () => {
             ipfs
         });
         chai_1.expect(scsc).to.be.an('object');
-    }));
+    })).timeout(20000); // timeout is since it is slow on circleci
     it('should add item', () => __awaiter(this, void 0, void 0, function* () {
         chai_1.expect(yield scsc.addItem(Buffer.from("Hello"))).to.equal(true);
     }));

@@ -23,9 +23,9 @@ const path_1 = __importDefault(require("path"));
 const lodash_1 = require("lodash");
 const about_1 = require("./about");
 const ipfs_1 = require("ipfs");
+const yargs_1 = __importDefault(require("yargs"));
 class XyoApi {
     constructor() {
-        this.ipfs = ipfs_1.createNode();
         this.resolvers = lodash_1.merge([
             {
                 Query: {
@@ -73,8 +73,9 @@ class XyoApi {
         };
         this.server = new apollo_server_1.ApolloServer(config);
     }
-    start() {
+    start(host = 'localhost', port = 12002) {
         console.log(" --- START ---");
+        this.ipfs = ipfs_1.createNode({ port: 1111 });
         this.ipfs.on('ready', () => {
             console.log('Ipfs is ready to use!');
         });
@@ -82,7 +83,7 @@ class XyoApi {
             console.log('Something went terribly wrong!', error);
         });
         this.ipfs.on('start', () => console.log('Ipfs started!'));
-        this.server.listen(4001).then(({ url }) => {
+        this.server.listen({ host, port }).then(({ url }) => {
             console.log(`🚀  Server ready at ${url}`);
         });
     }
@@ -93,4 +94,28 @@ class XyoApi {
     }
 }
 exports.XyoApi = XyoApi;
+const argv = yargs_1.default
+    .usage('$0 <cmd> [args]')
+    .help()
+    .command('start', "Start the Server", (args) => {
+    return args
+        .option('graphqlport', {
+        describe: "The port that GraphQL will listen on",
+        default: "12002",
+        alias: "g"
+    })
+        .option('host', {
+        describe: "The host that GraphQL will listen on",
+        default: "localhost",
+        alias: "h"
+    })
+        .option('verbose', {
+        alias: 'v',
+        default: false,
+    });
+}, (args) => {
+    const xyo = new XyoApi();
+    xyo.start(args.host, args.graphqlport);
+})
+    .argv;
 //# sourceMappingURL=index.js.map

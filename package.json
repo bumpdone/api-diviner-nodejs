@@ -6,15 +6,15 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "ts-mocha ./src/**/*.test.ts",
-    "build": "yarn build-ts && yarn tslint",
+    "build": "npm run build-ts && npm run tslint",
     "build-ts": "tsc",
-    "dist": "yarn install && tsc -p tsconfig.build.json && yarn tslint",
+    "dist": "npm run install && tsc -p tsconfig.build.json && npm run tslint",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "tslint-fix": "tslint -c tslint.json -p tsconfig.json --fix",
-    "precommit": "echo \"Build must pass before committing\" && yarn build",
-    "start": "yarn build && node ./dist/serve.js",
-    "killport": "kill $(lsof -t -i :4000)",
-    "killipfsport": "kill $(lsof -t -i :4003)"
+    "precommit": "echo \"Build must pass before committing\" && npm run build",
+    "start": "npm run build && node ./dist/index.js start",
+    "killport": "kill $(lsof -t -i :12002)",
+    "killipfsport": "kill $(lsof -t -i :12003)"
   },
   "author": "Arie Trouw",
   "license": "ISC",
@@ -38,7 +38,8 @@
     "ipfs": "^0.32.3",
     "lodash": "^4.17.11",
     "node-gyp": "^3.8.0",
-    "node-pre-gyp": "^0.11.0"
+    "node-pre-gyp": "^0.11.0",
+    "yargs": "^12.0.2"
   },
   "devDependencies": {
     "@firebase/app-types": "^0.3.2",
@@ -50,6 +51,7 @@
     "@types/graphql": "^14.0.1",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.11.0",
+    "@types/yargs": "^12.0.1",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "ts-mocha": "^2.0.0",

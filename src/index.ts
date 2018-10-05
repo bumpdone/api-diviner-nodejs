@@ -12,11 +12,13 @@ import { merge } from 'lodash'
 import { inspect } from 'util'
 import { About } from './about'
 import { createNode } from 'ipfs'
+import yargs from 'yargs'
 
-export class XyoApi {
+export class DivinerApi {
 
   public server: ApolloServer
-  public ipfs = createNode()
+  public ipfs: any
+  public archivists: string[] = []
 
   public resolvers: IResolvers =  merge([
     {
@@ -47,8 +49,10 @@ export class XyoApi {
     blockResolvers()
   ])
 
-  constructor() {
+  constructor(seedArchivist: string) {
     const typeDefs = gql(this.buildSchema())
+
+    this.archivists.push(seedArchivist)
 
     const context = ({ req }: {req: any}) => ({
       ipfs: this.ipfs
@@ -63,9 +67,11 @@ export class XyoApi {
     this.server = new ApolloServer(config)
   }
 
-  public start() {
+  public start(host: string = 'localhost', port: number = 12002) {
 
     console.log(" --- START ---")
+
+    this.ipfs = createNode({ port: 1111 })
 
     this.ipfs.on('ready', () => {
       console.log('Ipfs is ready to use!')
@@ -77,7 +83,7 @@ export class XyoApi {
 
     this.ipfs.on('start', () => console.log('Ipfs started!'))
 
-    this.server.listen(4001).then(({ url }: {url: any}) => {
+    this.server.listen({ host, port }).then(({ url }: {url: any}) => {
       console.log(`🚀  Server ready at ${url}`)
     })
   }
@@ -88,3 +94,33 @@ export class XyoApi {
     return typeDefs
   }
 }
+
+const argv = yargs
+  .usage('$0 <cmd> [args]')
+  .help()
+  .command('start', "Start the Server", (args: any) => {
+    return args
+    .option('graphqlport', {
+      describe: "The port that GraphQL will listen on",
+      default: "12002",
+      alias: "g"
+    })
+    .option('host', {
+      describe: "The host that GraphQL will listen on",
+      default: "localhost",
+      alias: "h"
+    })
+    .option('archivist', {
+      describe: "The url for an archivist for first contact",
+      default: "http://localhost:11001",
+      alias: "a"
+    })
+    .option('verbose', {
+        alias: 'v',
+        default: false,
+    })
+  }, (args: any) => {
+    const xyo = new DivinerApi(args.archivist)
+    xyo.start(args.host, args.graphqlport)
+  })
+  .argv

@@ -24,8 +24,9 @@ const lodash_1 = require("lodash");
 const about_1 = require("./about");
 const ipfs_1 = require("ipfs");
 const yargs_1 = __importDefault(require("yargs"));
-class XyoApi {
-    constructor() {
+class DivinerApi {
+    constructor(seedArchivist) {
+        this.archivists = [];
         this.resolvers = lodash_1.merge([
             {
                 Query: {
@@ -63,6 +64,7 @@ class XyoApi {
             block_1.blockResolvers()
         ]);
         const typeDefs = apollo_server_1.gql(this.buildSchema());
+        this.archivists.push(seedArchivist);
         const context = ({ req }) => ({
             ipfs: this.ipfs
         });
@@ -93,7 +95,7 @@ class XyoApi {
         return typeDefs;
     }
 }
-exports.XyoApi = XyoApi;
+exports.DivinerApi = DivinerApi;
 const argv = yargs_1.default
     .usage('$0 <cmd> [args]')
     .help()
@@ -109,12 +111,17 @@ const argv = yargs_1.default
         default: "localhost",
         alias: "h"
     })
+        .option('archivist', {
+        describe: "The url for an archivist for first contact",
+        default: "http://localhost:11001",
+        alias: "a"
+    })
         .option('verbose', {
         alias: 'v',
         default: false,
     });
 }, (args) => {
-    const xyo = new XyoApi();
+    const xyo = new DivinerApi(args.archivist);
     xyo.start(args.host, args.graphqlport);
 })
     .argv;

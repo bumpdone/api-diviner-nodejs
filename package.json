@@ -8,7 +8,7 @@
     "test": "ts-mocha ./src/**/*.test.ts",
     "build": "npm run build-ts && npm run tslint",
     "build-ts": "tsc",
-    "dist": "npm run install && tsc -p tsconfig.build.json && npm run tslint",
+    "dist": "npm install && tsc -p tsconfig.build.json && npm run tslint",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "tslint-fix": "tslint -c tslint.json -p tsconfig.json --fix",
     "precommit": "echo \"Build must pass before committing\" && npm run build",

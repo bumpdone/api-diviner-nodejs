@@ -30,5 +30,5 @@ declare module 'ipfs' {
         config: any
         util: any
     }
-    function createNode(): IPFS
+    function createNode(options?:any): IPFS
 }

@@ -1,16 +1,16 @@
 import { ApolloServer, gql, Config, CorsOptions } from 'apollo-server'
 import { IResolvers } from 'graphql-tools'
-import { listResolvers } from './resolvers/list'
-import { listMetaResolvers } from './resolvers/listmeta'
-import { blockResolvers } from './resolvers/block'
+import listResolvers from './list/resolvers'
+import listMetaResolvers from './list/meta/resolvers'
+import { blockResolvers } from './scsc/block/resolvers'
 import { importSchema } from 'graphql-import'
-import { Block } from './block'
+import Block from './scsc/block'
 import { IntersectionList } from './list/intersection'
-import { IntersectionQuestion } from './question/intersection'
+import IntersectionQuestion from './question/intersection'
 import path from 'path'
 import { merge } from 'lodash'
 import { inspect } from 'util'
-import { About } from './about'
+import About from './about'
 import { createNode } from 'ipfs'
 import yargs from 'yargs'
 
@@ -29,10 +29,7 @@ export class DivinerApi {
         },
         async block(parent: any, args: any, context: any, info: any) {
           console.log(`resolvers.Query.block: ${args.hash}`)
-          if (!args.hash) {
-            return new Block("0x0000", "0x0000", context.ipfs)
-          }
-          return new Block(args.hash, "0x0001", context.ipfs)
+          return new Block({ hash: args.hash, data: {}, ipfs: context.ipfs })
         },
         async intersections(addresses: [string]) {
           return new IntersectionList(["0x00", "0x11"])

@@ -12,16 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_server_1 = require("apollo-server");
-const list_1 = require("./resolvers/list");
-const listmeta_1 = require("./resolvers/listmeta");
-const block_1 = require("./resolvers/block");
+const resolvers_1 = __importDefault(require("./list/resolvers"));
+const resolvers_2 = __importDefault(require("./list/meta/resolvers"));
+const resolvers_3 = require("./scsc/block/resolvers");
 const graphql_import_1 = require("graphql-import");
-const block_2 = require("./block");
+const block_1 = __importDefault(require("./scsc/block"));
 const intersection_1 = require("./list/intersection");
-const intersection_2 = require("./question/intersection");
+const intersection_2 = __importDefault(require("./question/intersection"));
 const path_1 = __importDefault(require("path"));
 const lodash_1 = require("lodash");
-const about_1 = require("./about");
+const about_1 = __importDefault(require("./about"));
 const ipfs_1 = require("ipfs");
 const yargs_1 = __importDefault(require("yargs"));
 class DivinerApi {
@@ -33,16 +33,13 @@ class DivinerApi {
                     about(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
                             console.log(`resolvers.Query.about`);
-                            return new about_1.About("Diviner", "0.1.0");
+                            return new about_1.default("Diviner", "0.1.0");
                         });
                     },
                     block(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
                             console.log(`resolvers.Query.block: ${args.hash}`);
-                            if (!args.hash) {
-                                return new block_2.Block("0x0000", "0x0000", context.ipfs);
-                            }
-                            return new block_2.Block(args.hash, "0x0001", context.ipfs);
+                            return new block_1.default({ hash: args.hash, data: {}, ipfs: context.ipfs });
                         });
                     },
                     intersections(addresses) {
@@ -54,15 +51,15 @@ class DivinerApi {
                 Mutation: {
                     questionHasIntersected(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
-                            const q = new intersection_2.IntersectionQuestion(args.partyOneAddresses, args.partyTwoAddresses);
+                            const q = new intersection_2.default(args.partyOneAddresses, args.partyTwoAddresses);
                             return q.process();
                         });
                     }
                 }
             },
-            list_1.listResolvers(),
-            listmeta_1.listMetaResolvers(),
-            block_1.blockResolvers()
+            resolvers_1.default(),
+            resolvers_2.default(),
+            resolvers_3.blockResolvers()
         ]);
         const typeDefs = apollo_server_1.gql(this.buildSchema());
         this.archivists.push(seedArchivist);

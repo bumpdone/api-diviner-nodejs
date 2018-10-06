@@ -40,7 +40,8 @@ export class DivinerApi {
       },
       Mutation: {
         async questionHasIntersected(parent: any, args: any, context: any, info: any) {
-          return new IntersectionQuestion(args.partyOneAddresses, args.partTwoAddresses).publish()
+          const q = new IntersectionQuestion(args.partyOneAddresses, args.partyTwoAddresses)
+          return q.process()
         }
       }
     },

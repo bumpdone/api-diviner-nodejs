@@ -54,7 +54,8 @@ class DivinerApi {
                 Mutation: {
                     questionHasIntersected(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
-                            return new intersection_2.IntersectionQuestion(args.partyOneAddresses, args.partTwoAddresses).publish();
+                            const q = new intersection_2.IntersectionQuestion(args.partyOneAddresses, args.partyTwoAddresses);
+                            return q.process();
                         });
                     }
                 }

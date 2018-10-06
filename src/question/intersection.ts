@@ -32,7 +32,7 @@ export class IntersectionQuestion {
   constructor(partyOne: string[], partyTwo: string[]) {
     this.p1 = partyOne
     this.p2 = partyTwo
-    this.archivist = new ArchivistClient({ uri:'http://localhost:11001/' })
+    this.archivist = new ArchivistClient({ uri:'http://10.30.10.76:11001/' })
   }
 
   // publish the question to scsc

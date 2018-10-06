@@ -35,7 +35,7 @@ class IntersectionQuestion {
     constructor(partyOne, partyTwo) {
         this.p1 = partyOne;
         this.p2 = partyTwo;
-        this.archivist = new archivist_1.ArchivistClient({ uri: 'http://localhost:11001/' });
+        this.archivist = new archivist_1.ArchivistClient({ uri: 'http://10.30.10.76:11001/' });
     }
     // publish the question to scsc
     publish() {

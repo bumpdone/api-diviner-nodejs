@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_client_1 = require("apollo-client");
 const apollo_link_http_1 = require("apollo-link-http");
-const cross_fetch_1 = __importDefault(require("cross-fetch"));
+const isomorphic_fetch_1 = __importDefault(require("isomorphic-fetch"));
 const graphql_tag_1 = __importDefault(require("graphql-tag"));
 const apollo_cache_inmemory_1 = require("apollo-cache-inmemory");
 class ArchivistClient {
@@ -22,7 +22,7 @@ class ArchivistClient {
         Object.assign(this, { uri: string });
         const httpLink = apollo_link_http_1.createHttpLink({
             uri: this.uri,
-            fetch: cross_fetch_1.default
+            fetch: isomorphic_fetch_1.default
         });
         this.client = new apollo_client_1.ApolloClient({
             link: httpLink,

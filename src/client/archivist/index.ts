@@ -1,7 +1,7 @@
 import { Options } from './options'
 import { ApolloClient } from 'apollo-client'
 import { createHttpLink } from 'apollo-link-http'
-import fetch from 'cross-fetch'
+import fetch from 'isomorphic-fetch'
 import gql from 'graphql-tag'
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory'
 

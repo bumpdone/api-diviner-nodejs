@@ -1,8 +1,8 @@
 /// <reference types="node" />
 import { IPFS } from 'ipfs';
-import { Options } from './options';
+import Options from './options';
 import Block from '../block';
-export declare class ScscChain {
+export default class ScscChain {
     static validateItem(item: Buffer): boolean;
     contract: string;
     network: string;

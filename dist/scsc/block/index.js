@@ -8,13 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-class Block {
+class ScscBlock {
     constructor(options) {
-        this.data = {};
-        this.ipfs = options.ipfs;
-        this.hash = options.hash;
-        if (options.data) {
-            this.data = options.data;
+        if (options) {
+            this.ipfs = options.ipfs;
+            this.hash = options.hash;
+            if (options.data) {
+                this.data = options.data;
+            }
         }
     }
     read() {
@@ -27,13 +28,25 @@ class Block {
             }
         });
     }
-    concatValidation(base, additional) {
-        base.valid = base.valid && additional.valid;
-        base.messages.concat(additional.messages);
+    concatValidation(v1, v2) {
+        const v = { valid: true, messages: [] };
+        v.valid = v1.valid && v2.valid;
+        v.messages.concat(v1.messages);
+        v.messages.concat(v2.messages);
+        return v;
+    }
+    isValidAddress(address) {
+        return address.length === 40;
     }
     validateHeader(header) {
         const validation = { valid: true, messages: [] };
-        if (!header) {
+        if (header) {
+            if (!this.isValidAddress(header.address)) {
+                validation.valid = false;
+                validation.messages.push("Invalid Address in Header");
+            }
+        }
+        else {
             validation.messages.push("Missing Header");
             validation.valid = false;
         }
@@ -56,12 +69,12 @@ class Block {
         return validation;
     }
     validate() {
-        const validation = { valid: true, messages: [] };
+        let validation = { valid: true, messages: [] };
         const data = this.data;
         if (data) {
-            this.concatValidation(validation, this.validateHeader(data.header));
-            this.concatValidation(validation, this.validateHashes(data.hashes));
-            this.concatValidation(validation, this.validatePayments(data.payments));
+            validation = this.concatValidation(validation, this.validateHeader(data.header));
+            validation = this.concatValidation(validation, this.validateHashes(data.hashes));
+            validation = this.concatValidation(validation, this.validatePayments(data.payments));
         }
         else {
             validation.messages.push("Missing Data");
@@ -86,5 +99,5 @@ class Block {
         });
     }
 }
-exports.default = Block;
+exports.default = ScscBlock;
 //# sourceMappingURL=index.js.map

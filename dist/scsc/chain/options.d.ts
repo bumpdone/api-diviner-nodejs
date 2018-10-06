@@ -1,5 +1,5 @@
 import { IPFS } from 'ipfs';
-export interface Options {
+export default interface Options {
     contract: string;
     network: string;
     previousHash: string;

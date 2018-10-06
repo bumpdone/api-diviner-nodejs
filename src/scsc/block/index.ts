@@ -6,19 +6,21 @@ import Payment from './payment'
 
 interface Validation { valid: boolean, messages: string[] }
 
-export default class Block {
+export default class ScscBlock {
 
   public hash?: string
   public bytes?: Buffer
   public ipfs?: IPFS
-  public data: Data = {}
+  public data?: Data
 
-  constructor(options: Options) {
-    this.ipfs = options.ipfs
-    this.hash = options.hash
+  constructor(options?: Options) {
+    if (options) {
+      this.ipfs = options.ipfs
+      this.hash = options.hash
 
-    if (options.data) {
-      this.data = options.data
+      if (options.data) {
+        this.data = options.data
+      }
     }
   }
 
@@ -30,15 +32,27 @@ export default class Block {
     }
   }
 
-  public concatValidation(base: Validation, additional: Validation) {
-    base.valid = base.valid && additional.valid
-    base.messages.concat(additional.messages)
+  public concatValidation(v1: Validation, v2: Validation): Validation {
+    const v: Validation = { valid: true, messages: [] }
+    v.valid = v1.valid && v2.valid
+    v.messages.concat(v1.messages)
+    v.messages.concat(v2.messages)
+    return v
+  }
+
+  public isValidAddress(address: string): boolean {
+    return address.length === 40
   }
 
   public validateHeader(header?: Header): Validation {
     const validation: Validation = { valid: true, messages: [] }
 
-    if (!header) {
+    if (header) {
+      if (!this.isValidAddress(header.address)) {
+        validation.valid = false
+        validation.messages.push("Invalid Address in Header")
+      }
+    } else {
       validation.messages.push("Missing Header")
       validation.valid = false
     }
@@ -69,12 +83,12 @@ export default class Block {
   }
 
   public validate(): Validation {
-    const validation: Validation = { valid: true, messages: [] }
+    let validation: Validation = { valid: true, messages: [] }
     const data = this.data
     if (data) {
-      this.concatValidation(validation, this.validateHeader(data.header))
-      this.concatValidation(validation, this.validateHashes(data.hashes))
-      this.concatValidation(validation, this.validatePayments(data.payments))
+      validation = this.concatValidation(validation, this.validateHeader(data.header))
+      validation = this.concatValidation(validation, this.validateHashes(data.hashes))
+      validation = this.concatValidation(validation, this.validatePayments(data.payments))
     } else {
       validation.messages.push("Missing Data")
       validation.valid = false

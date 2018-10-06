@@ -7,8 +7,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const _1 = require("./");
+const _1 = __importDefault(require("./"));
 const ipfs_1 = require("ipfs");
 const chai_1 = require("chai");
 describe('ScscChain class', () => {
@@ -43,7 +46,7 @@ describe('ScscChain class', () => {
     it('should return create ScscChain', () => __awaiter(this, void 0, void 0, function* () {
         ipfs = yield startIpfs();
         console.log('3');
-        scsc = new _1.ScscChain({
+        scsc = new _1.default({
             contract: "",
             network: "",
             previousHash: "",
@@ -65,7 +68,7 @@ describe('ScscChain class', () => {
     it('should get block', () => __awaiter(this, void 0, void 0, function* () {
         block = yield scsc.getBlock(hash);
         if (block) {
-            chai_1.expect(block.header).to.be.a('object');
+            chai_1.expect(block.data).to.be.a('object');
         }
     }));
     it('should stop ipfs', () => __awaiter(this, void 0, void 0, function* () {

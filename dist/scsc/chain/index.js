@@ -85,5 +85,5 @@ class ScscChain {
         });
     }
 }
-exports.ScscChain = ScscChain;
+exports.default = ScscChain;
 //# sourceMappingURL=index.js.map

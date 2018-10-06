@@ -1,6 +1,6 @@
 import { IPFS } from 'ipfs'
 
-export interface Options {
+export default interface Options {
 
   /* the contract address of the SCSC contract that defines the chain */
   contract: string

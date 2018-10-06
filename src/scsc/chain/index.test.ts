@@ -1,6 +1,6 @@
-import { ScscChain } from './'
+import ScscChain from './'
 import { IPFS, createNode } from 'ipfs'
-import { Block } from '../block'
+import ScscBlock from '../block'
 
 import { expect } from 'chai'
 
@@ -61,12 +61,12 @@ describe('ScscChain class', () => {
     expect(hash).to.be.a('string')
   })
 
-  let block: Block
+  let block: ScscBlock
 
   it('should get block', async () => {
     block = await scsc.getBlock(hash)
     if (block) {
-      expect(block.header).to.be.a('object')
+      expect(block.data).to.be.a('object')
     }
   })
 

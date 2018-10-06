@@ -14,7 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_server_1 = require("apollo-server");
 const resolvers_1 = __importDefault(require("./list/resolvers"));
 const resolvers_2 = __importDefault(require("./list/meta/resolvers"));
-const resolvers_3 = require("./scsc/block/resolvers");
+const resolvers_3 = __importDefault(require("./scsc/block/resolvers"));
 const graphql_import_1 = require("graphql-import");
 const block_1 = __importDefault(require("./scsc/block"));
 const intersection_1 = require("./list/intersection");
@@ -59,7 +59,7 @@ class DivinerApi {
             },
             resolvers_1.default(),
             resolvers_2.default(),
-            resolvers_3.blockResolvers()
+            resolvers_3.default()
         ]);
         const typeDefs = apollo_server_1.gql(this.buildSchema());
         this.archivists.push(seedArchivist);

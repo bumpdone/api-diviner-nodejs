@@ -1,10 +1,10 @@
 import { IPFS } from 'ipfs'
-import { Options } from './options'
-import { Header } from '../block/header'
-import { Payment } from '../block/payment'
+import Options from './options'
+import Header from '../block/header'
+import Payment from '../block/payment'
 import Block from '../block'
 
-export class ScscChain {
+export default class ScscChain {
 
   public static validateItem(item: Buffer): boolean {
     return true

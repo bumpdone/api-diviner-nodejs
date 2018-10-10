@@ -1,1 +1,0 @@
-{"version":3,"file":"stake.js","sourceRoot":"","sources":["../../src/stake/stake.ts"],"names":[],"mappings":";;AAEA;IACS,MAAM,CAAC,IAAI,CAAC,MAAiB;QAClC,OAAO,IAAI,KAAK,CAAC,MAAM,CAAC,CAAA;IAC1B,CAAC;IAID,YAAY,MAAiB;QAC3B,IAAI,CAAC,MAAM,GAAG,MAAM,CAAA;IACtB,CAAC;CAEF;AAXD,sBAWC"}

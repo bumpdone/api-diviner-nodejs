@@ -14,12 +14,17 @@ export class ArchivistClient {
     Object.assign(this, { uri: string })
     const httpLink = createHttpLink({
       uri: this.uri,
-      fetch
+      fetch,
+      fetchOptions: {
+        timeout: 10000
+      }
     })
+
     this.client = new ApolloClient({
       link: httpLink,
       cache: new InMemoryCache()
     })
+
   }
 
   public async blocks(keys: string[]): Promise<any> {

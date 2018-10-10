@@ -1,1 +1,0 @@
-{"version":3,"file":"list.js","sourceRoot":"","sources":["../../src/resolvers/list.ts"],"names":[],"mappings":";;AAEA;IACE,OAAO;QACL,IAAI,EAAE;YACJ,aAAa,CAAC,MAAW,EAAE,IAAS,EAAE,OAAY,EAAE,IAAS;gBAC3D,OAAO,CAAC,GAAG,CAAC,qBAAqB,CAAC,CAAA;gBAClC,OAAO,OAAO,CAAC,YAAY,CAAA;YAC7B,CAAC;SACF;KACF,CAAA;AACH,CAAC;AATD,sCASC"}

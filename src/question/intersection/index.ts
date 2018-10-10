@@ -1,7 +1,7 @@
 import { IPFS } from 'ipfs'
 import { ArchivistClient } from '../../client/archivist'
 
-export default class IntersectionQuestion {
+export class IntersectionQuestion {
 
   // given an ipfs hash, load the question
   public static async fromHash(hash: string, ipfs: IPFS): Promise<boolean> {
@@ -32,7 +32,7 @@ export default class IntersectionQuestion {
   constructor(partyOne: string[], partyTwo: string[]) {
     this.p1 = partyOne
     this.p2 = partyTwo
-    this.archivist = new ArchivistClient({ uri:'http://10.30.10.76:11001/' })
+    this.archivist = new ArchivistClient({ uri:'http://localhost:11001/' })
   }
 
   // publish the question to scsc
@@ -42,8 +42,15 @@ export default class IntersectionQuestion {
 
   // process the question
   public async process(): Promise<boolean> {
-    const p1Hashes = await this.archivist.blockHashes(this.p1)
-    const p2Hashes = await this.archivist.blockHashes(this.p2)
+    let p1Hashes: string[] = []
+    let p2Hashes: string[] = []
+
+    try {
+      p1Hashes = await this.archivist.blockHashes(this.p1)
+      p2Hashes = await this.archivist.blockHashes(this.p2)
+    } catch (error) {
+      throw new Error("Failed to Retreive Hashes")
+    }
     const intersection = IntersectionQuestion.getStringArrayIntersection(p1Hashes, p2Hashes)
 
     if (intersection.length > 0) {

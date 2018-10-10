@@ -1,4 +1,4 @@
-import IntersectionQuestion from '.'
+import { IntersectionQuestion } from '.'
 
 import { expect } from 'chai'
 

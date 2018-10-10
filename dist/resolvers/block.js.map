@@ -1,1 +1,0 @@
-{"version":3,"file":"block.js","sourceRoot":"","sources":["../../src/resolvers/block.ts"],"names":[],"mappings":";;AAGA;IACE,OAAO;QACL,KAAK,EAAE;YACL,IAAI,CAAC,MAAa,EAAE,IAAS,EAAE,OAAY,EAAE,IAAS;gBACpD,OAAO,CAAC,GAAG,CAAC,sBAAsB,CAAC,CAAA;gBACnC,OAAO,MAAM,CAAC,IAAI,CAAA;YACpB,CAAC;SACF;KACF,CAAA;AACH,CAAC;AATD,wCASC"}

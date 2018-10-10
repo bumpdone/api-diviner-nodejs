@@ -6,13 +6,13 @@ import blockResolvers from './scsc/block/resolvers'
 import { importSchema } from 'graphql-import'
 import Block from './scsc/block'
 import { IntersectionList } from './list/intersection'
-import IntersectionQuestion from './question/intersection'
+import { IntersectionQuestion } from './question/intersection'
 import path from 'path'
 import { merge } from 'lodash'
 import { inspect } from 'util'
 import About from './about'
 import { createNode } from 'ipfs'
-import yargs from 'yargs'
+import program from 'commander'
 
 export class DivinerApi {
 
@@ -93,32 +93,23 @@ export class DivinerApi {
   }
 }
 
-const argv = yargs
-  .usage('$0 <cmd> [args]')
-  .help()
-  .command('start', "Start the Server", (args: any) => {
-    return args
-    .option('graphqlport', {
-      describe: "The port that GraphQL will listen on",
-      default: "12002",
-      alias: "g"
-    })
-    .option('host', {
-      describe: "The host that GraphQL will listen on",
-      default: "localhost",
-      alias: "h"
-    })
-    .option('archivist', {
-      describe: "The url for an archivist for first contact",
-      default: "http://localhost:11001",
-      alias: "a"
-    })
-    .option('verbose', {
-        alias: 'v',
-        default: false,
-    })
-  }, (args: any) => {
-    const xyo = new DivinerApi(args.archivist)
-    xyo.start(args.host, args.graphqlport)
+program
+  .version('0.1.0')
+  .option('-p, --port [n]', 'The Tcp port to listen on for connections (not yet implemented)', parseInt)
+  .option('-g, --graphql [n]', 'The http port to listen on for graphql connections', parseInt)
+  .option('-a, --archivist [s]', 'The url of the seed archivist to contact')
+  .parse(process.argv)
+
+program
+  .command('start')
+  .description('Start the Diviner')
+  .action(() => {
+    const xyo = new DivinerApi(program.archivist || "http://localhost:11001")
+    xyo.start(program.host || "localhost", program.graphql || 12001)
   })
-  .argv
+
+program.parse(process.argv)
+
+if (process.argv.length < 3) {
+  program.help()
+}

@@ -22,7 +22,10 @@ class ArchivistClient {
         Object.assign(this, { uri: string });
         const httpLink = apollo_link_http_1.createHttpLink({
             uri: this.uri,
-            fetch: isomorphic_fetch_1.default
+            fetch: isomorphic_fetch_1.default,
+            fetchOptions: {
+                timeout: 10000
+            }
         });
         this.client = new apollo_client_1.ApolloClient({
             link: httpLink,

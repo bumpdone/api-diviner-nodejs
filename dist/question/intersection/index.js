@@ -35,7 +35,7 @@ class IntersectionQuestion {
     constructor(partyOne, partyTwo) {
         this.p1 = partyOne;
         this.p2 = partyTwo;
-        this.archivist = new archivist_1.ArchivistClient({ uri: 'http://10.30.10.76:11001/' });
+        this.archivist = new archivist_1.ArchivistClient({ uri: 'http://localhost:11001/' });
     }
     // publish the question to scsc
     publish() {
@@ -46,8 +46,15 @@ class IntersectionQuestion {
     // process the question
     process() {
         return __awaiter(this, void 0, void 0, function* () {
-            const p1Hashes = yield this.archivist.blockHashes(this.p1);
-            const p2Hashes = yield this.archivist.blockHashes(this.p2);
+            let p1Hashes = [];
+            let p2Hashes = [];
+            try {
+                p1Hashes = yield this.archivist.blockHashes(this.p1);
+                p2Hashes = yield this.archivist.blockHashes(this.p2);
+            }
+            catch (error) {
+                throw new Error("Failed to Retreive Hashes");
+            }
             const intersection = IntersectionQuestion.getStringArrayIntersection(p1Hashes, p2Hashes);
             if (intersection.length > 0) {
                 return true;
@@ -56,5 +63,5 @@ class IntersectionQuestion {
         });
     }
 }
-exports.default = IntersectionQuestion;
+exports.IntersectionQuestion = IntersectionQuestion;
 //# sourceMappingURL=index.js.map

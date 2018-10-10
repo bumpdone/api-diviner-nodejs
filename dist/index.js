@@ -12,18 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_server_1 = require("apollo-server");
-const list_1 = require("./resolvers/list");
-const listmeta_1 = require("./resolvers/listmeta");
-const block_1 = require("./resolvers/block");
+const resolvers_1 = __importDefault(require("./list/resolvers"));
+const resolvers_2 = __importDefault(require("./list/meta/resolvers"));
+const resolvers_3 = __importDefault(require("./scsc/block/resolvers"));
 const graphql_import_1 = require("graphql-import");
-const block_2 = require("./block");
+const block_1 = __importDefault(require("./scsc/block"));
 const intersection_1 = require("./list/intersection");
 const intersection_2 = require("./question/intersection");
 const path_1 = __importDefault(require("path"));
 const lodash_1 = require("lodash");
-const about_1 = require("./about");
+const about_1 = __importDefault(require("./about"));
 const ipfs_1 = require("ipfs");
-const yargs_1 = __importDefault(require("yargs"));
+const commander_1 = __importDefault(require("commander"));
 class DivinerApi {
     constructor(seedArchivist) {
         this.archivists = [];
@@ -33,16 +33,13 @@ class DivinerApi {
                     about(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
                             console.log(`resolvers.Query.about`);
-                            return new about_1.About("Diviner", "0.1.0");
+                            return new about_1.default("Diviner", "0.1.0");
                         });
                     },
                     block(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
                             console.log(`resolvers.Query.block: ${args.hash}`);
-                            if (!args.hash) {
-                                return new block_2.Block("0x0000", "0x0000", context.ipfs);
-                            }
-                            return new block_2.Block(args.hash, "0x0001", context.ipfs);
+                            return new block_1.default({ hash: args.hash, data: {}, ipfs: context.ipfs });
                         });
                     },
                     intersections(addresses) {
@@ -54,14 +51,15 @@ class DivinerApi {
                 Mutation: {
                     questionHasIntersected(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
-                            return new intersection_2.IntersectionQuestion(args.partyOneAddresses, args.partTwoAddresses).publish();
+                            const q = new intersection_2.IntersectionQuestion(args.partyOneAddresses, args.partyTwoAddresses);
+                            return q.process();
                         });
                     }
                 }
             },
-            list_1.listResolvers(),
-            listmeta_1.listMetaResolvers(),
-            block_1.blockResolvers()
+            resolvers_1.default(),
+            resolvers_2.default(),
+            resolvers_3.default()
         ]);
         const typeDefs = apollo_server_1.gql(this.buildSchema());
         this.archivists.push(seedArchivist);
@@ -96,33 +94,21 @@ class DivinerApi {
     }
 }
 exports.DivinerApi = DivinerApi;
-const argv = yargs_1.default
-    .usage('$0 <cmd> [args]')
-    .help()
-    .command('start', "Start the Server", (args) => {
-    return args
-        .option('graphqlport', {
-        describe: "The port that GraphQL will listen on",
-        default: "12002",
-        alias: "g"
-    })
-        .option('host', {
-        describe: "The host that GraphQL will listen on",
-        default: "localhost",
-        alias: "h"
-    })
-        .option('archivist', {
-        describe: "The url for an archivist for first contact",
-        default: "http://localhost:11001",
-        alias: "a"
-    })
-        .option('verbose', {
-        alias: 'v',
-        default: false,
-    });
-}, (args) => {
-    const xyo = new DivinerApi(args.archivist);
-    xyo.start(args.host, args.graphqlport);
-})
-    .argv;
+commander_1.default
+    .version('0.1.0')
+    .option('-p, --port [n]', 'The Tcp port to listen on for connections (not yet implemented)', parseInt)
+    .option('-g, --graphql [n]', 'The http port to listen on for graphql connections', parseInt)
+    .option('-a, --archivist [s]', 'The url of the seed archivist to contact')
+    .parse(process.argv);
+commander_1.default
+    .command('start')
+    .description('Start the Diviner')
+    .action(() => {
+    const xyo = new DivinerApi(commander_1.default.archivist || "http://localhost:11001");
+    xyo.start(commander_1.default.host || "localhost", commander_1.default.graphql || 12001);
+});
+commander_1.default.parse(process.argv);
+if (process.argv.length < 3) {
+    commander_1.default.help();
+}
 //# sourceMappingURL=index.js.map

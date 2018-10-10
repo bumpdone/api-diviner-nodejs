@@ -19,6 +19,8 @@
   "author": "Arie Trouw",
   "license": "ISC",
   "dependencies": {
+    "@types/commander": "^2.12.2",
+    "@types/isomorphic-fetch": "0.0.34",
     "@types/node-fetch": "^2.1.2",
     "@xyo-network/api-originchain-graphql": "^0.1.2",
     "@xyo-network/sdk-core-nodejs": "https://github.com/XYOracleNetwork/sdk-core-nodejs",
@@ -28,6 +30,7 @@
     "apollo-link-http": "^1.5.5",
     "apollo-server": "^2.1.0",
     "cids": "^0.5.5",
+    "commander": "^2.19.0",
     "cross-fetch": "^2.2.2",
     "firebase-admin": "^6.0.0",
     "gc-stats": "^1.2.0",
@@ -36,10 +39,11 @@
     "graphql-tag": "^2.10.0",
     "graphql-tools": "^4.0.0",
     "ipfs": "^0.32.3",
+    "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.11",
+    "node-fetch": "^2.2.0",
     "node-gyp": "^3.8.0",
-    "node-pre-gyp": "^0.11.0",
-    "yargs": "^12.0.2"
+    "node-pre-gyp": "^0.11.0"
   },
   "devDependencies": {
     "@firebase/app-types": "^0.3.2",
@@ -51,7 +55,6 @@
     "@types/graphql": "^14.0.1",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.11.0",
-    "@types/yargs": "^12.0.1",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "ts-mocha": "^2.0.0",

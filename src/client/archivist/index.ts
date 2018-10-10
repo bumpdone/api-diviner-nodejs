@@ -1,7 +1,7 @@
 import { Options } from './options'
 import { ApolloClient } from 'apollo-client'
 import { createHttpLink } from 'apollo-link-http'
-import fetch from 'cross-fetch'
+import fetch from 'isomorphic-fetch'
 import gql from 'graphql-tag'
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory'
 
@@ -14,12 +14,17 @@ export class ArchivistClient {
     Object.assign(this, { uri: string })
     const httpLink = createHttpLink({
       uri: this.uri,
-      fetch
+      fetch,
+      fetchOptions: {
+        timeout: 10000
+      }
     })
+
     this.client = new ApolloClient({
       link: httpLink,
       cache: new InMemoryCache()
     })
+
   }
 
   public async blocks(keys: string[]): Promise<any> {

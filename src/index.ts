@@ -1,18 +1,18 @@
 import { ApolloServer, gql, Config, CorsOptions } from 'apollo-server'
 import { IResolvers } from 'graphql-tools'
-import { listResolvers } from './resolvers/list'
-import { listMetaResolvers } from './resolvers/listmeta'
-import { blockResolvers } from './resolvers/block'
+import listResolvers from './list/resolvers'
+import listMetaResolvers from './list/meta/resolvers'
+import blockResolvers from './scsc/block/resolvers'
 import { importSchema } from 'graphql-import'
-import { Block } from './block'
+import Block from './scsc/block'
 import { IntersectionList } from './list/intersection'
 import { IntersectionQuestion } from './question/intersection'
 import path from 'path'
 import { merge } from 'lodash'
 import { inspect } from 'util'
-import { About } from './about'
+import About from './about'
 import { createNode } from 'ipfs'
-import yargs from 'yargs'
+import program from 'commander'
 
 export class DivinerApi {
 
@@ -29,10 +29,7 @@ export class DivinerApi {
         },
         async block(parent: any, args: any, context: any, info: any) {
           console.log(`resolvers.Query.block: ${args.hash}`)
-          if (!args.hash) {
-            return new Block("0x0000", "0x0000", context.ipfs)
-          }
-          return new Block(args.hash, "0x0001", context.ipfs)
+          return new Block({ hash: args.hash, data: {}, ipfs: context.ipfs })
         },
         async intersections(addresses: [string]) {
           return new IntersectionList(["0x00", "0x11"])
@@ -40,7 +37,8 @@ export class DivinerApi {
       },
       Mutation: {
         async questionHasIntersected(parent: any, args: any, context: any, info: any) {
-          return new IntersectionQuestion(args.partyOneAddresses, args.partTwoAddresses).publish()
+          const q = new IntersectionQuestion(args.partyOneAddresses, args.partyTwoAddresses)
+          return q.process()
         }
       }
     },
@@ -95,32 +93,23 @@ export class DivinerApi {
   }
 }
 
-const argv = yargs
-  .usage('$0 <cmd> [args]')
-  .help()
-  .command('start', "Start the Server", (args: any) => {
-    return args
-    .option('graphqlport', {
-      describe: "The port that GraphQL will listen on",
-      default: "12002",
-      alias: "g"
-    })
-    .option('host', {
-      describe: "The host that GraphQL will listen on",
-      default: "localhost",
-      alias: "h"
-    })
-    .option('archivist', {
-      describe: "The url for an archivist for first contact",
-      default: "http://localhost:11001",
-      alias: "a"
-    })
-    .option('verbose', {
-        alias: 'v',
-        default: false,
-    })
-  }, (args: any) => {
-    const xyo = new DivinerApi(args.archivist)
-    xyo.start(args.host, args.graphqlport)
+program
+  .version('0.1.0')
+  .option('-p, --port [n]', 'The Tcp port to listen on for connections (not yet implemented)', parseInt)
+  .option('-g, --graphql [n]', 'The http port to listen on for graphql connections', parseInt)
+  .option('-a, --archivist [s]', 'The url of the seed archivist to contact')
+  .parse(process.argv)
+
+program
+  .command('start')
+  .description('Start the Diviner')
+  .action(() => {
+    const xyo = new DivinerApi(program.archivist || "http://localhost:11001")
+    xyo.start(program.host || "localhost", program.graphql || 12001)
   })
-  .argv
+
+program.parse(process.argv)
+
+if (process.argv.length < 3) {
+  program.help()
+}

@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Launch Program",
             "protocol": "inspector",
-            "args": ["dist/serve.js"],
+            "args": ["dist/index.js", "start"],
             "cwd": "${workspaceFolder}",
             "runtimeArgs": ["-r", "ts-node/register"],
             "internalConsoleOptions": "openOnSessionStart",

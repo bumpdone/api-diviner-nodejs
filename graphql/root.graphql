@@ -9,5 +9,5 @@ type Query {
 }
 
 type Mutation {
-  questionHasIntersected(partyOneAddresses: [String], partTwoAddresses: [String]): String
+  questionHasIntersected(partyOneAddresses: [String], partyTwoAddresses: [String]): String
 }

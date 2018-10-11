@@ -105,7 +105,7 @@ program
   .description('Start the Diviner')
   .action(() => {
     const xyo = new DivinerApi(program.archivist || "http://localhost:11001")
-    xyo.start(program.host || "localhost", program.graphql || 12001)
+    xyo.start(program.host || "localhost", program.graphql || 12002)
   })
 
 program.parse(process.argv)

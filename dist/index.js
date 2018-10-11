@@ -105,7 +105,7 @@ commander_1.default
     .description('Start the Diviner')
     .action(() => {
     const xyo = new DivinerApi(commander_1.default.archivist || "http://localhost:11001");
-    xyo.start(commander_1.default.host || "localhost", commander_1.default.graphql || 12001);
+    xyo.start(commander_1.default.host || "localhost", commander_1.default.graphql || 12002);
 });
 commander_1.default.parse(process.argv);
 if (process.argv.length < 3) {

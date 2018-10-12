@@ -25,7 +25,7 @@ export class DivinerApi {
       Query: {
         async about(parent: any, args: any, context: any, info: any) {
           console.log(`resolvers.Query.about`)
-          return new About("Diviner", "0.1.0")
+          return new About("Diviner", "0.1.0", `http://${context.req.headers.host}`, context.address)
         },
         async block(parent: any, args: any, context: any, info: any) {
           console.log(`resolvers.Query.block: ${args.hash}`)
@@ -53,7 +53,9 @@ export class DivinerApi {
     this.archivists.push(seedArchivist)
 
     const context = ({ req }: {req: any}) => ({
-      ipfs: this.ipfs
+      ipfs: this.ipfs,
+      req,
+      address: "0x000"
     })
 
     const config: Config & { cors?: CorsOptions | boolean } = {

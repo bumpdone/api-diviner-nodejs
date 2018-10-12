@@ -11,6 +11,10 @@ export function aboutResolvers(): IResolvers {
       version(parent: About, args: any, context: any, info: any) {
         console.log("resolvers.About.version")
         return parent.version
+      },
+      url(parent: About, args: any, context: any, info: any) {
+        console.log("resolvers.About.url")
+        return JSON.stringify(context)
       }
     }
   }

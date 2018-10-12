@@ -33,7 +33,7 @@ class DivinerApi {
                     about(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
                             console.log(`resolvers.Query.about`);
-                            return new about_1.default("Diviner", "0.1.0");
+                            return new about_1.default("Diviner", "0.1.0", `http://${context.req.headers.host}`, context.address);
                         });
                     },
                     block(parent, args, context, info) {
@@ -64,7 +64,9 @@ class DivinerApi {
         const typeDefs = apollo_server_1.gql(this.buildSchema());
         this.archivists.push(seedArchivist);
         const context = ({ req }) => ({
-            ipfs: this.ipfs
+            ipfs: this.ipfs,
+            req,
+            address: "0x000"
         });
         const config = {
             typeDefs,

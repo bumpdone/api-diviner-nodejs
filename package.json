@@ -6,13 +6,13 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "ts-mocha ./src/**/*.test.ts",
-    "build": "npm run build-ts && npm run tslint",
+    "build": "yarn build-ts && yarn tslint",
     "build-ts": "tsc",
-    "dist": "npm install && tsc -p tsconfig.build.json && npm run tslint",
+    "dist": "yarn install && tsc -p tsconfig.build.json && yarn tslint",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "tslint-fix": "tslint -c tslint.json -p tsconfig.json --fix",
     "precommit": "echo \"Build must pass before committing\" && npm run build",
-    "start": "npm run build && node ./dist/index.js start",
+    "start": "yarn build && node ./dist/index.js start",
     "killport": "kill $(lsof -t -i :12002)",
     "killipfsport": "kill $(lsof -t -i :12003)"
   },

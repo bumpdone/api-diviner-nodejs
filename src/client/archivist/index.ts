@@ -27,61 +27,66 @@ export class ArchivistClient {
 
   }
 
-  public async blocks(keys: string[]): Promise<any> {
+  public async blocks(keys: string[], fields: string): Promise<any> {
+    const fieldsToGet = fields || `
+      {
+        hash
+        bytes
+        major
+        minor
+        publicKeys {
+          hash
+          bytes
+          major
+          minor
+          array {
+            hash
+            bytes
+            major
+            minor
+          }
+        }
+        signatures {
+          hash
+          bytes
+          major
+          minor
+          array {
+            hash
+            bytes
+            major
+            minor
+          }
+        }
+        payloads {
+          hash
+          bytes
+          major
+          minor
+          signedPayload {
+            hash
+            bytes
+            major
+            minor
+          }
+          unsignedPayload {
+            hash
+            bytes
+            major
+            minor
+          }
+        }
+        signedBytes
+      }
+    `
+
     const result: any = await this.client.query({
       query: gql`
         query BlocksByPublicKey($publicKeys: [String!]) {
           blocksByPublicKey(publicKeys: $publicKeys) {
             publicKey
-            blocks {
-              hash
-              bytes
-              major
-              minor
-              publicKeys {
-                hash
-                bytes
-                major
-                minor
-                array {
-                  hash
-                  bytes
-                  major
-                  minor
-                }
-              }
-              signatures {
-                hash
-                bytes
-                major
-                minor
-                array {
-                  hash
-                  bytes
-                  major
-                  minor
-                }
-              }
-              payloads {
-                hash
-                bytes
-                major
-                minor
-                signedPayload {
-                  hash
-                  bytes
-                  major
-                  minor
-                }
-                unsignedPayload {
-                  hash
-                  bytes
-                  major
-                  minor
-                }
-              }
-              signedBytes
-            }
+            blocks
+              ${fields}
           }
         }
       `,

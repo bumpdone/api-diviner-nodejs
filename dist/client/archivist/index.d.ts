@@ -5,7 +5,7 @@ export declare class ArchivistClient {
     uri: string;
     client: ApolloClient<NormalizedCacheObject>;
     constructor({ uri: string }: Options);
-    blocks(keys: string[]): Promise<any>;
+    blocks(keys: string[], fields: string): Promise<any>;
     keys(keys: string[]): Promise<any>;
     blockHashes(keys: string[]): Promise<any>;
 }

@@ -32,62 +32,66 @@ class ArchivistClient {
             cache: new apollo_cache_inmemory_1.InMemoryCache()
         });
     }
-    blocks(keys) {
+    blocks(keys, fields) {
         return __awaiter(this, void 0, void 0, function* () {
+            const fieldsToGet = fields || `
+      {
+        hash
+        bytes
+        major
+        minor
+        publicKeys {
+          hash
+          bytes
+          major
+          minor
+          array {
+            hash
+            bytes
+            major
+            minor
+          }
+        }
+        signatures {
+          hash
+          bytes
+          major
+          minor
+          array {
+            hash
+            bytes
+            major
+            minor
+          }
+        }
+        payloads {
+          hash
+          bytes
+          major
+          minor
+          signedPayload {
+            hash
+            bytes
+            major
+            minor
+          }
+          unsignedPayload {
+            hash
+            bytes
+            major
+            minor
+          }
+        }
+        signedBytes
+      }
+    `;
             const result = yield this.client.query({
                 query: graphql_tag_1.default `
         query BlocksByPublicKey($publicKeys: [String!]) {
           blocksByPublicKey(publicKeys: $publicKeys) {
             publicKey
-            blocks {
-              hash
-              bytes
-              major
-              minor
-              publicKeys {
-                hash
-                bytes
-                major
-                minor
-                array {
-                  hash
-                  bytes
-                  major
-                  minor
-                }
-              }
-              signatures {
-                hash
-                bytes
-                major
-                minor
-                array {
-                  hash
-                  bytes
-                  major
-                  minor
-                }
-              }
-              payloads {
-                hash
-                bytes
-                major
-                minor
-                signedPayload {
-                  hash
-                  bytes
-                  major
-                  minor
-                }
-                unsignedPayload {
-                  hash
-                  bytes
-                  major
-                  minor
-                }
-              }
-              signedBytes
-            }
+            blocks
+              ${fields}
           }
         }
       `,

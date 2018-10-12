@@ -1,4 +1,6 @@
 type About {
   name: String,
-  version: String
+  version: String,
+  url: String,
+  address: String
 }

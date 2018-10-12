@@ -10,6 +10,10 @@ function aboutResolvers() {
             version(parent, args, context, info) {
                 console.log("resolvers.About.version");
                 return parent.version;
+            },
+            url(parent, args, context, info) {
+                console.log("resolvers.About.url");
+                return JSON.stringify(context);
             }
         }
     };

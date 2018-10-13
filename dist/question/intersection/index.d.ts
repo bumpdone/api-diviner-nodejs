@@ -6,7 +6,7 @@ export declare class IntersectionQuestion {
     p1: string[];
     p2: string[];
     archivist: ArchivistClient;
-    constructor(partyOne: string[], partyTwo: string[]);
+    constructor(partyOne: string[], partyTwo: string[], archivist: ArchivistClient[]);
     publish(): Promise<string>;
     process(): Promise<boolean>;
 }

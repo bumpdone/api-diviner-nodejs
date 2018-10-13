@@ -9,7 +9,21 @@
             "request": "launch",
             "name": "Launch Program",
             "protocol": "inspector",
-            "args": ["dist/index.js", "start"],
+            "args": ["dist/index.js", "start", "-a", "http://localhost:11001/"],
+            "cwd": "${workspaceFolder}",
+            "runtimeArgs": ["-r", "ts-node/register"],
+            "internalConsoleOptions": "openOnSessionStart",
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "outFiles": [
+                "${workspaceFolder}/lib/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Use Carter Archivist",
+            "protocol": "inspector",
+            "args": ["dist/index.js", "start", "-a", "http://192.168.1.163:11001/"],
             "cwd": "${workspaceFolder}",
             "runtimeArgs": ["-r", "ts-node/register"],
             "internalConsoleOptions": "openOnSessionStart",

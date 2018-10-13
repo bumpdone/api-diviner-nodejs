@@ -8,7 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const archivist_1 = require("../../client/archivist");
 class IntersectionQuestion {
     // given an ipfs hash, load the question
     static fromHash(hash, ipfs) {
@@ -32,10 +31,10 @@ class IntersectionQuestion {
         });
         return intersection;
     }
-    constructor(partyOne, partyTwo) {
+    constructor(partyOne, partyTwo, archivist) {
         this.p1 = partyOne;
         this.p2 = partyTwo;
-        this.archivist = new archivist_1.ArchivistClient({ uri: 'http://localhost:11001/' });
+        this.archivist = archivist[0];
     }
     // publish the question to scsc
     publish() {

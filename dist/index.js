@@ -24,6 +24,7 @@ const lodash_1 = require("lodash");
 const about_1 = __importDefault(require("./about"));
 const ipfs_1 = require("ipfs");
 const commander_1 = __importDefault(require("commander"));
+const archivist_1 = require("./client/archivist");
 class DivinerApi {
     constructor(seedArchivist) {
         this.archivists = [];
@@ -51,7 +52,7 @@ class DivinerApi {
                 Mutation: {
                     questionHasIntersected(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
-                            const q = new intersection_2.IntersectionQuestion(args.partyOneAddresses, args.partyTwoAddresses);
+                            const q = new intersection_2.IntersectionQuestion(args.partyOneAddresses, args.partyTwoAddresses, [new archivist_1.ArchivistClient({ uri: context.archivists[0] })]);
                             return q.process();
                         });
                     }
@@ -66,7 +67,8 @@ class DivinerApi {
         const context = ({ req }) => ({
             ipfs: this.ipfs,
             req,
-            address: "0x000"
+            address: "0x000",
+            archivists: this.archivists
         });
         const config = {
             typeDefs,

@@ -13,6 +13,7 @@ import { inspect } from 'util'
 import About from './about'
 import { createNode } from 'ipfs'
 import program from 'commander'
+import { ArchivistClient } from './client/archivist'
 
 export class DivinerApi {
 
@@ -37,7 +38,11 @@ export class DivinerApi {
       },
       Mutation: {
         async questionHasIntersected(parent: any, args: any, context: any, info: any) {
-          const q = new IntersectionQuestion(args.partyOneAddresses, args.partyTwoAddresses)
+          const q = new IntersectionQuestion(
+            args.partyOneAddresses,
+            args.partyTwoAddresses,
+            [new ArchivistClient({ uri:context.archivists[0] })]
+            )
           return q.process()
         }
       }
@@ -55,7 +60,8 @@ export class DivinerApi {
     const context = ({ req }: {req: any}) => ({
       ipfs: this.ipfs,
       req,
-      address: "0x000"
+      address: "0x000",
+      archivists: this.archivists
     })
 
     const config: Config & { cors?: CorsOptions | boolean } = {

@@ -29,10 +29,10 @@ export class IntersectionQuestion {
   public p2: string[]
   public archivist: ArchivistClient
 
-  constructor(partyOne: string[], partyTwo: string[]) {
+  constructor(partyOne: string[], partyTwo: string[], archivist: ArchivistClient[]) {
     this.p1 = partyOne
     this.p2 = partyTwo
-    this.archivist = new ArchivistClient({ uri:'http://localhost:11001/' })
+    this.archivist = archivist[0]
   }
 
   // publish the question to scsc

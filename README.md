@@ -20,7 +20,35 @@
 [![BCH compliance](https://bettercodehub.com/edge/badge/XYOracleNetwork/api-diviner-nodejs?branch=develop&token=3dd15a749bfd967c47acceb9e537294bc39579b5)](https://bettercodehub.com/results/XYOracleNetwork/api-diviner-nodejs)
 [![Greenkeeper badge](https://badges.greenkeeper.io/XYOracleNetwork/api-diviner-nodejs.svg)](https://greenkeeper.io/)
 
+## Description
+
 The main API for accessing a diviner on the XYO network information using GraphQL.
+
+## Requirements (Step 1)
+
+1. Install Node 10.x or later from: [NodeJs](https://nodejs.org/en/download/current/)
+2. Intall Yarn from [Yarn](https://yarnpkg.com/lang/en/docs/install/)
+
+## Install Diviner (Step 2)
+
+```bash
+npm install https://github.com/XYOracleNetwork/api-diviner-nodejs
+```
+
+
+## Build Diviner (Step 3)
+
+```bash
+yarn build
+```
+
+## Start Diviner (Step 4)
+
+```bash
+yarn start
+```
+
+### Options
 
 ## License
 

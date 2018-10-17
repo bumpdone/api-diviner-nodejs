@@ -95,7 +95,7 @@ export class DivinerApi {
   }
 
   private buildSchema() {
-    const schemaLocation = path.join('.', 'graphql', 'root.graphql')
+    const schemaLocation = path.normalize('./graphql/root.graphql')
     const typeDefs = importSchema(schemaLocation)
     return typeDefs
   }

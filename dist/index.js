@@ -92,7 +92,7 @@ class DivinerApi {
         });
     }
     buildSchema() {
-        const schemaLocation = path_1.default.join('.', 'graphql', 'root.graphql');
+        const schemaLocation = path_1.default.normalize('./graphql/root.graphql');
         const typeDefs = graphql_import_1.importSchema(schemaLocation);
         return typeDefs;
     }

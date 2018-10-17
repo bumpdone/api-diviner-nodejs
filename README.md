@@ -12,6 +12,7 @@
 [![CircleCI](https://circleci.com/gh/XYOracleNetwork/api-diviner-nodejs/tree/master.svg?style=svg&circle-token=1e3979acebbd7de5d21d4cc99f2eb08694196d4f)](https://circleci.com/gh/XYOracleNetwork/api-diviner-nodejs/tree/master)
 [![BCH compliance](https://bettercodehub.com/edge/badge/XYOracleNetwork/api-diviner-nodejs?branch=master&token=3dd15a749bfd967c47acceb9e537294bc39579b5)](https://bettercodehub.com/results/XYOracleNetwork/api-diviner-nodejs)
 [![Maintainability](https://api.codeclimate.com/v1/badges/f6bc63330b1d2422973b/maintainability)](https://codeclimate.com/github/XYOracleNetwork/api-diviner-nodejs/maintainability)
+[![Greenkeeper badge](https://badges.greenkeeper.io/XYOracleNetwork/api-diviner-nodejs.svg)](https://greenkeeper.io/)
 
 ### Develop
 
@@ -24,25 +25,45 @@
 
 The main API for accessing a diviner on the XYO network information using GraphQL.
 
-## Requirements (Step 1)
+## User Mode
 
-1. Install Node 10.x or later from: [NodeJs](https://nodejs.org/en/download/current/)
-2. Intall Yarn from [Yarn](https://yarnpkg.com/lang/en/docs/install/)
+### Requirements (Step 1)
 
-## Install Diviner (Step 2)
+Install Node 10.x or later from: [NodeJs](https://nodejs.org/en/download/current/)
+
+### Install Diviner (Step 2)
+
+```bash
+sudo npm install @xyo-network/api-diviner-nodejs -g --unsafe-perm=true
+```
+
+### Build Diviner (Step 3)
+
+```bash
+xyo-diviner start
+```
+
+
+
+## Developer Mode
+
+### Requirements (Step 1)
+
+Install Node 10.x or later from: [NodeJs](https://nodejs.org/en/download/current/)
+
+### Install Diviner (Step 2)
 
 ```bash
 npm install https://github.com/XYOracleNetwork/api-diviner-nodejs
 ```
 
-
-## Build Diviner (Step 3)
+### Build Diviner (Step 3)
 
 ```bash
 yarn build
 ```
 
-## Start Diviner (Step 4)
+### Start Diviner (Step 4)
 
 ```bash
 yarn start

@@ -105,8 +105,7 @@ program
   .version('0.1.0')
   .option('-p, --port [n]', 'The Tcp port to listen on for connections (not yet implemented)', parseInt)
   .option('-g, --graphql [n]', 'The http port to listen on for graphql connections', parseInt)
-  .option('-a, --archivist [s]', 'The url of the seed archivist to contact')
-  .parse(process.argv)
+  .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://localhost:11001)')
 
 program
   .command('start')

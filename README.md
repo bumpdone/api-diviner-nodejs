@@ -43,8 +43,6 @@ sudo npm install @xyo-network/api-diviner-nodejs -g --unsafe-perm=true
 xyo-diviner start
 ```
 
-
-
 ## Developer Mode
 
 ### Requirements (Step 1)
@@ -69,7 +67,26 @@ yarn build
 yarn start
 ```
 
-### Options
+### Accessing GraphQL
+
+## Example Query
+
+GraphQL Query
+
+```graphql
+mutation QuestionHasIntersected($partyOneAddresses: [String!], $partyTwoAddresses: [String!]) {
+  questionHasIntersected(partyOneAddresses: $partyOneAddresses, partyTwoAddresses: $partyTwoAddresses)
+}
+```
+
+Query Variables (replace the addresses with known addresses)
+
+```json
+{
+  "partyOneAddresses": ["040135DC4E51B3A3AC55F5A88D22DDAD498FDE02273BD0DF6FC63D5138EB8C128CF4268A6ED86A1DC433E0D3EFD24172CD1253EAFEFF71C9B6C133B7D759BFFE7E95"],
+  "partyTwoAddresses": ["0401FF4FD5F39558F82E53111993D632756FBB9E5FAF85C0316DA8465F6B8B0F0BD1EC61D9C56EBBDF31C14F125964279F1996623995CCC1E30ACDF4A42E002620D4"]
+}
+```
 
 ## License
 

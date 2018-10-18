@@ -58,13 +58,13 @@ npm install https://github.com/XYOracleNetwork/api-diviner-nodejs
 ### Build Diviner (Step 3)
 
 ```bash
-yarn build
+npm run build
 ```
 
 ### Start Diviner (Step 4)
 
 ```bash
-yarn start
+npm run start
 ```
 
 ### Accessing GraphQL

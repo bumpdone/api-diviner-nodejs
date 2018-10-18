@@ -2,6 +2,12 @@
 # import Block from "block.graphql"
 # import IntersectionList from "intersectionlist.graphql"
 
+enum Direction {
+  BACK,
+  FORWARD,
+  BOTH
+}
+
 type Query {
   about: About,
   block(hash: String): Block,
@@ -9,5 +15,5 @@ type Query {
 }
 
 type Mutation {
-  questionHasIntersected(partyOneAddresses: [String], partyTwoAddresses: [String]): String
+  questionHasIntersected(partyOneAddresses: [String]!, partyTwoAddresses: [String]!, direction: Direction): String
 }

@@ -31,7 +31,7 @@ class IntersectionQuestion {
         });
         return intersection;
     }
-    constructor(partyOne, partyTwo, archivist) {
+    constructor(partyOne, partyTwo, direction, archivist) {
         this.p1 = partyOne;
         this.p2 = partyTwo;
         this.archivist = archivist[0];

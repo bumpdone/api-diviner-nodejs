@@ -29,7 +29,7 @@ export class IntersectionQuestion {
   public p2: string[]
   public archivist: ArchivistClient
 
-  constructor(partyOne: string[], partyTwo: string[], archivist: ArchivistClient[]) {
+  constructor(partyOne: string[], partyTwo: string[], direction: string, archivist: ArchivistClient[]) {
     this.p1 = partyOne
     this.p2 = partyTwo
     this.archivist = archivist[0]

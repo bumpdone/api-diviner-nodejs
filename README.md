@@ -71,8 +71,12 @@ npm run start
 
 ### Install
 
-```bash
+Install the Diviner in a Docker and start the server at the end.
 
+Note: There currently are quite a few build errors/warnings generted from dependencies that can safely be ignored, but should addressed in the future.
+
+```bash
+docker image build -t 'xyonetwork:api-diviner-nodejs-install' 'https://raw.githubusercontent.com/XYOracleNetwork/api-diviner-nodejs/master/docker/install/Dockerfile'
 ```
 
 ## Accessing GraphQL

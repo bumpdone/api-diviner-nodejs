@@ -41,6 +41,7 @@ export class DivinerApi {
           const q = new IntersectionQuestion(
             args.partyOneAddresses,
             args.partyTwoAddresses,
+            args.direction,
             [new ArchivistClient({ uri:context.archivists[0] })]
             )
           return q.process()

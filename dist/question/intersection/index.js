@@ -8,6 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var Direction;
+(function (Direction) {
+    Direction[Direction["Forward"] = 0] = "Forward";
+    Direction[Direction["Backward"] = 1] = "Backward";
+    Direction[Direction["Both"] = 2] = "Both";
+})(Direction = exports.Direction || (exports.Direction = {}));
 class IntersectionQuestion {
     // given an ipfs hash, load the question
     static fromHash(hash, ipfs) {
@@ -31,9 +37,10 @@ class IntersectionQuestion {
         });
         return intersection;
     }
-    constructor(partyOne, partyTwo, archivist) {
+    constructor(partyOne, partyTwo, direction, archivist) {
         this.p1 = partyOne;
         this.p2 = partyTwo;
+        this.direction = direction;
         this.archivist = archivist[0];
     }
     // publish the question to scsc
@@ -54,12 +61,28 @@ class IntersectionQuestion {
             catch (error) {
                 throw new Error("Failed to Retreive Hashes");
             }
+            switch (this.direction) {
+                case Direction.Forward:
+                    p1Hashes = this.removePreceedingData(p1Hashes, this.p1);
+                    p2Hashes = this.removePreceedingData(p2Hashes, this.p2);
+                    break;
+                case Direction.Backward:
+                    p1Hashes = this.removeSubsequentData(p1Hashes, this.p1);
+                    p2Hashes = this.removeSubsequentData(p2Hashes, this.p2);
+                    break;
+            }
             const intersection = IntersectionQuestion.getStringArrayIntersection(p1Hashes, p2Hashes);
             if (intersection.length > 0) {
                 return true;
             }
             return false;
         });
+    }
+    removePreceedingData(hashes, keys) {
+        return hashes;
+    }
+    removeSubsequentData(hashes, keys) {
+        return hashes;
     }
 }
 exports.IntersectionQuestion = IntersectionQuestion;

@@ -52,7 +52,7 @@ class DivinerApi {
                 Mutation: {
                     questionHasIntersected(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
-                            const q = new intersection_2.IntersectionQuestion(args.partyOneAddresses, args.partyTwoAddresses, [new archivist_1.ArchivistClient({ uri: context.archivists[0] })]);
+                            const q = new intersection_2.IntersectionQuestion(args.partyOneAddresses, args.partyTwoAddresses, args.direction, [new archivist_1.ArchivistClient({ uri: context.archivists[0] })]);
                             return q.process();
                         });
                     }
@@ -102,8 +102,7 @@ commander_1.default
     .version('0.1.0')
     .option('-p, --port [n]', 'The Tcp port to listen on for connections (not yet implemented)', parseInt)
     .option('-g, --graphql [n]', 'The http port to listen on for graphql connections', parseInt)
-    .option('-a, --archivist [s]', 'The url of the seed archivist to contact')
-    .parse(process.argv);
+    .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://localhost:11001)');
 commander_1.default
     .command('start')
     .description('Start the Diviner')

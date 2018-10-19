@@ -78,7 +78,7 @@ class DivinerApi {
         };
         this.server = new apollo_server_1.ApolloServer(config);
     }
-    start(host = 'localhost', port = 11001) {
+    start(port = 12002) {
         console.log(" --- START ---");
         this.ipfs = ipfs_1.createNode({ port: 1111 });
         this.ipfs.on('ready', () => {
@@ -109,7 +109,7 @@ commander_1.default
     .description('Start the Diviner')
     .action(() => {
     const xyo = new DivinerApi(commander_1.default.archivist || "http://localhost:11001");
-    xyo.start(commander_1.default.host || "localhost", commander_1.default.graphql || 12002);
+    xyo.start(commander_1.default.graphql || 12002);
 });
 commander_1.default.parse(process.argv);
 if (process.argv.length < 3) {

@@ -31,6 +31,27 @@
             "outFiles": [
                 "${workspaceFolder}/lib/**/*.js"
             ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Tests",
+            "protocol": "inspector",
+            "program": "${workspaceFolder}/node_modules/.bin/_mocha",
+            "args": ["--no-timeouts", "--colors", "${workspaceFolder}/dist/**/*.test.js"],
+            "cwd": "${workspaceFolder}",
+            "stopOnEntry": false,
+            "console": "integratedTerminal",
+            "runtimeArgs": ["-r", "ts-node/register"],
+            "internalConsoleOptions": "neverOpen",
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "runtimeExecutable": null,
+            "outFiles": [
+                "${workspaceFolder}/lib/**/*.js"
+            ],
+            "env": {
+                "NODE_ENV": "testing"
+            }
         }
     ]
 }

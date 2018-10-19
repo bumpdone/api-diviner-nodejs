@@ -53,7 +53,7 @@ class DivinerApi {
                 Mutation: {
                     questionHasIntersected(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
-                            const q = new intersection_2.IntersectionQuestion(args.partyOneAddresses, args.partyTwoAddresses, args.direction, [new archivist_1.ArchivistClient({ uri: context.archivists[0] })]);
+                            const q = new intersection_2.IntersectionQuestion(args.partyOneAddresses, args.partyTwoAddresses, args.markers, args.direction, [new archivist_1.ArchivistClient({ uri: context.archivists[0] })]);
                             return q.process();
                         });
                     }

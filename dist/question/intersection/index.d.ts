@@ -8,13 +8,16 @@ export declare enum Direction {
 export declare class IntersectionQuestion {
     static fromHash(hash: string, ipfs: IPFS): Promise<boolean>;
     static getStringArrayIntersection(a1: string[], a2: string[]): string[];
+    static removePreceedingDataByHash(hashes: string[], marker: string): string[];
+    static removeSubsequentDataByHash(hashes: string[], marker: string): string[];
+    static removePreceedingData(hashes: string[], markers: string[]): string[];
+    static removeSubsequentData(hashes: string[], markers: string[]): string[];
     p1: string[];
     p2: string[];
-    archivist: ArchivistClient;
+    markers: string[];
     direction: Direction;
-    constructor(partyOne: string[], partyTwo: string[], direction: Direction, archivist: ArchivistClient[]);
+    archivist: ArchivistClient;
+    constructor(partyOne: string[], partyTwo: string[], markers: string[], direction: Direction, archivist: ArchivistClient[]);
     publish(): Promise<string>;
     process(): Promise<boolean>;
-    private removePreceedingData;
-    private removeSubsequentData;
 }

@@ -15,5 +15,5 @@ type Query {
 }
 
 type Mutation {
-  questionHasIntersected(partyOneAddresses: [String]!, partyTwoAddresses: [String]!, direction: Direction): String
+  questionHasIntersected(partyOneAddresses: [String]!, partyTwoAddresses: [String]!, markers: [String], direction: Direction): String
 }

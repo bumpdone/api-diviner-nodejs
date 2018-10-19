@@ -37,9 +37,53 @@ class IntersectionQuestion {
         });
         return intersection;
     }
-    constructor(partyOne, partyTwo, direction, archivist) {
+    // removal is inclusive
+    static removePreceedingDataByHash(hashes, marker) {
+        let result = hashes;
+        hashes.every((item, index) => {
+            if (item === marker) {
+                if (index + 1 === hashes.length) {
+                    result = [];
+                }
+                result = hashes.slice(index + 1);
+                return false; // end every
+            }
+            return true;
+        });
+        return result;
+    }
+    // removal is inclusive
+    static removeSubsequentDataByHash(hashes, marker) {
+        let index = 0;
+        hashes.forEach((hash) => {
+            if (hash === marker) {
+                if (index === 0) {
+                    return [];
+                }
+                return hashes.slice(0, index - 1);
+            }
+            index++;
+        });
+        return hashes;
+    }
+    static removePreceedingData(hashes, markers) {
+        let prunedHashes = hashes;
+        markers.forEach((marker) => {
+            prunedHashes = this.removePreceedingDataByHash(prunedHashes, marker);
+        });
+        return prunedHashes;
+    }
+    static removeSubsequentData(hashes, markers) {
+        let prunedHashes = hashes;
+        markers.forEach((marker) => {
+            prunedHashes = this.removeSubsequentDataByHash(prunedHashes, marker);
+        });
+        return prunedHashes;
+    }
+    constructor(partyOne, partyTwo, markers, direction, archivist) {
         this.p1 = partyOne;
         this.p2 = partyTwo;
+        this.markers = markers;
         this.direction = direction;
         this.archivist = archivist[0];
     }
@@ -63,12 +107,12 @@ class IntersectionQuestion {
             }
             switch (this.direction) {
                 case Direction.Forward:
-                    p1Hashes = this.removePreceedingData(p1Hashes, this.p1);
-                    p2Hashes = this.removePreceedingData(p2Hashes, this.p2);
+                    p1Hashes = IntersectionQuestion.removePreceedingData(p1Hashes, this.p1);
+                    p2Hashes = IntersectionQuestion.removePreceedingData(p2Hashes, this.p2);
                     break;
                 case Direction.Backward:
-                    p1Hashes = this.removeSubsequentData(p1Hashes, this.p1);
-                    p2Hashes = this.removeSubsequentData(p2Hashes, this.p2);
+                    p1Hashes = IntersectionQuestion.removeSubsequentData(p1Hashes, this.p1);
+                    p2Hashes = IntersectionQuestion.removeSubsequentData(p2Hashes, this.p2);
                     break;
             }
             const intersection = IntersectionQuestion.getStringArrayIntersection(p1Hashes, p2Hashes);
@@ -77,12 +121,6 @@ class IntersectionQuestion {
             }
             return false;
         });
-    }
-    removePreceedingData(hashes, keys) {
-        return hashes;
-    }
-    removeSubsequentData(hashes, keys) {
-        return hashes;
     }
 }
 exports.IntersectionQuestion = IntersectionQuestion;

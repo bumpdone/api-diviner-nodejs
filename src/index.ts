@@ -75,7 +75,7 @@ export class DivinerApi {
     this.server = new ApolloServer(config)
   }
 
-  public start(host: string = 'localhost', port: number = 11001) {
+  public start(port: number = 12002) {
 
     console.log(" --- START ---")
 
@@ -114,7 +114,7 @@ program
   .description('Start the Diviner')
   .action(() => {
     const xyo = new DivinerApi(program.archivist || "http://localhost:11001")
-    xyo.start(program.host || "localhost", program.graphql || 12002)
+    xyo.start(program.graphql || 12002)
   })
 
 program.parse(process.argv)

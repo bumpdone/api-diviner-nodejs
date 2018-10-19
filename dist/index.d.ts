@@ -6,6 +6,6 @@ export declare class DivinerApi {
     archivists: string[];
     resolvers: IResolvers;
     constructor(seedArchivist: string);
-    start(host?: string, port?: number): void;
+    start(port?: number): void;
     private buildSchema;
 }

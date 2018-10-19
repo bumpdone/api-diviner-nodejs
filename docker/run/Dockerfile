@@ -6,6 +6,6 @@ RUN npm install --production=false
 RUN npm run build
 RUN rm -r node_modules
 RUN npm install --production=true
-EXPOSE 12002/tcp
+EXPOSE 11001
 
-CMD node dist --g 12002
+CMD node dist start

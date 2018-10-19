@@ -74,7 +74,7 @@ export class DivinerApi {
     this.server = new ApolloServer(config)
   }
 
-  public start(host: string = 'localhost', port: number = 12002) {
+  public start(host: string = 'localhost', port: number = 11001) {
 
     console.log(" --- START ---")
 

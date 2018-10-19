@@ -77,7 +77,7 @@ class DivinerApi {
         };
         this.server = new apollo_server_1.ApolloServer(config);
     }
-    start(host = 'localhost', port = 12002) {
+    start(host = 'localhost', port = 11001) {
         console.log(" --- START ---");
         this.ipfs = ipfs_1.createNode({ port: 1111 });
         this.ipfs.on('ready', () => {

@@ -1,3 +1,4 @@
 declare module 'pkginfo' {
-    let version: any;
+    const pkginfo: any;
+    export default pkginfo;
 }

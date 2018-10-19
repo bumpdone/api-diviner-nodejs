@@ -14,7 +14,7 @@ import About from './about'
 import { createNode } from 'ipfs'
 import program from 'commander'
 import { ArchivistClient } from './client/archivist'
-import { version } from 'pkginfo'
+import pkginfo from 'pkginfo'
 
 export class DivinerApi {
 
@@ -27,7 +27,7 @@ export class DivinerApi {
       Query: {
         async about(parent: any, args: any, context: any, info: any) {
           console.log(`resolvers.Query.about`)
-          return new About("Diviner", version, `http://${context.req.headers.host}`, context.address)
+          return new About("Diviner", module.exports.version, `http://${context.req.headers.host}`, context.address)
         },
         async block(parent: any, args: any, context: any, info: any) {
           console.log(`resolvers.Query.block: ${args.hash}`)
@@ -92,7 +92,7 @@ export class DivinerApi {
     this.ipfs.on('start', () => console.log('Ipfs started!'))
 
     this.server.listen({ port }).then(({ url }: {url: any}) => {
-      console.log(`XYO Diviner [${version}] ready at ${url}`)
+      console.log(`XYO Diviner [${module.exports.version}] ready at ${url}`)
     })
   }
 
@@ -103,8 +103,10 @@ export class DivinerApi {
   }
 }
 
+pkginfo(module)
+
 program
-  .version(version)
+  .version(module.exports.version)
   .option('-p, --port [n]', 'The Tcp port to listen on for connections (not yet implemented)', parseInt)
   .option('-g, --graphql [n]', 'The http port to listen on for graphql connections', parseInt)
   .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://localhost:11001)')

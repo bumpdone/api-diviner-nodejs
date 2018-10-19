@@ -25,6 +25,7 @@ const about_1 = __importDefault(require("./about"));
 const ipfs_1 = require("ipfs");
 const commander_1 = __importDefault(require("commander"));
 const archivist_1 = require("./client/archivist");
+const pkginfo_1 = require("pkginfo");
 class DivinerApi {
     constructor(seedArchivist) {
         this.archivists = [];
@@ -34,7 +35,7 @@ class DivinerApi {
                     about(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
                             console.log(`resolvers.Query.about`);
-                            return new about_1.default("Diviner", "0.1.0", `http://${context.req.headers.host}`, context.address);
+                            return new about_1.default("Diviner", pkginfo_1.version, `http://${context.req.headers.host}`, context.address);
                         });
                     },
                     block(parent, args, context, info) {
@@ -87,8 +88,8 @@ class DivinerApi {
             console.log('Something went terribly wrong!', error);
         });
         this.ipfs.on('start', () => console.log('Ipfs started!'));
-        this.server.listen({ host, port }).then(({ url }) => {
-            console.log(`🚀  Server ready at ${url}`);
+        this.server.listen({ port }).then(({ url }) => {
+            console.log(`XYO Diviner [${pkginfo_1.version}] ready at ${url}`);
         });
     }
     buildSchema() {
@@ -99,7 +100,7 @@ class DivinerApi {
 }
 exports.DivinerApi = DivinerApi;
 commander_1.default
-    .version('0.1.0')
+    .version(pkginfo_1.version)
     .option('-p, --port [n]', 'The Tcp port to listen on for connections (not yet implemented)', parseInt)
     .option('-g, --graphql [n]', 'The http port to listen on for graphql connections', parseInt)
     .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://localhost:11001)');

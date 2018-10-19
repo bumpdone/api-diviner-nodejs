@@ -53,7 +53,8 @@
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.11",
     "node-gyp": "^3.8.0",
-    "node-pre-gyp": "^0.11.0"
+    "node-pre-gyp": "^0.11.0",
+    "pkginfo": "^0.4.1"
   },
   "devDependencies": {
     "@firebase/app-types": "^0.3.2",

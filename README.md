@@ -80,7 +80,7 @@ docker image build -t xyonetwork-api-diviner-nodejs-install:latest https://raw.g
 ```
 
 ```bash
-docker run -p 12002:12002 xyonetwork-api-diviner-nodejs-install:latest
+docker run -p 12003:12003 xyonetwork-api-diviner-nodejs-install:latest
 ```
 
 ## Accessing GraphQL

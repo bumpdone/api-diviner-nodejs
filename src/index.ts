@@ -90,7 +90,7 @@ export class DivinerApi {
 
     this.ipfs.on('start', () => console.log('Ipfs started!'))
 
-    this.server.listen({ host, port }).then(({ url }: {url: any}) => {
+    this.server.listen({ port }).then(({ url }: {url: any}) => {
       console.log(`🚀  Server ready at ${url}`)
     })
   }

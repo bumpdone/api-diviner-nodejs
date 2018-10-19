@@ -6,6 +6,6 @@ RUN npm install --production=false
 RUN npm run build
 RUN rm -r node_modules
 RUN npm install --production=true
-EXPOSE 11001
+EXPOSE 12002
 
-CMD node dist start
+CMD node dist start -g 12002

@@ -31,14 +31,60 @@ export class IntersectionQuestion {
     return intersection
   }
 
+  // removal is inclusive
+  public static removePreceedingDataByHash(hashes: string[], marker: string) {
+    let result = hashes
+    hashes.every((item: string, index: number) => {
+      if (item === marker) {
+        result = (index + 1 === hashes.length) ?
+          result = [] :result = hashes.slice(index + 1)
+        return false // end every
+      }
+      return true
+    })
+    return result
+  }
+
+  // removal is inclusive
+  public static removeSubsequentDataByHash(hashes: string[], marker: string) {
+    let result = hashes
+    hashes.every((item: string, index: number) => {
+      if (item === marker) {
+        result = (index === 0) ?
+          result = [] :result = hashes.slice(0, index)
+        return false // end every
+      }
+      return true
+    })
+    return result
+  }
+
+  public static removePreceedingData(hashes: string[], markers: string[]) {
+    let prunedHashes = hashes
+    markers.forEach((marker: string) => {
+      prunedHashes = this.removePreceedingDataByHash(prunedHashes, marker)
+    })
+    return prunedHashes
+  }
+
+  public static removeSubsequentData(hashes: string[], markers: string[]) {
+    let prunedHashes = hashes
+    markers.forEach((marker: string) => {
+      prunedHashes = this.removeSubsequentDataByHash(prunedHashes, marker)
+    })
+    return prunedHashes
+  }
+
   public p1: string[]
   public p2: string[]
-  public archivist: ArchivistClient
+  public markers: string[] // the hashs that is used for the forwad/backward filter
   public direction: Direction
+  public archivist: ArchivistClient
 
-  constructor(partyOne: string[], partyTwo: string[], direction: Direction, archivist: ArchivistClient[]) {
+  constructor(partyOne: string[], partyTwo: string[], markers: string[], direction: Direction, archivist: ArchivistClient[]) {
     this.p1 = partyOne
     this.p2 = partyTwo
+    this.markers = markers
     this.direction = direction
     this.archivist = archivist[0]
   }
@@ -62,12 +108,12 @@ export class IntersectionQuestion {
 
     switch (this.direction) {
       case Direction.Forward:
-        p1Hashes = this.removePreceedingData(p1Hashes, this.p1)
-        p2Hashes = this.removePreceedingData(p2Hashes, this.p2)
+        p1Hashes = IntersectionQuestion.removePreceedingData(p1Hashes, this.p1)
+        p2Hashes = IntersectionQuestion.removePreceedingData(p2Hashes, this.p2)
         break
       case Direction.Backward:
-        p1Hashes = this.removeSubsequentData(p1Hashes, this.p1)
-        p2Hashes = this.removeSubsequentData(p2Hashes, this.p2)
+        p1Hashes = IntersectionQuestion.removeSubsequentData(p1Hashes, this.p1)
+        p2Hashes = IntersectionQuestion.removeSubsequentData(p2Hashes, this.p2)
         break
     }
 
@@ -77,13 +123,5 @@ export class IntersectionQuestion {
       return true
     }
     return false
-  }
-
-  private removePreceedingData(hashes: string[], keys: string[]) {
-    return hashes
-  }
-
-  private removeSubsequentData(hashes: string[], keys: string[]) {
-    return hashes
   }
 }

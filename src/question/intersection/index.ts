@@ -36,10 +36,8 @@ export class IntersectionQuestion {
     let result = hashes
     hashes.every((item: string, index: number) => {
       if (item === marker) {
-        if (index + 1 === hashes.length) {
-          result = []
-        }
-        result = hashes.slice(index + 1)
+        result = (index + 1 === hashes.length) ?
+          result = [] :result = hashes.slice(index + 1)
         return false // end every
       }
       return true
@@ -49,17 +47,16 @@ export class IntersectionQuestion {
 
   // removal is inclusive
   public static removeSubsequentDataByHash(hashes: string[], marker: string) {
-    let index = 0
-    hashes.forEach((hash: string) => {
-      if (hash === marker) {
-        if (index === 0) {
-          return []
-        }
-        return hashes.slice(0, index - 1)
+    let result = hashes
+    hashes.every((item: string, index: number) => {
+      if (item === marker) {
+        result = (index === 0) ?
+          result = [] :result = hashes.slice(0, index)
+        return false // end every
       }
-      index++
+      return true
     })
-    return hashes
+    return result
   }
 
   public static removePreceedingData(hashes: string[], markers: string[]) {

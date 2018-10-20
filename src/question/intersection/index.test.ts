@@ -68,10 +68,58 @@ describe('IntersectionQuestion class (getStringArrayIntersection)', () => {
 
 describe('IntersectionQuestion class (removePreceedingDataByHash)', () => {
   it('should remove one', async () => {
-    const list = ["a1", "a2", "3", "a4", "a5"]
+    const list = ["a1", "a2", "a3", "a4", "a5"]
     const hash = "a1"
     const hashes = IntersectionQuestion.removePreceedingDataByHash(list, hash)
 
     expect(hashes.length).to.equal(list.length - 1)
+    expect(hashes[0]).to.equal("a2")
   })
+
+  it('should remove all', async () => {
+    const list = ["a1", "a2", "a3", "a4", "a5"]
+    const hash = "a5"
+    const hashes = IntersectionQuestion.removePreceedingDataByHash(list, hash)
+
+    expect(hashes.length).to.equal(0)
+  })
+
+  it('should remove all but one', async () => {
+    const list = ["a1", "a2", "a3", "a4", "a5"]
+    const hash = "a4"
+    const hashes = IntersectionQuestion.removePreceedingDataByHash(list, hash)
+
+    expect(hashes.length).to.equal(1)
+    expect(hashes[0]).to.equal("a5")
+  })
+
+})
+
+describe('IntersectionQuestion class (removeSubsequentDataByHash)', () => {
+  it('should remove one', async () => {
+    const list = ["a1", "a2", "a3", "a4", "a5"]
+    const hash = "a5"
+    const hashes = IntersectionQuestion.removeSubsequentDataByHash(list, hash)
+
+    expect(hashes.length).to.equal(list.length - 1)
+    expect(hashes[3]).to.equal("a4")
+  })
+
+  it('should remove all', async () => {
+    const list = ["a1", "a2", "a3", "a4", "a5"]
+    const hash = "a1"
+    const hashes = IntersectionQuestion.removeSubsequentDataByHash(list, hash)
+
+    expect(hashes.length).to.equal(0)
+  })
+
+  it('should remove all but one', async () => {
+    const list = ["a1", "a2", "a3", "a4", "a5"]
+    const hash = "a2"
+    const hashes = IntersectionQuestion.removeSubsequentDataByHash(list, hash)
+
+    expect(hashes.length).to.equal(1)
+    expect(hashes[0]).to.equal("a1")
+  })
+
 })

@@ -36,6 +36,7 @@
   "author": "Arie Trouw",
   "license": "ISC",
   "dependencies": {
+    "@xyo-network/sdk-core-nodejs": "^0.1.95",
     "apollo-cache-inmemory": "^1.2.10",
     "apollo-client": "^2.4.2",
     "apollo-link": "^1.2.3",
@@ -68,7 +69,6 @@
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.11.0",
     "@xyo-network/api-originchain-graphql": "^0.1.2",
-    "@xyo-network/sdk-core-nodejs": "https://github.com/XYOracleNetwork/sdk-core-nodejs",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "ts-mocha": "^2.0.0",

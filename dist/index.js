@@ -59,7 +59,19 @@ class DivinerApi {
                 Mutation: {
                     questionHasIntersected(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
-                            const q = new intersection_2.IntersectionQuestion(args.partyOneAddresses, args.partyTwoAddresses, args.markers, args.direction, [new archivist_2.ArchivistClient({ uri: context.archivists[0] })]);
+                            let direction;
+                            switch (args.direction) {
+                                case "FORWARD":
+                                    direction = intersection_2.Direction.Forward;
+                                    break;
+                                case "BACKWARD":
+                                    direction = intersection_2.Direction.Backward;
+                                    break;
+                                default:
+                                    direction = intersection_2.Direction.Both;
+                                    break;
+                            }
+                            const q = new intersection_2.IntersectionQuestion(args.partyOneAddresses, args.partyTwoAddresses, args.markers, direction, [new archivist_2.ArchivistClient({ uri: context.archivists[0] })]);
                             return q.process();
                         });
                     }
@@ -111,12 +123,12 @@ commander_1.default
     .version(module.exports.version)
     .option('-p, --port [n]', 'The Tcp port to listen on for connections (not yet implemented)', parseInt)
     .option('-g, --graphql [n]', 'The http port to listen on for graphql connections', parseInt)
-    .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://peers.xyo.network:11001)');
+    .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://18.233.111.243:11001/)');
 commander_1.default
     .command('start')
     .description('Start the Diviner')
     .action(() => {
-    const xyo = new DivinerApi(commander_1.default.archivist || "http://peers.xyo.network:11001");
+    const xyo = new DivinerApi(commander_1.default.archivist || "http://18.233.111.243:11001/");
     xyo.start(commander_1.default.graphql || 12002);
 });
 commander_1.default.parse(process.argv);

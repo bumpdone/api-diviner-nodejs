@@ -6,7 +6,7 @@ import blockResolvers from './scsc/block/resolvers'
 import { importSchema } from 'graphql-import'
 import Block from './scsc/block'
 import { IntersectionList } from './list/intersection'
-import { IntersectionQuestion } from './question/intersection'
+import { IntersectionQuestion, Direction } from './question/intersection'
 import { ArchivistList } from './list/archivist'
 import path from 'path'
 import { merge } from 'lodash'
@@ -43,11 +43,23 @@ export class DivinerApi {
       },
       Mutation: {
         async questionHasIntersected(parent: any, args: any, context: any, info: any) {
+          let direction: Direction
+          switch (args.direction) {
+            case "FORWARD":
+              direction = Direction.Forward
+              break
+            case "BACKWARD":
+              direction = Direction.Backward
+              break
+            default:
+              direction = Direction.Both
+              break
+          }
           const q = new IntersectionQuestion(
             args.partyOneAddresses,
             args.partyTwoAddresses,
             args.markers,
-            args.direction,
+            direction,
             [new ArchivistClient({ uri:context.archivists[0] })]
             )
           return q.process()
@@ -117,13 +129,13 @@ program
   .version(module.exports.version)
   .option('-p, --port [n]', 'The Tcp port to listen on for connections (not yet implemented)', parseInt)
   .option('-g, --graphql [n]', 'The http port to listen on for graphql connections', parseInt)
-  .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://peers.xyo.network:11001)')
+  .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://18.233.111.243:11001/)')
 
 program
   .command('start')
   .description('Start the Diviner')
   .action(() => {
-    const xyo = new DivinerApi(program.archivist || "http://peers.xyo.network:11001")
+    const xyo = new DivinerApi(program.archivist || "http://18.233.111.243:11001/")
     xyo.start(program.graphql || 12002)
   })
 

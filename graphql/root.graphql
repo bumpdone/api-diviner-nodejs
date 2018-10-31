@@ -4,8 +4,8 @@
 # import ArchivistList from "archivistlist.graphql"
 
 enum Direction {
-  BACK,
   FORWARD,
+  BACKWARD,
   BOTH
 }
 

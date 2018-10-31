@@ -123,12 +123,12 @@ commander_1.default
     .version(module.exports.version)
     .option('-p, --port [n]', 'The Tcp port to listen on for connections (not yet implemented)', parseInt)
     .option('-g, --graphql [n]', 'The http port to listen on for graphql connections', parseInt)
-    .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://18.233.111.243:11001/)');
+    .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://34.237.137.107:11001/)');
 commander_1.default
     .command('start')
     .description('Start the Diviner')
     .action(() => {
-    const xyo = new DivinerApi(commander_1.default.archivist || "http://18.233.111.243:11001/");
+    const xyo = new DivinerApi(commander_1.default.archivist || "http://34.237.137.107:11001/");
     xyo.start(commander_1.default.graphql || 12002);
 });
 commander_1.default.parse(process.argv);

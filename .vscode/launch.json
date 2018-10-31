@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Launch Program",
             "protocol": "inspector",
-            "args": ["dist/index.js", "start", "-a", "http://peers.xyo.network:11001/"],
+            "args": ["dist/index.js", "start", "-a", "http://34.237.137.107:11001/"],
             "cwd": "${workspaceFolder}",
             "runtimeArgs": ["-r", "ts-node/register"],
             "internalConsoleOptions": "openOnSessionStart",

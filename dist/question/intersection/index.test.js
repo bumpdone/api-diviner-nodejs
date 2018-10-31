@@ -56,10 +56,46 @@ describe('IntersectionQuestion class (getStringArrayIntersection)', () => {
 });
 describe('IntersectionQuestion class (removePreceedingDataByHash)', () => {
     it('should remove one', () => __awaiter(this, void 0, void 0, function* () {
-        const list = ["a1", "a2", "3", "a4", "a5"];
+        const list = ["a1", "a2", "a3", "a4", "a5"];
         const hash = "a1";
         const hashes = _1.IntersectionQuestion.removePreceedingDataByHash(list, hash);
         chai_1.expect(hashes.length).to.equal(list.length - 1);
+        chai_1.expect(hashes[0]).to.equal("a2");
+    }));
+    it('should remove all', () => __awaiter(this, void 0, void 0, function* () {
+        const list = ["a1", "a2", "a3", "a4", "a5"];
+        const hash = "a5";
+        const hashes = _1.IntersectionQuestion.removePreceedingDataByHash(list, hash);
+        chai_1.expect(hashes.length).to.equal(0);
+    }));
+    it('should remove all but one', () => __awaiter(this, void 0, void 0, function* () {
+        const list = ["a1", "a2", "a3", "a4", "a5"];
+        const hash = "a4";
+        const hashes = _1.IntersectionQuestion.removePreceedingDataByHash(list, hash);
+        chai_1.expect(hashes.length).to.equal(1);
+        chai_1.expect(hashes[0]).to.equal("a5");
+    }));
+});
+describe('IntersectionQuestion class (removeSubsequentDataByHash)', () => {
+    it('should remove one', () => __awaiter(this, void 0, void 0, function* () {
+        const list = ["a1", "a2", "a3", "a4", "a5"];
+        const hash = "a5";
+        const hashes = _1.IntersectionQuestion.removeSubsequentDataByHash(list, hash);
+        chai_1.expect(hashes.length).to.equal(list.length - 1);
+        chai_1.expect(hashes[3]).to.equal("a4");
+    }));
+    it('should remove all', () => __awaiter(this, void 0, void 0, function* () {
+        const list = ["a1", "a2", "a3", "a4", "a5"];
+        const hash = "a1";
+        const hashes = _1.IntersectionQuestion.removeSubsequentDataByHash(list, hash);
+        chai_1.expect(hashes.length).to.equal(0);
+    }));
+    it('should remove all but one', () => __awaiter(this, void 0, void 0, function* () {
+        const list = ["a1", "a2", "a3", "a4", "a5"];
+        const hash = "a2";
+        const hashes = _1.IntersectionQuestion.removeSubsequentDataByHash(list, hash);
+        chai_1.expect(hashes.length).to.equal(1);
+        chai_1.expect(hashes[0]).to.equal("a1");
     }));
 });
 //# sourceMappingURL=index.test.js.map

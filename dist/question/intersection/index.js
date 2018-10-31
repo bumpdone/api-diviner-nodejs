@@ -42,10 +42,8 @@ class IntersectionQuestion {
         let result = hashes;
         hashes.every((item, index) => {
             if (item === marker) {
-                if (index + 1 === hashes.length) {
-                    result = [];
-                }
-                result = hashes.slice(index + 1);
+                result = (index + 1 === hashes.length) ?
+                    result = [] : result = hashes.slice(index + 1);
                 return false; // end every
             }
             return true;
@@ -54,17 +52,16 @@ class IntersectionQuestion {
     }
     // removal is inclusive
     static removeSubsequentDataByHash(hashes, marker) {
-        let index = 0;
-        hashes.forEach((hash) => {
-            if (hash === marker) {
-                if (index === 0) {
-                    return [];
-                }
-                return hashes.slice(0, index - 1);
+        let result = hashes;
+        hashes.every((item, index) => {
+            if (item === marker) {
+                result = (index === 0) ?
+                    result = [] : result = hashes.slice(0, index);
+                return false; // end every
             }
-            index++;
+            return true;
         });
-        return hashes;
+        return result;
     }
     static removePreceedingData(hashes, markers) {
         let prunedHashes = hashes;
@@ -107,12 +104,12 @@ class IntersectionQuestion {
             }
             switch (this.direction) {
                 case Direction.Forward:
-                    p1Hashes = IntersectionQuestion.removePreceedingData(p1Hashes, this.p1);
-                    p2Hashes = IntersectionQuestion.removePreceedingData(p2Hashes, this.p2);
+                    p1Hashes = IntersectionQuestion.removePreceedingData(p1Hashes, this.markers);
+                    p2Hashes = IntersectionQuestion.removePreceedingData(p2Hashes, this.markers);
                     break;
                 case Direction.Backward:
-                    p1Hashes = IntersectionQuestion.removeSubsequentData(p1Hashes, this.p1);
-                    p2Hashes = IntersectionQuestion.removeSubsequentData(p2Hashes, this.p2);
+                    p1Hashes = IntersectionQuestion.removeSubsequentData(p1Hashes, this.markers);
+                    p2Hashes = IntersectionQuestion.removeSubsequentData(p2Hashes, this.markers);
                     break;
             }
             const intersection = IntersectionQuestion.getStringArrayIntersection(p1Hashes, p2Hashes);

@@ -90,7 +90,7 @@ docker run -p 12002:12002 xyonetwork-api-diviner-nodejs-install:latest
 GraphQL Query
 
 ```graphql
-mutation QuestionHasIntersected($partyOneAddresses: [String!], $partyTwoAddresses: [String!]) {
+mutation QuestionHasIntersected($partyOneAddresses: [String]!, $partyTwoAddresses: [String]!) {
   questionHasIntersected(partyOneAddresses: $partyOneAddresses, partyTwoAddresses: $partyTwoAddresses)
 }
 ```

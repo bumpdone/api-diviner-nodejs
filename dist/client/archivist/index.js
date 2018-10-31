@@ -27,6 +27,16 @@ class ArchivistClient {
                 timeout: 10000
             }
         });
+        /*const defaultOptions = {
+          watchQuery: {
+            fetchPolicy: 'network-only',
+            errorPolicy: 'ignore',
+          },
+          query: {
+            fetchPolicy: 'network-only',
+            errorPolicy: 'all',
+          },
+        }*/
         this.client = new apollo_client_1.ApolloClient({
             link: httpLink,
             cache: new apollo_cache_inmemory_1.InMemoryCache()
@@ -37,6 +47,7 @@ class ArchivistClient {
             const fieldsToGet = fields || `
       {
         hash
+        signedHash
         bytes
         major
         minor
@@ -135,7 +146,7 @@ class ArchivistClient {
           blocksByPublicKey(publicKeys: $publicKeys) {
             publicKey
             blocks {
-              hash
+              signedHash
             }
           }
         }
@@ -147,7 +158,7 @@ class ArchivistClient {
             const hashes = [];
             result.data.blocksByPublicKey.forEach((chain) => {
                 chain.blocks.forEach((block) => {
-                    hashes.push(block.hash);
+                    hashes.push(block.signedHash);
                 });
             });
             return hashes;

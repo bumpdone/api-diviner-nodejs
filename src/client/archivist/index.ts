@@ -20,6 +20,17 @@ export class ArchivistClient {
       }
     })
 
+    /*const defaultOptions = {
+      watchQuery: {
+        fetchPolicy: 'network-only',
+        errorPolicy: 'ignore',
+      },
+      query: {
+        fetchPolicy: 'network-only',
+        errorPolicy: 'all',
+      },
+    }*/
+
     this.client = new ApolloClient({
       link: httpLink,
       cache: new InMemoryCache()
@@ -31,6 +42,7 @@ export class ArchivistClient {
     const fieldsToGet = fields || `
       {
         hash
+        signedHash
         bytes
         major
         minor
@@ -130,7 +142,7 @@ export class ArchivistClient {
           blocksByPublicKey(publicKeys: $publicKeys) {
             publicKey
             blocks {
-              hash
+              signedHash
             }
           }
         }
@@ -144,7 +156,7 @@ export class ArchivistClient {
 
     result.data.blocksByPublicKey.forEach((chain: any) => {
       chain.blocks.forEach((block: any) => {
-        hashes.push(block.hash)
+        hashes.push(block.signedHash)
       })
     })
 

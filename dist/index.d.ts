@@ -19,7 +19,17 @@ export declare class DivinerApi {
         };
     })[];
     resolvers: IResolvers;
-    constructor(seedArchivist: string);
+    seeds: {
+        archivists: string[];
+        diviners: string[];
+    };
+    address: string;
+    constructor(options: {
+        seeds: {
+            archivists: string[];
+            diviners: string[];
+        };
+    });
     start(port?: number): void;
     private buildSchema;
 }

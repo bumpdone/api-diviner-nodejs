@@ -1,6 +1,12 @@
+type Seeds {
+  archivists: [String],
+  diviners: [String]
+}
+
 type About {
   name: String,
   version: String,
   url: String,
-  address: String
+  address: String,
+  seeds: Seeds
 }

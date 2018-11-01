@@ -3,5 +3,18 @@ export default class About {
     version: string;
     url: string;
     address: string;
-    constructor(name: string, version: string, url: string, address: string);
+    seeds: {
+        archivists: [];
+        diviners: [];
+    };
+    constructor(options: {
+        name: string;
+        version: string;
+        url: string;
+        address: string;
+        seeds: {
+            archivists: [];
+            diviners: [];
+        };
+    });
 }

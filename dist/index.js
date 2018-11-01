@@ -28,7 +28,7 @@ const commander_1 = __importDefault(require("commander"));
 const archivist_2 = require("./client/archivist");
 const pkginfo_1 = __importDefault(require("pkginfo"));
 class DivinerApi {
-    constructor(seedArchivist) {
+    constructor(options) {
         this.archivists = [];
         this.resolverArray = [
             {
@@ -36,7 +36,13 @@ class DivinerApi {
                     about(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
                             console.log(`resolvers.Query.about`);
-                            return new about_1.default("Diviner", module.exports.version, `http://${context.req.headers.host}`, context.address);
+                            return new about_1.default({
+                                name: "Diviner",
+                                version: module.exports.version,
+                                url: `http:${context.req.headers.host}`,
+                                address: context.address,
+                                seeds: context.seeds
+                            });
                         });
                     },
                     block(parent, args, context, info) {
@@ -81,14 +87,19 @@ class DivinerApi {
             resolvers_2.default(),
             resolvers_3.default()
         ];
+        this.address = "0123456789";
+        this.seeds = options.seeds;
         this.resolvers = lodash_1.merge(this.resolverArray);
         const typeDefs = apollo_server_1.gql(this.buildSchema());
-        this.archivists.push(seedArchivist);
+        this.seeds.archivists.forEach((archivist) => {
+            this.archivists.push(archivist);
+        });
         const context = ({ req }) => ({
             ipfs: this.ipfs,
             req,
-            address: "0x000",
-            archivists: this.archivists
+            address: this.address,
+            archivists: this.archivists,
+            seeds: this.seeds
         });
         const config = {
             typeDefs,
@@ -128,7 +139,7 @@ commander_1.default
     .command('start')
     .description('Start the Diviner')
     .action(() => {
-    const xyo = new DivinerApi(commander_1.default.archivist || "http://34.237.137.107:11001/");
+    const xyo = new DivinerApi({ seeds: { archivists: [(commander_1.default.archivist || "http://34.237.137.107:11001/")], diviners: [] } });
     xyo.start(commander_1.default.graphql || 12002);
 });
 commander_1.default.parse(process.argv);

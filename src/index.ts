@@ -140,14 +140,14 @@ pkginfo(module)
 program
   .version(module.exports.version)
   .option('-p, --port [n]', 'The Tcp port to listen on for connections (not yet implemented)', parseInt)
-  .option('-g, --graphql [n]', 'The http port to listen on for graphql connections', parseInt)
-  .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://34.237.137.107:11001/)')
+  .option('-g, --graphql [n]', 'The http port to listen on for graphql connections (default=12002)', parseInt)
+  .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://archivists.xyo.network:11001/)')
 
 program
   .command('start')
   .description('Start the Diviner')
   .action(() => {
-    const xyo = new DivinerApi({ seeds: { archivists: [(program.archivist || "http://34.237.137.107:11001/")], diviners: [] } })
+    const xyo = new DivinerApi({ seeds: { archivists: [(program.archivist || "http://archivists.xyo.network:11001/")], diviners: [] } })
     xyo.start(program.graphql || 12002)
   })
 

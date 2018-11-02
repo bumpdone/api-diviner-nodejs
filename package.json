@@ -1,7 +1,7 @@
 {
   "$schema": "http://json.schemastore.org/package",
   "name": "@xyo-network/api-diviner-nodejs",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Main Diviner Interface",
   "main": "dist/index.js",
   "scripts": {
@@ -34,7 +34,7 @@
     "xyo-diviner-nodejs"
   ],
   "author": "Arie Trouw",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@xyo-network/sdk-core-nodejs": "^0.1.95",
     "apollo-cache-inmemory": "^1.2.10",

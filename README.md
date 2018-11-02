@@ -9,7 +9,6 @@
 ### Master
 
 [![Build Status](https://travis-ci.com/XYOracleNetwork/api-diviner-nodejs.svg?token=A85R2pDnngMDyWoqeLUG&branch=master)](https://travis-ci.com/XYOracleNetwork/api-diviner-nodejs)
-[![CircleCI](https://circleci.com/gh/XYOracleNetwork/api-diviner-nodejs/tree/master.svg?style=svg&circle-token=1e3979acebbd7de5d21d4cc99f2eb08694196d4f)](https://circleci.com/gh/XYOracleNetwork/api-diviner-nodejs/tree/master)
 [![BCH compliance](https://bettercodehub.com/edge/badge/XYOracleNetwork/api-diviner-nodejs?branch=master&token=3dd15a749bfd967c47acceb9e537294bc39579b5)](https://bettercodehub.com/results/XYOracleNetwork/api-diviner-nodejs)
 [![Maintainability](https://api.codeclimate.com/v1/badges/f6bc63330b1d2422973b/maintainability)](https://codeclimate.com/github/XYOracleNetwork/api-diviner-nodejs/maintainability)
 [![Greenkeeper badge](https://badges.greenkeeper.io/XYOracleNetwork/api-diviner-nodejs.svg)](https://greenkeeper.io/)
@@ -17,7 +16,6 @@
 ### Develop
 
 [![Build Status](https://travis-ci.com/XYOracleNetwork/api-diviner-nodejs.svg?token=A85R2pDnngMDyWoqeLUG&branch=develop)](https://travis-ci.com/XYOracleNetwork/api-diviner-nodejs)
-[![CircleCI](https://circleci.com/gh/XYOracleNetwork/api-diviner-nodejs/tree/develop.svg?style=svg&circle-token=1e3979acebbd7de5d21d4cc99f2eb08694196d4f)](https://circleci.com/gh/XYOracleNetwork/api-diviner-nodejs/tree/develop)
 [![BCH compliance](https://bettercodehub.com/edge/badge/XYOracleNetwork/api-diviner-nodejs?branch=develop&token=3dd15a749bfd967c47acceb9e537294bc39579b5)](https://bettercodehub.com/results/XYOracleNetwork/api-diviner-nodejs)
 [![Greenkeeper badge](https://badges.greenkeeper.io/XYOracleNetwork/api-diviner-nodejs.svg)](https://greenkeeper.io/)
 
@@ -102,6 +100,39 @@ Query Variables (replace the addresses with known addresses)
   "partyOneAddresses": ["040135DC4E51B3A3AC55F5A88D22DDAD498FDE02273BD0DF6FC63D5138EB8C128CF4268A6ED86A1DC433E0D3EFD24172CD1253EAFEFF71C9B6C133B7D759BFFE7E95"],
   "partyTwoAddresses": ["0401FF4FD5F39558F82E53111993D632756FBB9E5FAF85C0316DA8465F6B8B0F0BD1EC61D9C56EBBDF31C14F125964279F1996623995CCC1E30ACDF4A42E002620D4"]
 }
+```
+
+## Command Line
+
+### Usage
+
+```bash
+  xyo-diviner <cmd> [opt]
+
+  <cmd>: commands
+  [opt]: options
+```
+
+### Commands
+
+```bash
+  start               Start the Api Server
+```
+
+### Options
+
+```bash
+  -g, --graphql [n]   The http port to listen on for graphql connections
+                      (default = 12001)
+
+  -a, --archivist [s] The url of the seed archivists to contact
+                      (default = http://archivists.xyo.network:11001)
+```
+
+### Example: Start the Diviner on port 9070 and use port 9079 on your local computer for the archivist
+
+```bash
+  xyo-diviner start -g 9070 -a http://localhost:9079
 ```
 
 ## License

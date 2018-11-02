@@ -73,11 +73,11 @@ Install the Diviner in a Docker and start the server at the end.
 
 Note: There currently are quite a few build errors/warnings generted from dependencies that can safely be ignored, but should addressed in the future.
 
-```bash
+```none
 docker image build -t xyonetwork-api-diviner-nodejs-install:latest https://raw.githubusercontent.com/XYOracleNetwork/api-diviner-nodejs/master/docker/install/Dockerfile
 ```
 
-```bash
+```none
 docker run -p 12002:12002 xyonetwork-api-diviner-nodejs-install:latest
 ```
 
@@ -88,17 +88,33 @@ docker run -p 12002:12002 xyonetwork-api-diviner-nodejs-install:latest
 GraphQL Query
 
 ```graphql
-mutation QuestionHasIntersected($partyOneAddresses: [String]!, $partyTwoAddresses: [String]!) {
-  questionHasIntersected(partyOneAddresses: $partyOneAddresses, partyTwoAddresses: $partyTwoAddresses)
+query QuestionHasIntersected($partyOneAddresses: [String]!, $partyTwoAddresses: [String]!, $markers: [String], $direction: Direction) {
+  questionHasIntersected(partyOneAddresses: $partyOneAddresses, partyTwoAddresses: $partyTwoAddresses, markers: $markers, direction: $direction)
 }
 ```
 
-Query Variables (replace the addresses with known addresses)
+partyOneAddresses - the first of two entities in the query
+
+partyTwoAddresses - the second of two entities in the query
+
+markers - a list of known interactions between the two entities used for truncating
+
+direction - truncate everything before or after the markers
+
+Notes:
+
+1. Addresses are public keys from the entities.
+2. Markers are signed hashes from bound witness interactions.
+3. Direction can be FORWARD, BACKWARD, or BOTH (default=BOTH)
+
+Query Variables (replace the addresses with known addresses and markers)
 
 ```json
 {
   "partyOneAddresses": ["040135DC4E51B3A3AC55F5A88D22DDAD498FDE02273BD0DF6FC63D5138EB8C128CF4268A6ED86A1DC433E0D3EFD24172CD1253EAFEFF71C9B6C133B7D759BFFE7E95"],
-  "partyTwoAddresses": ["0401FF4FD5F39558F82E53111993D632756FBB9E5FAF85C0316DA8465F6B8B0F0BD1EC61D9C56EBBDF31C14F125964279F1996623995CCC1E30ACDF4A42E002620D4"]
+  "partyTwoAddresses": ["0401FF4FD5F39558F82E53111993D632756FBB9E5FAF85C0316DA8465F6B8B0F0BD1EC61D9C56EBBDF31C14F125964279F1996623995CCC1E30ACDF4A42E002620D4"],
+  "markers": ["030524007069b9aa23dfa7b86e729aff39f976027dacd292588b70c93d9b53cfc15d"],
+  "direction": "FORWARD"
 }
 ```
 
@@ -106,7 +122,7 @@ Query Variables (replace the addresses with known addresses)
 
 ### Usage
 
-```bash
+```none
   xyo-diviner <cmd> [opt]
 
   <cmd>: commands
@@ -115,13 +131,13 @@ Query Variables (replace the addresses with known addresses)
 
 ### Commands
 
-```bash
+```none
   start               Start the Api Server
 ```
 
 ### Options
 
-```bash
+```none
   -g, --graphql [n]   The http port to listen on for graphql connections
                       (default = 12001)
 
@@ -131,7 +147,7 @@ Query Variables (replace the addresses with known addresses)
 
 ### Example: Start the Diviner on port 9070 and use port 9079 on your local computer for the archivist
 
-```bash
+```none
   xyo-diviner start -g 9070 -a http://localhost:9079
 ```
 

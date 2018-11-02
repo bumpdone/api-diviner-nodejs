@@ -13,9 +13,7 @@ export declare class DivinerApi {
             block(parent: any, args: any, context: any, info: any): Promise<Block>;
             intersections(addresses: [string]): Promise<IntersectionList>;
             archivists(parent: any, args: any, context: any, info: any): Promise<any>;
-        };
-        Mutation: {
-            questionHasIntersected(parent: any, args: any, context: any, info: any): Promise<boolean>;
+            questionHasIntersected(parent: any, args: any, context: any, info: any): Promise<any>;
         };
     })[];
     resolvers: IResolvers;

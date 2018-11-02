@@ -60,9 +60,7 @@ class DivinerApi {
                         return __awaiter(this, void 0, void 0, function* () {
                             return new archivist_1.ArchivistList(context.archivists);
                         });
-                    }
-                },
-                Mutation: {
+                    },
                     questionHasIntersected(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
                             let direction;

@@ -14,8 +14,5 @@ type Query {
   block(hash: String): Block,
   intersections(addresses: [String]): IntersectionList,
   archivists: ArchivistList
-}
-
-type Mutation {
   questionHasIntersected(partyOneAddresses: [String]!, partyTwoAddresses: [String]!, markers: [String], direction: Direction): String
 }

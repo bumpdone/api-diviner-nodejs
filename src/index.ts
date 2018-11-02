@@ -45,10 +45,8 @@ export class DivinerApi {
         },
         async archivists(parent: any, args: any, context: any, info: any): Promise<any> {
           return new ArchivistList(context.archivists)
-        }
-      },
-      Mutation: {
-        async questionHasIntersected(parent: any, args: any, context: any, info: any) {
+        },
+        async questionHasIntersected(parent: any, args: any, context: any, info: any): Promise<any> {
           let direction: Direction
           switch (args.direction) {
             case "FORWARD":

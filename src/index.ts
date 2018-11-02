@@ -28,7 +28,13 @@ export class DivinerApi {
       Query: {
         async about(parent: any, args: any, context: any, info: any) {
           console.log(`resolvers.Query.about`)
-          return new About("Diviner", module.exports.version, `http://${context.req.headers.host}`, context.address)
+          return new About({
+            name: "Diviner",
+            version:module.exports.version,
+            url:`http:${context.req.headers.host}`,
+            address:context.address,
+            seeds: context.seeds
+          })
         },
         async block(parent: any, args: any, context: any, info: any) {
           console.log(`resolvers.Query.block: ${args.hash}`)
@@ -72,18 +78,24 @@ export class DivinerApi {
   ]
 
   public resolvers: IResolvers
+  public seeds: { archivists: string[], diviners: string[] }
+  public address = "0123456789"
 
-  constructor(seedArchivist: string) {
+  constructor(options: { seeds: { archivists: string[], diviners: string[] } }) {
+    this.seeds = options.seeds
     this.resolvers =  merge(this.resolverArray)
     const typeDefs = gql(this.buildSchema())
 
-    this.archivists.push(seedArchivist)
+    this.seeds.archivists.forEach((archivist) => {
+      this.archivists.push(archivist)
+    })
 
     const context = ({ req }: {req: any}) => ({
       ipfs: this.ipfs,
       req,
-      address: "0x000",
-      archivists: this.archivists
+      address: this.address,
+      archivists: this.archivists,
+      seeds: this.seeds
     })
 
     const config: Config & { cors?: CorsOptions | boolean } = {
@@ -128,14 +140,14 @@ pkginfo(module)
 program
   .version(module.exports.version)
   .option('-p, --port [n]', 'The Tcp port to listen on for connections (not yet implemented)', parseInt)
-  .option('-g, --graphql [n]', 'The http port to listen on for graphql connections', parseInt)
-  .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://34.237.137.107:11001/)')
+  .option('-g, --graphql [n]', 'The http port to listen on for graphql connections (default=12002)', parseInt)
+  .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://archivists.xyo.network:11001/)')
 
 program
   .command('start')
   .description('Start the Diviner')
   .action(() => {
-    const xyo = new DivinerApi(program.archivist || "http://34.237.137.107:11001/")
+    const xyo = new DivinerApi({ seeds: { archivists: [(program.archivist || "http://archivists.xyo.network:11001/")], diviners: [] } })
     xyo.start(program.graphql || 12002)
   })
 

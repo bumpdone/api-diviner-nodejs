@@ -28,7 +28,7 @@ const commander_1 = __importDefault(require("commander"));
 const archivist_2 = require("./client/archivist");
 const pkginfo_1 = __importDefault(require("pkginfo"));
 class DivinerApi {
-    constructor(seedArchivist) {
+    constructor(options) {
         this.archivists = [];
         this.resolverArray = [
             {
@@ -36,7 +36,13 @@ class DivinerApi {
                     about(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
                             console.log(`resolvers.Query.about`);
-                            return new about_1.default("Diviner", module.exports.version, `http://${context.req.headers.host}`, context.address);
+                            return new about_1.default({
+                                name: "Diviner",
+                                version: module.exports.version,
+                                url: `http:${context.req.headers.host}`,
+                                address: context.address,
+                                seeds: context.seeds
+                            });
                         });
                     },
                     block(parent, args, context, info) {
@@ -81,14 +87,19 @@ class DivinerApi {
             resolvers_2.default(),
             resolvers_3.default()
         ];
+        this.address = "0123456789";
+        this.seeds = options.seeds;
         this.resolvers = lodash_1.merge(this.resolverArray);
         const typeDefs = apollo_server_1.gql(this.buildSchema());
-        this.archivists.push(seedArchivist);
+        this.seeds.archivists.forEach((archivist) => {
+            this.archivists.push(archivist);
+        });
         const context = ({ req }) => ({
             ipfs: this.ipfs,
             req,
-            address: "0x000",
-            archivists: this.archivists
+            address: this.address,
+            archivists: this.archivists,
+            seeds: this.seeds
         });
         const config = {
             typeDefs,
@@ -122,13 +133,13 @@ pkginfo_1.default(module);
 commander_1.default
     .version(module.exports.version)
     .option('-p, --port [n]', 'The Tcp port to listen on for connections (not yet implemented)', parseInt)
-    .option('-g, --graphql [n]', 'The http port to listen on for graphql connections', parseInt)
-    .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://34.237.137.107:11001/)');
+    .option('-g, --graphql [n]', 'The http port to listen on for graphql connections (default=12002)', parseInt)
+    .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://archivists.xyo.network:11001/)');
 commander_1.default
     .command('start')
     .description('Start the Diviner')
     .action(() => {
-    const xyo = new DivinerApi(commander_1.default.archivist || "http://34.237.137.107:11001/");
+    const xyo = new DivinerApi({ seeds: { archivists: [(commander_1.default.archivist || "http://archivists.xyo.network:11001/")], diviners: [] } });
     xyo.start(commander_1.default.graphql || 12002);
 });
 commander_1.default.parse(process.argv);

@@ -15,7 +15,10 @@ import About from './about'
 import { createNode } from 'ipfs'
 import program from 'commander'
 import { ArchivistClient } from './client/archivist'
-import pkginfo from 'pkginfo'
+import * as dotenv from 'dotenv'
+import dotenvExpand from 'dotenv-expand'
+
+import { IXyoSigner, XyoSha256HashProvider, XyoEcdsaSecp256k1Sha256SignerProvider } from '@xyo-network/sdk-core-nodejs'
 
 export class DivinerApi {
 
@@ -30,9 +33,9 @@ export class DivinerApi {
           console.log(`resolvers.Query.about`)
           return new About({
             name: "Diviner",
-            version:module.exports.version,
-            url:`http:${context.req.headers.host}`,
-            address:context.address,
+            version: getVersion(),
+            url: `http:${context.req.headers.host}`,
+            address: context.address,
             seeds: context.seeds
           })
         },
@@ -45,10 +48,8 @@ export class DivinerApi {
         },
         async archivists(parent: any, args: any, context: any, info: any): Promise<any> {
           return new ArchivistList(context.archivists)
-        }
-      },
-      Mutation: {
-        async questionHasIntersected(parent: any, args: any, context: any, info: any) {
+        },
+        async questionHasIntersected(parent: any, args: any, context: any, info: any): Promise<any> {
           let direction: Direction
           switch (args.direction) {
             case "FORWARD":
@@ -80,11 +81,15 @@ export class DivinerApi {
   public resolvers: IResolvers
   public seeds: { archivists: string[], diviners: string[] }
   public address = "0123456789"
+  public signer: IXyoSigner
 
   constructor(options: { seeds: { archivists: string[], diviners: string[] } }) {
     this.seeds = options.seeds
     this.resolvers =  merge(this.resolverArray)
     const typeDefs = gql(this.buildSchema())
+
+    this.signer = this.getSigner()
+    this.address = this.signer.publicKey.serialize(true).toString('HEX')
 
     this.seeds.archivists.forEach((archivist) => {
       this.archivists.push(archivist)
@@ -95,7 +100,8 @@ export class DivinerApi {
       req,
       address: this.address,
       archivists: this.archivists,
-      seeds: this.seeds
+      seeds: this.seeds,
+      signer: this.signer
     })
 
     const config: Config & { cors?: CorsOptions | boolean } = {
@@ -105,6 +111,15 @@ export class DivinerApi {
     }
 
     this.server = new ApolloServer(config)
+  }
+
+  public getSigner(): IXyoSigner {
+    const sha256HashProvider = new XyoSha256HashProvider()
+    const signerProvider = new XyoEcdsaSecp256k1Sha256SignerProvider(
+      sha256HashProvider
+    )
+
+    return signerProvider.newInstance()
   }
 
   public start(port: number = 12002) {
@@ -124,7 +139,7 @@ export class DivinerApi {
     this.ipfs.on('start', () => console.log('Ipfs started!'))
 
     this.server.listen({ port }).then(({ url }: {url: any}) => {
-      console.log(`XYO Diviner [${module.exports.version}] ready at ${url}`)
+      console.log(`XYO Diviner [${getVersion()}] ready at ${url}`)
     })
   }
 
@@ -135,10 +150,15 @@ export class DivinerApi {
   }
 }
 
-pkginfo(module)
+const getVersion = (): string => {
+  const env = dotenv.config()
+  dotenvExpand(env)
+
+  return process.env.APP_VERSION || "Unknown"
+}
 
 program
-  .version(module.exports.version)
+  .version(getVersion())
   .option('-p, --port [n]', 'The Tcp port to listen on for connections (not yet implemented)', parseInt)
   .option('-g, --graphql [n]', 'The http port to listen on for graphql connections (default=12002)', parseInt)
   .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://archivists.xyo.network:11001/)')

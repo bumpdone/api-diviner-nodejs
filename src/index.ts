@@ -15,7 +15,6 @@ import About from './about'
 import { createNode } from 'ipfs'
 import program from 'commander'
 import { ArchivistClient } from './client/archivist'
-import * as dotenv from 'dotenv'
 import dotenvExpand from 'dotenv-expand'
 
 import { IXyoSigner, XyoSha256HashProvider, XyoEcdsaSecp256k1Sha256SignerProvider } from '@xyo-network/sdk-core-nodejs'
@@ -151,8 +150,12 @@ export class DivinerApi {
 }
 
 const getVersion = (): string => {
-  const env = dotenv.config()
-  dotenvExpand(env)
+  dotenvExpand({
+    parsed: {
+      APP_VERSION:"$npm_package_version",
+      APP_NAME:"$npm_package_name"
+    }
+  })
 
   return process.env.APP_VERSION || "Unknown"
 }

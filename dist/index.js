@@ -10,13 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_server_1 = require("apollo-server");
 const resolvers_1 = __importDefault(require("./list/resolvers"));
@@ -33,7 +26,6 @@ const about_1 = __importDefault(require("./about"));
 const ipfs_1 = require("ipfs");
 const commander_1 = __importDefault(require("commander"));
 const archivist_2 = require("./client/archivist");
-const dotenv = __importStar(require("dotenv"));
 const dotenv_expand_1 = __importDefault(require("dotenv-expand"));
 const sdk_core_nodejs_1 = require("@xyo-network/sdk-core-nodejs");
 class DivinerApi {
@@ -145,8 +137,12 @@ class DivinerApi {
 }
 exports.DivinerApi = DivinerApi;
 const getVersion = () => {
-    const env = dotenv.config();
-    dotenv_expand_1.default(env);
+    dotenv_expand_1.default({
+        parsed: {
+            APP_VERSION: "$npm_package_version",
+            APP_NAME: "$npm_package_name"
+        }
+    });
     return process.env.APP_VERSION || "Unknown";
 };
 commander_1.default

@@ -18,7 +18,7 @@ const graphql_tag_1 = __importDefault(require("graphql-tag"));
 const apollo_cache_inmemory_1 = require("apollo-cache-inmemory");
 class ArchivistClient {
     constructor({ uri: string }) {
-        this.uri = "";
+        this.uri = '';
         Object.assign(this, { uri: string });
         const httpLink = apollo_link_http_1.createHttpLink({
             uri: this.uri,

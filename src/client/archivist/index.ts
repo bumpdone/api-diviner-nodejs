@@ -7,7 +7,7 @@ import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory'
 
 export class ArchivistClient {
 
-  public uri = ""
+  public uri = ''
   public client: ApolloClient<NormalizedCacheObject>
 
   constructor({ uri: string }: Options) {

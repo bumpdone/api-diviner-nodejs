@@ -21,9 +21,9 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Use Carter Archivist",
+            "name": "Use Ryan Archivist",
             "protocol": "inspector",
-            "args": ["dist/index.js", "start", "-a", "http://192.168.1.163:11001/"],
+            "args": ["dist/index.js", "start", "-a", "http://18.234.76.137:11001"],
             "cwd": "${workspaceFolder}",
             "runtimeArgs": ["-r", "ts-node/register"],
             "internalConsoleOptions": "openOnSessionStart",

@@ -1,11 +1,12 @@
 import { IPFS } from 'ipfs';
 import { ArchivistClient } from '../../client/archivist';
+import { Question } from '..';
 export declare enum Direction {
     Forward = 0,
     Backward = 1,
     Both = 2
 }
-export declare class IntersectionQuestion {
+export declare class IntersectionQuestion extends Question {
     static fromHash(hash: string, ipfs: IPFS): Promise<boolean>;
     static getStringArrayIntersection(a1: string[], a2: string[]): string[];
     static removePreceedingDataByHash(hashes: string[], marker: string): string[];

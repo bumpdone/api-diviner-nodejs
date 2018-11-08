@@ -28,6 +28,8 @@ const commander_1 = __importDefault(require("commander"));
 const archivist_2 = require("./client/archivist");
 const dotenv_expand_1 = __importDefault(require("dotenv-expand"));
 const sdk_core_nodejs_1 = require("@xyo-network/sdk-core-nodejs");
+const question_1 = require("./list/question");
+const worker_1 = require("./worker");
 class DivinerApi {
     constructor(options) {
         this.archivists = [];
@@ -36,9 +38,9 @@ class DivinerApi {
                 Query: {
                     about(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
-                            console.log(`resolvers.Query.about`);
+                            console.log('resolvers.Query.about');
                             return new about_1.default({
-                                name: "Diviner",
+                                name: 'Diviner',
                                 version: getVersion(),
                                 url: `http:${context.req.headers.host}`,
                                 address: context.address,
@@ -54,7 +56,7 @@ class DivinerApi {
                     },
                     intersections(addresses) {
                         return __awaiter(this, void 0, void 0, function* () {
-                            return new intersection_1.IntersectionList(["0x00", "0x11"]);
+                            return new intersection_1.IntersectionList(['0x00', '0x11']);
                         });
                     },
                     archivists(parent, args, context, info) {
@@ -62,14 +64,21 @@ class DivinerApi {
                             return new archivist_1.ArchivistList(context.archivists);
                         });
                     },
+                    questions(parent, args, context, info) {
+                        return __awaiter(this, void 0, void 0, function* () {
+                            const questionList = new question_1.QuestionList(context);
+                            yield questionList.read();
+                            return questionList;
+                        });
+                    },
                     questionHasIntersected(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
                             let direction;
                             switch (args.direction) {
-                                case "FORWARD":
+                                case 'FORWARD':
                                     direction = intersection_2.Direction.Forward;
                                     break;
-                                case "BACKWARD":
+                                case 'BACKWARD':
                                     direction = intersection_2.Direction.Backward;
                                     break;
                                 default:
@@ -86,7 +95,8 @@ class DivinerApi {
             resolvers_2.default(),
             resolvers_3.default()
         ];
-        this.address = "0123456789";
+        this.address = '';
+        this.worker = new worker_1.DivinerWorker();
         this.seeds = options.seeds;
         this.resolvers = lodash_1.merge(this.resolverArray);
         const typeDefs = apollo_server_1.gql(this.buildSchema());
@@ -116,7 +126,7 @@ class DivinerApi {
         return signerProvider.newInstance();
     }
     start(port = 12002) {
-        console.log(" --- START ---");
+        console.log(' --- START ---');
         this.ipfs = ipfs_1.createNode({ port: 1111 });
         this.ipfs.on('ready', () => {
             console.log('Ipfs is ready to use!');
@@ -125,6 +135,7 @@ class DivinerApi {
             console.log('Something went terribly wrong!', error);
         });
         this.ipfs.on('start', () => console.log('Ipfs started!'));
+        this.worker.start();
         this.server.listen({ port }).then(({ url }) => {
             console.log(`XYO Diviner [${getVersion()}] ready at ${url}`);
         });
@@ -139,11 +150,11 @@ exports.DivinerApi = DivinerApi;
 const getVersion = () => {
     dotenv_expand_1.default({
         parsed: {
-            APP_VERSION: "$npm_package_version",
-            APP_NAME: "$npm_package_name"
+            APP_VERSION: '$npm_package_version',
+            APP_NAME: '$npm_package_name'
         }
     });
-    return process.env.APP_VERSION || "Unknown";
+    return process.env.APP_VERSION || 'Unknown';
 };
 commander_1.default
     .version(getVersion())
@@ -154,7 +165,7 @@ commander_1.default
     .command('start')
     .description('Start the Diviner')
     .action(() => {
-    const xyo = new DivinerApi({ seeds: { archivists: [(commander_1.default.archivist || "http://archivists.xyo.network:11001/")], diviners: [] } });
+    const xyo = new DivinerApi({ seeds: { archivists: [(commander_1.default.archivist || 'http://archivists.xyo.network:11001/')], diviners: [] } });
     xyo.start(commander_1.default.graphql || 12002);
 });
 commander_1.default.parse(process.argv);

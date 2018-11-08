@@ -1,5 +1,5 @@
 export default class Meta {
-    totalCount?: number;
-    endCursor?: string;
-    hasNextPage?: boolean;
+    totalCount: number;
+    endCursor: string | null;
+    hasNextPage: boolean;
 }

@@ -1,5 +1,6 @@
 import { IPFS } from 'ipfs'
 import { ArchivistClient } from '../../client/archivist'
+import { Question } from '..'
 
 export enum Direction {
   Forward,
@@ -7,7 +8,7 @@ export enum Direction {
   Both
 }
 
-export class IntersectionQuestion {
+export class IntersectionQuestion extends Question {
 
   // given an ipfs hash, load the question
   public static async fromHash(hash: string, ipfs: IPFS): Promise<boolean> {
@@ -82,6 +83,8 @@ export class IntersectionQuestion {
   public archivist: ArchivistClient
 
   constructor(partyOne: string[], partyTwo: string[], markers: string[], direction: Direction, archivist: ArchivistClient[]) {
+    super()
+    this.type = 'intersection'
     this.p1 = partyOne
     this.p2 = partyTwo
     this.markers = markers
@@ -91,7 +94,7 @@ export class IntersectionQuestion {
 
   // publish the question to scsc
   public async publish(): Promise < string > {
-    return "0x000"
+    return '0x000'
   }
 
   // process the question
@@ -103,7 +106,7 @@ export class IntersectionQuestion {
       p1Hashes = await this.archivist.blockHashes(this.p1)
       p2Hashes = await this.archivist.blockHashes(this.p2)
     } catch (error) {
-      throw new Error("Failed to Retreive Hashes")
+      throw new Error('Failed to Retreive Hashes')
     }
 
     switch (this.direction) {

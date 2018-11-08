@@ -11,7 +11,7 @@ export class XYError {
   }
 
   private report() {
-    console.error(`ERROR[${this.code}]: ${this.message || "No Message"}`)
+    console.error(`ERROR[${this.code}]: ${this.message || 'No Message'}`)
     if (this.exception) {
       console.error(`Exception Data: ${this.exception}`)
     }

@@ -11,20 +11,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const intersection_1 = require("../../intersection");
 const __1 = __importDefault(require(".."));
-class IntersectionList extends __1.default {
-    constructor(addresses) {
+class QuestionList extends __1.default {
+    constructor(context) {
         super();
-        this.addresses = addresses;
         this.items = [];
     }
     read() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.items.push(new intersection_1.Intersection('2018-09-14T12:43:37+0700', 10));
-            return this;
+            return true;
         });
     }
 }
-exports.IntersectionList = IntersectionList;
+exports.QuestionList = QuestionList;
 //# sourceMappingURL=index.js.map

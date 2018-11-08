@@ -12,7 +12,7 @@
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "tslint-fix": "tslint -c tslint.json -p tsconfig.json --fix",
     "precommit": "echo \"Build must pass before committing\" && npm run build",
-    "start": "node ./dist/index.js start",
+    "start": "npm run build-ts && node ./dist/index.js start",
     "killport": "kill $(lsof -t -i :12002)",
     "killipfsport": "kill $(lsof -t -i :12003)"
   },

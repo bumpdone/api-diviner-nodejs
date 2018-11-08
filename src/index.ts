@@ -18,6 +18,8 @@ import { ArchivistClient } from './client/archivist'
 import dotenvExpand from 'dotenv-expand'
 
 import { IXyoSigner, XyoSha256HashProvider, XyoEcdsaSecp256k1Sha256SignerProvider } from '@xyo-network/sdk-core-nodejs'
+import { QuestionList } from './list/question'
+import { DivinerWorker } from './worker'
 
 export class DivinerApi {
 
@@ -29,9 +31,9 @@ export class DivinerApi {
     {
       Query: {
         async about(parent: any, args: any, context: any, info: any) {
-          console.log(`resolvers.Query.about`)
+          console.log('resolvers.Query.about')
           return new About({
-            name: "Diviner",
+            name: 'Diviner',
             version: getVersion(),
             url: `http:${context.req.headers.host}`,
             address: context.address,
@@ -43,18 +45,23 @@ export class DivinerApi {
           return new Block({ hash: args.hash, data: {}, ipfs: context.ipfs })
         },
         async intersections(addresses: [string]) {
-          return new IntersectionList(["0x00", "0x11"])
+          return new IntersectionList(['0x00', '0x11'])
         },
         async archivists(parent: any, args: any, context: any, info: any): Promise<any> {
           return new ArchivistList(context.archivists)
         },
+        async questions(parent: any, args: any, context: any, info: any): Promise<any> {
+          const questionList = new QuestionList(context)
+          await questionList.read()
+          return questionList
+        },
         async questionHasIntersected(parent: any, args: any, context: any, info: any): Promise<any> {
           let direction: Direction
           switch (args.direction) {
-            case "FORWARD":
+            case 'FORWARD':
               direction = Direction.Forward
               break
-            case "BACKWARD":
+            case 'BACKWARD':
               direction = Direction.Backward
               break
             default:
@@ -79,8 +86,9 @@ export class DivinerApi {
 
   public resolvers: IResolvers
   public seeds: { archivists: string[], diviners: string[] }
-  public address = "0123456789"
+  public address = ''
   public signer: IXyoSigner
+  public worker = new DivinerWorker()
 
   constructor(options: { seeds: { archivists: string[], diviners: string[] } }) {
     this.seeds = options.seeds
@@ -123,7 +131,7 @@ export class DivinerApi {
 
   public start(port: number = 12002) {
 
-    console.log(" --- START ---")
+    console.log(' --- START ---')
 
     this.ipfs = createNode({ port: 1111 })
 
@@ -136,6 +144,8 @@ export class DivinerApi {
     })
 
     this.ipfs.on('start', () => console.log('Ipfs started!'))
+
+    this.worker.start()
 
     this.server.listen({ port }).then(({ url }: {url: any}) => {
       console.log(`XYO Diviner [${getVersion()}] ready at ${url}`)
@@ -152,12 +162,12 @@ export class DivinerApi {
 const getVersion = (): string => {
   dotenvExpand({
     parsed: {
-      APP_VERSION:"$npm_package_version",
-      APP_NAME:"$npm_package_name"
+      APP_VERSION:'$npm_package_version',
+      APP_NAME:'$npm_package_name'
     }
   })
 
-  return process.env.APP_VERSION || "Unknown"
+  return process.env.APP_VERSION || 'Unknown'
 }
 
 program
@@ -170,7 +180,7 @@ program
   .command('start')
   .description('Start the Diviner')
   .action(() => {
-    const xyo = new DivinerApi({ seeds: { archivists: [(program.archivist || "http://archivists.xyo.network:11001/")], diviners: [] } })
+    const xyo = new DivinerApi({ seeds: { archivists: [(program.archivist || 'http://archivists.xyo.network:11001/')], diviners: [] } })
     xyo.start(program.graphql || 12002)
   })
 

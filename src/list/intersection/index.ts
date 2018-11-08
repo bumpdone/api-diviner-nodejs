@@ -14,7 +14,7 @@ export class IntersectionList extends List {
   }
 
   public async read() {
-    this.items.push(new Intersection("2018-09-14T12:43:37+0700", 10))
+    this.items.push(new Intersection('2018-09-14T12:43:37+0700', 10))
     return this
   }
 }

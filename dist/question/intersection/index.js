@@ -8,13 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const __1 = require("..");
 var Direction;
 (function (Direction) {
     Direction[Direction["Forward"] = 0] = "Forward";
     Direction[Direction["Backward"] = 1] = "Backward";
     Direction[Direction["Both"] = 2] = "Both";
 })(Direction = exports.Direction || (exports.Direction = {}));
-class IntersectionQuestion {
+class IntersectionQuestion extends __1.Question {
     // given an ipfs hash, load the question
     static fromHash(hash, ipfs) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -78,6 +79,8 @@ class IntersectionQuestion {
         return prunedHashes;
     }
     constructor(partyOne, partyTwo, markers, direction, archivist) {
+        super();
+        this.type = 'intersection';
         this.p1 = partyOne;
         this.p2 = partyTwo;
         this.markers = markers;
@@ -87,7 +90,7 @@ class IntersectionQuestion {
     // publish the question to scsc
     publish() {
         return __awaiter(this, void 0, void 0, function* () {
-            return "0x000";
+            return '0x000';
         });
     }
     // process the question
@@ -100,7 +103,7 @@ class IntersectionQuestion {
                 p2Hashes = yield this.archivist.blockHashes(this.p2);
             }
             catch (error) {
-                throw new Error("Failed to Retreive Hashes");
+                throw new Error('Failed to Retreive Hashes');
             }
             switch (this.direction) {
                 case Direction.Forward:

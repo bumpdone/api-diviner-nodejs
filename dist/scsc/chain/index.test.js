@@ -19,11 +19,11 @@ describe('ScscChain class', () => {
         const newIpfs = ipfs_1.createNode();
         return new Promise((resolve, reject) => {
             newIpfs.on('ready', () => __awaiter(this, void 0, void 0, function* () {
-                console.log("IPFS Ready");
+                console.log('IPFS Ready');
                 resolve(newIpfs);
             }));
             newIpfs.on('error', (error) => __awaiter(this, void 0, void 0, function* () {
-                console.log("IPFS Error");
+                console.log('IPFS Error');
                 reject(error);
             }));
         });
@@ -32,11 +32,11 @@ describe('ScscChain class', () => {
         oldIpfs.stop();
         return new Promise((resolve, reject) => {
             oldIpfs.on('stop', () => __awaiter(this, void 0, void 0, function* () {
-                console.log("IPFS Stopped");
+                console.log('IPFS Stopped');
                 resolve(oldIpfs);
             }));
             oldIpfs.on('error', (error) => __awaiter(this, void 0, void 0, function* () {
-                console.log("IPFS Error");
+                console.log('IPFS Error');
                 reject(error);
             }));
         });
@@ -47,16 +47,16 @@ describe('ScscChain class', () => {
         ipfs = yield startIpfs();
         console.log('3');
         scsc = new _1.default({
-            contract: "",
-            network: "",
-            previousHash: "",
-            address: "",
+            contract: '',
+            network: '',
+            previousHash: '',
+            address: '',
             ipfs
         });
         chai_1.expect(scsc).to.be.an('object');
     })).timeout(20000); // timeout is since it is slow on circleci
     it('should add item', () => __awaiter(this, void 0, void 0, function* () {
-        chai_1.expect(yield scsc.addItem(Buffer.from("Hello"))).to.equal(true);
+        chai_1.expect(yield scsc.addItem(Buffer.from('Hello'))).to.equal(true);
     }));
     let hash;
     it('should mine block', () => __awaiter(this, void 0, void 0, function* () {

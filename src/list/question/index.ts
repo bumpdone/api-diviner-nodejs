@@ -6,29 +6,38 @@ import * as sc from '../../util/SmartContractService'
 const contractNamed = sc.contractNamed
 
 export class QuestionList extends List {
+  public static contract: any
+  public static runner = QuestionList.createRunner()
 
-  public items: Question[] = []
-  public contract: any
-
-  constructor(context: any) {
-    super()
-    this.runner().then(() => {
-      this.contract = sc.contractNamed('PayOnDelivery')
+  private static async createRunner() {
+    const runner = sc.reloadWeb3(
+        '42',
+        'QmWBZp6NbGB3u8CYaWYA6JMcPx8oYQCizzWw8UZzErb2tv',
+      )
+    runner.then(() => {
+      QuestionList.contract = sc.contractNamed('PayOnDelivery')
       console.log('Smart Contract', this.contract)
     })
   }
 
-  public async read(): Promise<any> {
-    /*if (this.contract) {
-      this.contract.
-    }*/
-    return true
+  public items: Question[] = []
+
+  constructor(context: any) {
+    super()
   }
 
-  private async runner() {
-    return sc.reloadWeb3(
-      '5777',
-      'QmWBZp6NbGB3u8CYaWYA6JMcPx8oYQCizzWw8UZzErb2tv',
-    )
+  public async read(): Promise < any > {
+    console.log('Reading  sQuestions...')
+    try {
+      if (QuestionList.contract) {
+        const questions = await QuestionList.contract.methods
+            .allQuestions()
+            .send()
+        console.log(`Quesionts: ${questions.length}`)
+      }
+    } catch (ex) {
+      console.error(ex)
+    }
+    return true
   }
 }

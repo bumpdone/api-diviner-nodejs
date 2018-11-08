@@ -26,20 +26,33 @@ class QuestionList extends __1.default {
         super();
         this.items = [];
     }
+    static createRunner() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const runner = sc.reloadWeb3('42', 'QmWBZp6NbGB3u8CYaWYA6JMcPx8oYQCizzWw8UZzErb2tv');
+            runner.then(() => {
+                QuestionList.contract = sc.contractNamed('PayOnDelivery');
+                console.log('Smart Contract', this.contract);
+            });
+        });
+    }
     read() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.runner().then(() => {
-                const contract = sc.contractNamed('PayOnDelivery');
-                console.log('Smart Contract', contract);
-            });
+            console.log('Reading CQuestions...');
+            try {
+                if (QuestionList.contract) {
+                    const questions = yield QuestionList.contract.methods
+                        .allQuestions()
+                        .send();
+                    console.log(`Quesionts: ${questions.length}`);
+                }
+            }
+            catch (ex) {
+                console.error(ex);
+            }
             return true;
         });
     }
-    runner() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return sc.reloadWeb3('5777', 'QmWBZp6NbGB3u8CYaWYA6JMcPx8oYQCizzWw8UZzErb2tv');
-        });
-    }
 }
+QuestionList.runner = QuestionList.createRunner();
 exports.QuestionList = QuestionList;
 //# sourceMappingURL=index.js.map

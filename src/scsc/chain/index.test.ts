@@ -10,11 +10,11 @@ describe('ScscChain class', () => {
     const newIpfs = createNode()
     return new Promise((resolve, reject) => {
       newIpfs.on('ready', async () => {
-        console.log("IPFS Ready")
+        console.log('IPFS Ready')
         resolve(newIpfs)
       })
       newIpfs.on('error', async (error) => {
-        console.log("IPFS Error")
+        console.log('IPFS Error')
         reject(error)
       })
     })
@@ -24,11 +24,11 @@ describe('ScscChain class', () => {
     oldIpfs.stop()
     return new Promise((resolve, reject) => {
       oldIpfs.on('stop', async () => {
-        console.log("IPFS Stopped")
+        console.log('IPFS Stopped')
         resolve(oldIpfs)
       })
       oldIpfs.on('error', async (error) => {
-        console.log("IPFS Error")
+        console.log('IPFS Error')
         reject(error)
       })
     })
@@ -40,17 +40,17 @@ describe('ScscChain class', () => {
     ipfs = await startIpfs()
     console.log('3')
     scsc = new ScscChain({
-      contract: "",
-      network: "",
-      previousHash: "",
-      address: "",
+      contract: '',
+      network: '',
+      previousHash: '',
+      address: '',
       ipfs
     })
     expect(scsc).to.be.an('object')
   }).timeout(20000) // timeout is since it is slow on circleci
 
   it('should add item', async () => {
-    expect(await scsc.addItem(Buffer.from("Hello"))).to.equal(true)
+    expect(await scsc.addItem(Buffer.from('Hello'))).to.equal(true)
   })
 
   let hash: string

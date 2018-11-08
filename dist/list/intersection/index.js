@@ -21,7 +21,7 @@ class IntersectionList extends __1.default {
     }
     read() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.items.push(new intersection_1.Intersection("2018-09-14T12:43:37+0700", 10));
+            this.items.push(new intersection_1.Intersection('2018-09-14T12:43:37+0700', 10));
             return this;
         });
     }

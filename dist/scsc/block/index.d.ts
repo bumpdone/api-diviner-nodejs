@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { IPFS } from 'ipfs';
-import Options from "./options";
-import Data from "./data";
+import Options from './options';
+import Data from './data';
 import Header from './header';
 import Payment from './payment';
 interface Validation {

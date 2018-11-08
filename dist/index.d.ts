@@ -4,6 +4,7 @@ import Block from './scsc/block';
 import { IntersectionList } from './list/intersection';
 import About from './about';
 import { IXyoSigner } from '@xyo-network/sdk-core-nodejs';
+import { DivinerWorker } from './worker';
 export declare class DivinerApi {
     server: ApolloServer;
     ipfs: any;
@@ -14,7 +15,9 @@ export declare class DivinerApi {
             block(parent: any, args: any, context: any, info: any): Promise<Block>;
             intersections(addresses: [string]): Promise<IntersectionList>;
             archivists(parent: any, args: any, context: any, info: any): Promise<any>;
+            questions(parent: any, args: any, context: any, info: any): Promise<any>;
             questionHasIntersected(parent: any, args: any, context: any, info: any): Promise<any>;
+            questionNotifyIntersect(parent: any, args: any, context: any, info: any): Promise<any>;
         };
     })[];
     resolvers: IResolvers;
@@ -24,6 +27,7 @@ export declare class DivinerApi {
     };
     address: string;
     signer: IXyoSigner;
+    worker: DivinerWorker;
     constructor(options: {
         seeds: {
             archivists: string[];

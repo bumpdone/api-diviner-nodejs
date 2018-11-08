@@ -24,7 +24,7 @@ class ScscBlock {
                 this.ipfs.files.get(this.hash);
             }
             else {
-                throw Error("IPFS needed to read");
+                throw Error('IPFS needed to read');
             }
         });
     }
@@ -43,11 +43,11 @@ class ScscBlock {
         if (header) {
             if (!this.isValidAddress(header.address)) {
                 validation.valid = false;
-                validation.messages.push("Invalid Address in Header");
+                validation.messages.push('Invalid Address in Header');
             }
         }
         else {
-            validation.messages.push("Missing Header");
+            validation.messages.push('Missing Header');
             validation.valid = false;
         }
         return validation;
@@ -55,7 +55,7 @@ class ScscBlock {
     validateHashes(hashes) {
         const validation = { valid: true, messages: [] };
         if (!hashes) {
-            validation.messages.push("Missing Hashes");
+            validation.messages.push('Missing Hashes');
             validation.valid = false;
         }
         return validation;
@@ -63,7 +63,7 @@ class ScscBlock {
     validatePayments(payments) {
         const validation = { valid: true, messages: [] };
         if (!payments) {
-            validation.messages.push("Missing Payments");
+            validation.messages.push('Missing Payments');
             validation.valid = false;
         }
         return validation;
@@ -77,7 +77,7 @@ class ScscBlock {
             validation = this.concatValidation(validation, this.validatePayments(data.payments));
         }
         else {
-            validation.messages.push("Missing Data");
+            validation.messages.push('Missing Data');
             validation.valid = false;
         }
         return validation;
@@ -90,11 +90,11 @@ class ScscBlock {
                     this.hash = this.ipfs.files.put(this.data);
                 }
                 else {
-                    throw Error("Write Failed. Invalid Data");
+                    throw Error('Write Failed. Invalid Data');
                 }
             }
             else {
-                throw Error("IPFS needed to write");
+                throw Error('IPFS needed to write');
             }
         });
     }

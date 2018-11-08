@@ -4,7 +4,7 @@ function listResolvers() {
     return {
         List: {
             __resolveType(parent, args, context, info) {
-                console.log("resolvers.List.type");
+                console.log('resolvers.List.type');
                 return context.listItemType;
             }
         }

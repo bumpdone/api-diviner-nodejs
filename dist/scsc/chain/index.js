@@ -14,11 +14,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const block_1 = __importDefault(require("../block"));
 class ScscChain {
     constructor({ contract, network, previousHash, address, ipfs }) {
-        this.contract = "";
-        this.network = "";
-        this.previousHash = "";
-        this.address = "";
-        this.genesis = "";
+        this.contract = '';
+        this.network = '';
+        this.previousHash = '';
+        this.address = '';
+        this.genesis = '';
         // this is private since we require validation before adding
         this.items = [];
         Object.assign(this, { contract, network, previousHash, address, ipfs });
@@ -52,11 +52,11 @@ class ScscChain {
     }
     mine() {
         return __awaiter(this, void 0, void 0, function* () {
-            const resultHash = "";
+            const resultHash = '';
             if (this.ipfs) {
                 const header = {
                     address: this.address,
-                    index: "0",
+                    index: '0',
                     previousHash: this.previousHash
                 };
                 const payments = [];

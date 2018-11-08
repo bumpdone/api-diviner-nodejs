@@ -10,11 +10,11 @@ export default class ScscChain {
     return true
   }
 
-  public contract = ""
-  public network = ""
-  public previousHash = ""
-  public address = ""
-  public genesis = ""
+  public contract = ''
+  public network = ''
+  public previousHash = ''
+  public address = ''
+  public genesis = ''
   public ipfs?: IPFS
 
   // this is private since we require validation before adding
@@ -50,11 +50,11 @@ export default class ScscChain {
   }
 
   public async mine(): Promise < string > {
-    const resultHash = ""
+    const resultHash = ''
     if (this.ipfs) {
       const header: Header = {
         address: this.address,
-        index: "0",
+        index: '0',
         previousHash: this.previousHash
       }
       const payments: Payment[] = []

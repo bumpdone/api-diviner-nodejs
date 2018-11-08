@@ -7,6 +7,85 @@ import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory'
 
 export class ArchivistClient {
 
+  private static blockHashesQuery = gql`
+    query BlocksByPublicKey($publicKeys: [String!]) {
+      blocksByPublicKey(publicKeys: $publicKeys) {
+        publicKey
+        blocks {
+          signedHash
+        }
+      }
+    }
+  `
+
+  private static keysQuery = gql`
+    query BlocksByPublicKey($publicKeys: [String!]) {
+      blocksByPublicKey(publicKeys: $publicKeys) {
+        publicKey
+        blocks {
+          publicKeys {
+            array {
+              bytes
+            }
+          }
+        }
+      }
+    }
+  `
+
+  private static blocksFields = `
+    {
+      hash
+      signedHash
+      bytes
+      major
+      minor
+      publicKeys {
+        hash
+        bytes
+        major
+        minor
+        array {
+          hash
+          bytes
+          major
+          minor
+        }
+      }
+      signatures {
+        hash
+        bytes
+        major
+        minor
+        array {
+          hash
+          bytes
+          major
+          minor
+        }
+      }
+      payloads {
+        hash
+        bytes
+        major
+        minor
+        signedPayload {
+          hash
+          bytes
+          major
+          minor
+        }
+        unsignedPayload {
+          hash
+          bytes
+          major
+          minor
+        }
+      }
+      signedBytes
+    }
+  `
+
   public uri = ''
   public client: ApolloClient<NormalizedCacheObject>
 
@@ -20,17 +99,6 @@ export class ArchivistClient {
       }
     })
 
-    /*const defaultOptions = {
-      watchQuery: {
-        fetchPolicy: 'network-only',
-        errorPolicy: 'ignore',
-      },
-      query: {
-        fetchPolicy: 'network-only',
-        errorPolicy: 'all',
-      },
-    }*/
-
     this.client = new ApolloClient({
       link: httpLink,
       cache: new InMemoryCache()
@@ -39,58 +107,7 @@ export class ArchivistClient {
   }
 
   public async blocks(keys: string[], fields: string): Promise<any> {
-    const fieldsToGet = fields || `
-      {
-        hash
-        signedHash
-        bytes
-        major
-        minor
-        publicKeys {
-          hash
-          bytes
-          major
-          minor
-          array {
-            hash
-            bytes
-            major
-            minor
-          }
-        }
-        signatures {
-          hash
-          bytes
-          major
-          minor
-          array {
-            hash
-            bytes
-            major
-            minor
-          }
-        }
-        payloads {
-          hash
-          bytes
-          major
-          minor
-          signedPayload {
-            hash
-            bytes
-            major
-            minor
-          }
-          unsignedPayload {
-            hash
-            bytes
-            major
-            minor
-          }
-        }
-        signedBytes
-      }
-    `
+    const fieldsToGet = fields || ArchivistClient.blocksFields
 
     const result: any = await this.client.query({
       query: gql`
@@ -113,20 +130,7 @@ export class ArchivistClient {
 
   public async keys(keys: string[]): Promise<any> {
     const result = await this.client.query({
-      query: gql`
-        query BlocksByPublicKey($publicKeys: [String!]) {
-          blocksByPublicKey(publicKeys: $publicKeys) {
-            publicKey
-            blocks {
-              publicKeys {
-                array {
-                  bytes
-                }
-              }
-            }
-          }
-        }
-      `,
+      query: ArchivistClient.keysQuery,
       variables: {
         publicKeys: keys
       }
@@ -137,16 +141,7 @@ export class ArchivistClient {
 
   public async blockHashes(keys: string[]): Promise<any> {
     const result: any = await this.client.query({
-      query: gql`
-        query BlocksByPublicKey($publicKeys: [String!]) {
-          blocksByPublicKey(publicKeys: $publicKeys) {
-            publicKey
-            blocks {
-              signedHash
-            }
-          }
-        }
-      `,
+      query: ArchivistClient.blockHashesQuery,
       variables: {
         publicKeys: keys
       }

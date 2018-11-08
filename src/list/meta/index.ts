@@ -1,7 +1,7 @@
 import { inspect } from 'util'
 
 export default class Meta {
-  public totalCount?: number
-  public endCursor?: string
-  public hasNextPage?: boolean
+  public totalCount = 0
+  public endCursor: string | null = null
+  public hasNextPage = false
 }

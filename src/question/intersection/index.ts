@@ -1,5 +1,6 @@
 import { IPFS } from 'ipfs'
 import { ArchivistClient } from '../../client/archivist'
+import { Question } from '..'
 
 export enum Direction {
   Forward,
@@ -7,7 +8,7 @@ export enum Direction {
   Both
 }
 
-export class IntersectionQuestion {
+export class IntersectionQuestion extends Question {
 
   // given an ipfs hash, load the question
   public static async fromHash(hash: string, ipfs: IPFS): Promise<boolean> {
@@ -81,21 +82,22 @@ export class IntersectionQuestion {
   public direction: Direction
   public archivist: ArchivistClient
 
-  constructor(partyOne: string[], partyTwo: string[], markers: string[], direction: Direction, archivist: ArchivistClient[]) {
-    this.p1 = partyOne
-    this.p2 = partyTwo
-    this.markers = markers
-    this.direction = direction
-    this.archivist = archivist[0]
+  constructor(params: { partyOne: string[], partyTwo: string[], markers?: string[], direction?: Direction, archivist: ArchivistClient[] }) {
+    super()
+    this.type = 'intersection'
+    this.p1 = params.partyOne
+    this.p2 = params.partyTwo
+    this.markers = params.markers || []
+    this.direction = params.direction || Direction.Forward
+    this.archivist = params.archivist[0]
   }
 
   // publish the question to scsc
   public async publish(): Promise < string > {
-    return "0x000"
+    return '0x000'
   }
 
-  // process the question
-  public async process(): Promise < boolean > {
+  public async didIntersect(): Promise<boolean> {
     let p1Hashes: string[] = []
     let p2Hashes: string[] = []
 
@@ -103,7 +105,7 @@ export class IntersectionQuestion {
       p1Hashes = await this.archivist.blockHashes(this.p1)
       p2Hashes = await this.archivist.blockHashes(this.p2)
     } catch (error) {
-      throw new Error("Failed to Retreive Hashes")
+      throw new Error('Failed to Retreive Hashes')
     }
 
     switch (this.direction) {
@@ -123,5 +125,10 @@ export class IntersectionQuestion {
       return true
     }
     return false
+  }
+
+  // process the question
+  public async process(): Promise < any > {
+    return this.didIntersect()
   }
 }

@@ -4,7 +4,7 @@ function blockResolvers() {
     return {
         Block: {
             hash(parent, args, context, info) {
-                console.log("resolvers.Block.hash");
+                console.log('resolvers.Block.hash');
                 return parent.hash;
             }
         }

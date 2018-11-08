@@ -17,6 +17,7 @@ export declare class DivinerApi {
             archivists(parent: any, args: any, context: any, info: any): Promise<any>;
             questions(parent: any, args: any, context: any, info: any): Promise<any>;
             questionHasIntersected(parent: any, args: any, context: any, info: any): Promise<any>;
+            questionNotifyIntersect(parent: any, args: any, context: any, info: any): Promise<any>;
         };
     })[];
     resolvers: IResolvers;

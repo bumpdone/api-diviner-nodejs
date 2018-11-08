@@ -30,6 +30,7 @@ const dotenv_expand_1 = __importDefault(require("dotenv-expand"));
 const sdk_core_nodejs_1 = require("@xyo-network/sdk-core-nodejs");
 const question_1 = require("./list/question");
 const worker_1 = require("./worker");
+const onintersect_1 = require("./question/onintersect");
 class DivinerApi {
     constructor(options) {
         this.archivists = [];
@@ -85,7 +86,24 @@ class DivinerApi {
                                     direction = intersection_2.Direction.Both;
                                     break;
                             }
-                            const q = new intersection_2.IntersectionQuestion(args.partyOneAddresses, args.partyTwoAddresses, args.markers, direction, [new archivist_2.ArchivistClient({ uri: context.archivists[0] })]);
+                            const q = new intersection_2.IntersectionQuestion({
+                                partyOne: args.partyOneAddresses,
+                                partyTwo: args.partyTwoAddresses,
+                                markers: args.markers,
+                                direction,
+                                archivist: [new archivist_2.ArchivistClient({ uri: context.archivists[0] })]
+                            });
+                            return q.process();
+                        });
+                    },
+                    questionNotifyIntersect(parent, args, context, info) {
+                        return __awaiter(this, void 0, void 0, function* () {
+                            const q = new onintersect_1.OnIntersectQuestion({
+                                partyOne: args.partyOneAddresses,
+                                partyTwo: args.partyTwoAddresses,
+                                markers: args.markers,
+                                archivist: [new archivist_2.ArchivistClient({ uri: context.archivists[0] })]
+                            });
                             return q.process();
                         });
                     }

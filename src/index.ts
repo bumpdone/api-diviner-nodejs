@@ -20,6 +20,7 @@ import dotenvExpand from 'dotenv-expand'
 import { IXyoSigner, XyoSha256HashProvider, XyoEcdsaSecp256k1Sha256SignerProvider } from '@xyo-network/sdk-core-nodejs'
 import { QuestionList } from './list/question'
 import { DivinerWorker } from './worker'
+import { OnIntersectQuestion } from './question/onintersect'
 
 export class DivinerApi {
 
@@ -68,13 +69,22 @@ export class DivinerApi {
               direction = Direction.Both
               break
           }
-          const q = new IntersectionQuestion(
-            args.partyOneAddresses,
-            args.partyTwoAddresses,
-            args.markers,
+          const q = new IntersectionQuestion({
+            partyOne: args.partyOneAddresses,
+            partyTwo: args.partyTwoAddresses,
+            markers: args.markers,
             direction,
-            [new ArchivistClient({ uri:context.archivists[0] })]
-            )
+            archivist: [new ArchivistClient({ uri:context.archivists[0] })]
+          })
+          return q.process()
+        },
+        async questionNotifyIntersect(parent: any, args: any, context: any, info: any): Promise<any> {
+          const q = new OnIntersectQuestion({
+            partyOne: args.partyOneAddresses,
+            partyTwo: args.partyTwoAddresses,
+            markers: args.markers,
+            archivist: [new ArchivistClient({ uri:context.archivists[0] })]
+          })
           return q.process()
         }
       }

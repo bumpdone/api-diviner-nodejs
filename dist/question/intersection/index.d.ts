@@ -18,7 +18,14 @@ export declare class IntersectionQuestion extends Question {
     markers: string[];
     direction: Direction;
     archivist: ArchivistClient;
-    constructor(partyOne: string[], partyTwo: string[], markers: string[], direction: Direction, archivist: ArchivistClient[]);
+    constructor(params: {
+        partyOne: string[];
+        partyTwo: string[];
+        markers?: string[];
+        direction?: Direction;
+        archivist: ArchivistClient[];
+    });
     publish(): Promise<string>;
-    process(): Promise<boolean>;
+    didIntersect(): Promise<boolean>;
+    process(): Promise<any>;
 }

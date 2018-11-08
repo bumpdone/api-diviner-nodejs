@@ -82,14 +82,14 @@ export class IntersectionQuestion extends Question {
   public direction: Direction
   public archivist: ArchivistClient
 
-  constructor(partyOne: string[], partyTwo: string[], markers: string[], direction: Direction, archivist: ArchivistClient[]) {
+  constructor(params: { partyOne: string[], partyTwo: string[], markers?: string[], direction?: Direction, archivist: ArchivistClient[] }) {
     super()
     this.type = 'intersection'
-    this.p1 = partyOne
-    this.p2 = partyTwo
-    this.markers = markers
-    this.direction = direction
-    this.archivist = archivist[0]
+    this.p1 = params.partyOne
+    this.p2 = params.partyTwo
+    this.markers = params.markers || []
+    this.direction = params.direction || Direction.Forward
+    this.archivist = params.archivist[0]
   }
 
   // publish the question to scsc
@@ -97,8 +97,7 @@ export class IntersectionQuestion extends Question {
     return '0x000'
   }
 
-  // process the question
-  public async process(): Promise < boolean > {
+  public async didIntersect(): Promise<boolean> {
     let p1Hashes: string[] = []
     let p2Hashes: string[] = []
 
@@ -126,5 +125,10 @@ export class IntersectionQuestion extends Question {
       return true
     }
     return false
+  }
+
+  // process the question
+  public async process(): Promise < any > {
+    return this.didIntersect()
   }
 }

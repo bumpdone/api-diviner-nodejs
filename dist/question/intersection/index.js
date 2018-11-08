@@ -78,14 +78,14 @@ class IntersectionQuestion extends __1.Question {
         });
         return prunedHashes;
     }
-    constructor(partyOne, partyTwo, markers, direction, archivist) {
+    constructor(params) {
         super();
         this.type = 'intersection';
-        this.p1 = partyOne;
-        this.p2 = partyTwo;
-        this.markers = markers;
-        this.direction = direction;
-        this.archivist = archivist[0];
+        this.p1 = params.partyOne;
+        this.p2 = params.partyTwo;
+        this.markers = params.markers || [];
+        this.direction = params.direction || Direction.Forward;
+        this.archivist = params.archivist[0];
     }
     // publish the question to scsc
     publish() {
@@ -93,8 +93,7 @@ class IntersectionQuestion extends __1.Question {
             return '0x000';
         });
     }
-    // process the question
-    process() {
+    didIntersect() {
         return __awaiter(this, void 0, void 0, function* () {
             let p1Hashes = [];
             let p2Hashes = [];
@@ -120,6 +119,12 @@ class IntersectionQuestion extends __1.Question {
                 return true;
             }
             return false;
+        });
+    }
+    // process the question
+    process() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.didIntersect();
         });
     }
 }

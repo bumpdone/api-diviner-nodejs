@@ -1,7 +1,6 @@
 import { ApolloServer, gql, Config, CorsOptions } from 'apollo-server'
 import { IResolvers } from 'graphql-tools'
 import listResolvers from './list/resolvers'
-import listMetaResolvers from './list/meta/resolvers'
 import blockResolvers from './scsc/block/resolvers'
 import { importSchema } from 'graphql-import'
 import Block from './scsc/block'
@@ -90,7 +89,6 @@ export class DivinerApi {
       }
     },
     listResolvers(),
-    listMetaResolvers(),
     blockResolvers()
   ]
 

@@ -27,7 +27,8 @@ class LocalSettings {
     load() {
         const storage = this.getLocalStorage();
         if (storage) {
-            const settings = JSON.parse(storage.getItem('settings') || '{}') || {};
+            const settingsFromStorage = JSON.parse(storage.getItem('settings') || '{}');
+            const settings = settingsFromStorage || {};
             this.settings.api = settings.api || this.settings.api;
             this.settings.mock = settings.mock || this.settings.mock;
             this.settings.network = settings.network || this.settings.network;

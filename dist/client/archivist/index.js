@@ -27,16 +27,6 @@ class ArchivistClient {
                 timeout: 10000
             }
         });
-        /*const defaultOptions = {
-          watchQuery: {
-            fetchPolicy: 'network-only',
-            errorPolicy: 'ignore',
-          },
-          query: {
-            fetchPolicy: 'network-only',
-            errorPolicy: 'all',
-          },
-        }*/
         this.client = new apollo_client_1.ApolloClient({
             link: httpLink,
             cache: new apollo_cache_inmemory_1.InMemoryCache()
@@ -44,58 +34,7 @@ class ArchivistClient {
     }
     blocks(keys, fields) {
         return __awaiter(this, void 0, void 0, function* () {
-            const fieldsToGet = fields || `
-      {
-        hash
-        signedHash
-        bytes
-        major
-        minor
-        publicKeys {
-          hash
-          bytes
-          major
-          minor
-          array {
-            hash
-            bytes
-            major
-            minor
-          }
-        }
-        signatures {
-          hash
-          bytes
-          major
-          minor
-          array {
-            hash
-            bytes
-            major
-            minor
-          }
-        }
-        payloads {
-          hash
-          bytes
-          major
-          minor
-          signedPayload {
-            hash
-            bytes
-            major
-            minor
-          }
-          unsignedPayload {
-            hash
-            bytes
-            major
-            minor
-          }
-        }
-        signedBytes
-      }
-    `;
+            const fieldsToGet = fields || ArchivistClient.blocksFields;
             const result = yield this.client.query({
                 query: graphql_tag_1.default `
         query BlocksByPublicKey($publicKeys: [String!]) {
@@ -117,20 +56,7 @@ class ArchivistClient {
     keys(keys) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield this.client.query({
-                query: graphql_tag_1.default `
-        query BlocksByPublicKey($publicKeys: [String!]) {
-          blocksByPublicKey(publicKeys: $publicKeys) {
-            publicKey
-            blocks {
-              publicKeys {
-                array {
-                  bytes
-                }
-              }
-            }
-          }
-        }
-      `,
+                query: ArchivistClient.keysQuery,
                 variables: {
                     publicKeys: keys
                 }
@@ -141,16 +67,7 @@ class ArchivistClient {
     blockHashes(keys) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield this.client.query({
-                query: graphql_tag_1.default `
-        query BlocksByPublicKey($publicKeys: [String!]) {
-          blocksByPublicKey(publicKeys: $publicKeys) {
-            publicKey
-            blocks {
-              signedHash
-            }
-          }
-        }
-      `,
+                query: ArchivistClient.blockHashesQuery,
                 variables: {
                     publicKeys: keys
                 }
@@ -165,5 +82,81 @@ class ArchivistClient {
         });
     }
 }
+ArchivistClient.blockHashesQuery = graphql_tag_1.default `
+    query BlocksByPublicKey($publicKeys: [String!]) {
+      blocksByPublicKey(publicKeys: $publicKeys) {
+        publicKey
+        blocks {
+          signedHash
+        }
+      }
+    }
+  `;
+ArchivistClient.keysQuery = graphql_tag_1.default `
+    query BlocksByPublicKey($publicKeys: [String!]) {
+      blocksByPublicKey(publicKeys: $publicKeys) {
+        publicKey
+        blocks {
+          publicKeys {
+            array {
+              bytes
+            }
+          }
+        }
+      }
+    }
+  `;
+ArchivistClient.blocksFields = `
+    {
+      hash
+      signedHash
+      bytes
+      major
+      minor
+      publicKeys {
+        hash
+        bytes
+        major
+        minor
+        array {
+          hash
+          bytes
+          major
+          minor
+        }
+      }
+      signatures {
+        hash
+        bytes
+        major
+        minor
+        array {
+          hash
+          bytes
+          major
+          minor
+        }
+      }
+      payloads {
+        hash
+        bytes
+        major
+        minor
+        signedPayload {
+          hash
+          bytes
+          major
+          minor
+        }
+        unsignedPayload {
+          hash
+          bytes
+          major
+          minor
+        }
+      }
+      signedBytes
+    }
+  `;
 exports.ArchivistClient = ArchivistClient;
 //# sourceMappingURL=index.js.map

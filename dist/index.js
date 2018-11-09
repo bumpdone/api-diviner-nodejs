@@ -101,7 +101,8 @@ class DivinerApi {
                                 partyOne: args.partyOneAddresses,
                                 partyTwo: args.partyTwoAddresses,
                                 markers: args.markers,
-                                archivist: [new archivist_2.ArchivistClient({ uri: context.archivists[0] })]
+                                archivist: [new archivist_2.ArchivistClient({ uri: context.archivists[0] })],
+                                beneficiary: ''
                             });
                             return q.process();
                         });

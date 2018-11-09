@@ -9,7 +9,7 @@ dotenv.config()
 
 let web3: any
 
-const mnemonic = process.env.MNENOMIC
+const mstring = process.env.MSTRING || ''
 const infuraKey = process.env.INFURA_API_KEY
 let currentUser = process.env.WALLET
 
@@ -98,13 +98,13 @@ const validContract = async (name: any) => {
   })
 }
 
-const getCurrentUser = () => currentUser
+export const getCurrentUser = () => currentUser
 
-export const refreshContracts = async (netId: any, ipfsHash: any) => {
+export const refreshContracts = async (netId: any, ipfsHash: any): Promise<any> => {
   console.log('Refreshing contracts')
   return downloadFiles(ipfsHash)
     .then((contracts: any) => {
-      currentNetwork = getNetworkString(0, String(netId))
+      currentNetwork = 'kovan' // getNetworkString(0, String(netId))
       const sc: any = []
       contracts.forEach((contract: any) => {
         const json = contract.data
@@ -118,7 +118,7 @@ export const refreshContracts = async (netId: any, ipfsHash: any) => {
           const contract2 = new web3.eth.Contract(json.abi, address)
           sc.push({
             name: json.contractName,
-            contract2,
+            contract: contract2,
             address,
             networks: json.networks,
           })
@@ -140,38 +140,54 @@ export const refreshContracts = async (netId: any, ipfsHash: any) => {
     })
 }
 
-const getWeb3 = (netId: any) => {
-  if (netId !== '5777') {
-    return new Web3(
-      new HDWalletProvider(
-        mnemonic,
-        `https://${getNetworksString(netId)}.infura.io/v3/${infuraKey}`,
-      ) as Provider,
-    )
+const getWeb3 = async (netId: any) => {
+  try {
+    if (netId !== '5777') {
+      const networkString = `https://kovan.infura.io/v3/${infuraKey}`
+      return new Web3(
+        new HDWalletProvider(
+          mstring,
+          networkString
+        ),
+      )
+
+      /*
+             return new Web3(
+        new Web3.providers.HttpProvider(
+          networkString
+        ),
+        )
+      */
+    }
+    const provider = new HDWalletProvider(mstring, 'http://localhost:8545')
+    return new Web3(provider)
+  } catch (ex) {
+    console.log(`getWeb3 Excepted: ${ex}`)
   }
-  const provider = new HDWalletProvider(mnemonic, 'http://localhost:8545')
-  return new Web3(provider as Provider)
 }
 
-const refreshUser = async () =>
-  web3.eth.getAccounts().then((accounts: any) => {
-    console.log(`Updating USER from ${currentUser} to ${accounts[0]}`)
-    currentUser = accounts[0]
-    return accounts[0]
-  })
+const refreshUser = async (): Promise<any> => {
+  console.log('Trying to refresh User...')
+  const accounts = web3.eth.getAccounts()
+
+  console.log(`Updating USER from ${currentUser} to ${accounts[0]}`)
+  currentUser = accounts[0]
+  return accounts[0]
+}
 
 // reloadWeb3 = async (netId, ipfsHash) => {
 //   web3 = getWeb3(netId)
 //   return refreshContracts(netId, ipfsHash)
 // }
 
-export const reloadWeb3 = (network: any, ipfsHash: any) => {
-  web3 = getWeb3(network)
+export const reloadWeb3 = async (network: any, ipfsHash: any): Promise<any> => {
+  console.log(`reloadWeb3: ${network}, ${ipfsHash}`)
+  web3 = await getWeb3(network)
 
-  const refreshDapp = async () =>
-    Promise.all([refreshUser(), refreshContracts(network, ipfsHash)])
-
-  return refreshDapp()
+  await refreshContracts(network, ipfsHash)
+  console.log('DONE!!!!!')
+  /*await refreshUser()
+  console.log('DONER!!!!!')*/
 }
 
 module.exports = {
@@ -179,4 +195,5 @@ module.exports = {
   reloadWeb3,
   validateContracts,
   contractNamed,
+  getCurrentUser
 }

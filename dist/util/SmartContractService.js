@@ -18,7 +18,7 @@ const web3_1 = __importDefault(require("web3"));
 const IPFSReader_1 = require("./IPFSReader");
 dotenv_1.default.config();
 let web3;
-const mnemonic = process.env.MNENOMIC;
+const mstring = process.env.MSTRING || '';
 const infuraKey = process.env.INFURA_API_KEY;
 let currentUser = process.env.WALLET;
 let currentNetwork;
@@ -91,12 +91,12 @@ const validContract = (name) => __awaiter(this, void 0, void 0, function* () {
             .catch((err) => reject(err));
     });
 });
-const getCurrentUser = () => currentUser;
+exports.getCurrentUser = () => currentUser;
 exports.refreshContracts = (netId, ipfsHash) => __awaiter(this, void 0, void 0, function* () {
     console.log('Refreshing contracts');
     return IPFSReader_1.downloadFiles(ipfsHash)
         .then((contracts) => {
-        currentNetwork = getNetworkString(0, String(netId));
+        currentNetwork = 'kovan'; // getNetworkString(0, String(netId))
         const sc = [];
         contracts.forEach((contract) => {
             const json = contract.data;
@@ -106,7 +106,7 @@ exports.refreshContracts = (netId, ipfsHash) => __awaiter(this, void 0, void 0, 
                 const contract2 = new web3.eth.Contract(json.abi, address);
                 sc.push({
                     name: json.contractName,
-                    contract2,
+                    contract: contract2,
                     address,
                     networks: json.networks,
                 });
@@ -124,33 +124,50 @@ exports.refreshContracts = (netId, ipfsHash) => __awaiter(this, void 0, void 0, 
         // throw new Error('Could not refresh', err)
     });
 });
-const getWeb3 = (netId) => {
-    if (netId !== '5777') {
-        return new web3_1.default(new truffle_hdwallet_provider_1.default(mnemonic, `https://${getNetworksString(netId)}.infura.io/v3/${infuraKey}`));
+const getWeb3 = (netId) => __awaiter(this, void 0, void 0, function* () {
+    try {
+        if (netId !== '5777') {
+            const networkString = `https://kovan.infura.io/v3/${infuraKey}`;
+            return new web3_1.default(new truffle_hdwallet_provider_1.default(mstring, networkString));
+            /*
+                   return new Web3(
+              new Web3.providers.HttpProvider(
+                networkString
+              ),
+              )
+            */
+        }
+        const provider = new truffle_hdwallet_provider_1.default(mstring, 'http://localhost:8545');
+        return new web3_1.default(provider);
     }
-    const provider = new truffle_hdwallet_provider_1.default(mnemonic, 'http://localhost:8545');
-    return new web3_1.default(provider);
-};
+    catch (ex) {
+        console.log(`getWeb3 Excepted: ${ex}`);
+    }
+});
 const refreshUser = () => __awaiter(this, void 0, void 0, function* () {
-    return web3.eth.getAccounts().then((accounts) => {
-        console.log(`Updating USER from ${currentUser} to ${accounts[0]}`);
-        currentUser = accounts[0];
-        return accounts[0];
-    });
+    console.log('Trying to refresh User...');
+    const accounts = web3.eth.getAccounts();
+    console.log(`Updating USER from ${currentUser} to ${accounts[0]}`);
+    currentUser = accounts[0];
+    return accounts[0];
 });
 // reloadWeb3 = async (netId, ipfsHash) => {
 //   web3 = getWeb3(netId)
 //   return refreshContracts(netId, ipfsHash)
 // }
-exports.reloadWeb3 = (network, ipfsHash) => {
-    web3 = getWeb3(network);
-    const refreshDapp = () => __awaiter(this, void 0, void 0, function* () { return Promise.all([refreshUser(), exports.refreshContracts(network, ipfsHash)]); });
-    return refreshDapp();
-};
+exports.reloadWeb3 = (network, ipfsHash) => __awaiter(this, void 0, void 0, function* () {
+    console.log(`reloadWeb3: ${network}, ${ipfsHash}`);
+    web3 = yield getWeb3(network);
+    yield exports.refreshContracts(network, ipfsHash);
+    console.log('DONE!!!!!');
+    /*await refreshUser()
+    console.log('DONER!!!!!')*/
+});
 module.exports = {
     refreshContracts: exports.refreshContracts,
     reloadWeb3: exports.reloadWeb3,
     validateContracts: exports.validateContracts,
     contractNamed: exports.contractNamed,
+    getCurrentUser: exports.getCurrentUser
 };
 //# sourceMappingURL=SmartContractService.js.map

@@ -3,40 +3,61 @@ import { inspect } from 'util'
 import { Question } from '../../question'
 
 import * as sc from '../../util/SmartContractService'
-const contractNamed = sc.contractNamed
+import { OnIntersectQuestion } from '../../question/onintersect'
+import { Direction } from '../../question/intersection'
 
 export class QuestionList extends List {
   public static contract: any
-  public static runner = QuestionList.createRunner()
+  public static runner: any
+
+  public static async initialize() {
+    QuestionList.runner = await QuestionList.createRunner()
+  }
+
+  public static async reportTimedout(itemA: string, itemB: string, beneficiary: string) {
+    const from = sc.getCurrentUser()
+    await QuestionList.contract.methods.refundPayment(itemA, itemB, beneficiary).send({ from })
+  }
+
+  public static async reportIntersected(itemA: string, itemB: string, beneficiary: string) {
+    const from = sc.getCurrentUser()
+    await QuestionList.contract.methods.payForDelivery(itemA, itemB, beneficiary).send({ from })
+  }
 
   private static async createRunner() {
-    const runner = sc.reloadWeb3(
+    await sc.reloadWeb3(
         '42',
-        'QmWBZp6NbGB3u8CYaWYA6JMcPx8oYQCizzWw8UZzErb2tv',
+        'QmXdwrnoWGV7uDEQ2HvrTALPoFkF39578HQzmB1CGeqDfT',
       )
-    runner.then(() => {
-      QuestionList.contract = sc.contractNamed('PayOnDelivery')
-      console.log('Smart Contract', this.contract)
-    })
+
+    QuestionList.contract = await sc.contractNamed('PayOnDelivery')
+    console.log('Smart Contract Loaded!')
   }
 
   public items: Question[] = []
+  private context: any
 
   constructor(context: any) {
     super()
+    this.context = context
   }
 
   public async read(): Promise < any > {
-    console.log('Reading  sQuestions...')
-    try {
-      if (QuestionList.contract) {
-        const questions = await QuestionList.contract.methods
-            .allQuestions()
-            .send()
-        console.log(`Quesionts: ${questions.length}`)
+    console.log('Reading Questions...')
+    if (QuestionList.contract) {
+      console.log('Reading Questions [Really]...')
+      try {
+        const questions = await QuestionList.contract.methods.questions(0).call()
+        await questions.forEach(async (question: any) => {
+          const questionObj = new OnIntersectQuestion(
+            { partyOne: question.itemA, partyTwo: question.itemB, markers: [question.marker], direction: Direction.Forward, archivist: this.context.archivists, beneficiary: question.beneficiary }
+          )
+          this.items.push(questionObj)
+        })
+        console.log(`read[Good]: ${this.items.length}`)
+      } catch (ex) {
+        console.log(`read[Reverted]: ${ex}`)
       }
-    } catch (ex) {
-      console.error(ex)
     }
     return true
   }

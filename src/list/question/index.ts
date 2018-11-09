@@ -5,6 +5,7 @@ import { Question } from '../../question'
 import * as sc from '../../util/SmartContractService'
 import { OnIntersectQuestion } from '../../question/onintersect'
 import { Direction } from '../../question/intersection'
+import { ArchivistClient } from '../../client/archivist'
 
 export class QuestionList extends List {
   public static contract: any
@@ -39,7 +40,7 @@ export class QuestionList extends List {
 
   constructor(context: any) {
     super()
-    this.context = context
+    this.context = context({ req:{} })
   }
 
   public async read(): Promise < any > {
@@ -47,16 +48,14 @@ export class QuestionList extends List {
     if (QuestionList.contract) {
       console.log('Reading Questions [Really]...')
       try {
-        const questions = await QuestionList.contract.methods.questions(0).call()
-        await questions.forEach(async (question: any) => {
-          const questionObj = new OnIntersectQuestion(
-            { partyOne: question.itemA, partyTwo: question.itemB, markers: [question.marker], direction: Direction.Forward, archivist: this.context.archivists, beneficiary: question.beneficiary }
-          )
-          this.items.push(questionObj)
-        })
+        const question = await QuestionList.contract.methods.questions(0).call()
+        const questionObj = new OnIntersectQuestion(
+          { partyOne: question.itemA, partyTwo: question.itemB, markers: [question.marker], direction: Direction.Forward, archivists: [new ArchivistClient({ uri:this.context.archivists[0] })], beneficiary: question.beneficiary }
+        )
+        this.items.push(questionObj)
         console.log(`read[Good]: ${this.items.length}`)
       } catch (ex) {
-        console.log(`read[Reverted]: ${ex}`)
+        console.log('read[Reverted]:', ex)
       }
     }
     return true

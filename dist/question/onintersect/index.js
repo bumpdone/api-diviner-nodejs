@@ -17,8 +17,9 @@ class OnIntersectQuestion extends intersection_1.IntersectionQuestion {
     // process the question
     process() {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.didIntersect() ?
-                true : (this.didTimeout() ? false : null);
+            const didInteract = yield this.didIntersect();
+            const didTimeout = this.didTimeout();
+            return didInteract ? true : (didTimeout ? false : null);
         });
     }
     didTimeout() {

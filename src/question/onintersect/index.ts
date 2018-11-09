@@ -6,15 +6,16 @@ export class OnIntersectQuestion extends IntersectionQuestion {
 
   public beneficiary: string
 
-  constructor(params: { partyOne: string[], partyTwo: string[], markers?: string[], direction?: Direction, archivist: ArchivistClient[], beneficiary: string }) {
+  constructor(params: { partyOne: string[], partyTwo: string[], markers?: string[], direction?: Direction, archivists: ArchivistClient[], beneficiary: string }) {
     super(params)
     this.beneficiary = params.beneficiary
   }
 
   // process the question
   public async process(): Promise < any > {
-    return this.didIntersect() ?
-      true : (this.didTimeout() ? false : null)
+    const didInteract = await this.didIntersect()
+    const didTimeout = this.didTimeout()
+    return didInteract ? true : (didTimeout ? false : null)
   }
 
   private didTimeout(): boolean {

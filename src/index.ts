@@ -73,7 +73,7 @@ export class DivinerApi {
             partyTwo: args.partyTwoAddresses,
             markers: args.markers,
             direction,
-            archivist: [new ArchivistClient({ uri:context.archivists[0] })]
+            archivists: [new ArchivistClient({ uri:context.archivists[0] })]
           })
           return q.process()
         },
@@ -82,10 +82,12 @@ export class DivinerApi {
             partyOne: args.partyOneAddresses,
             partyTwo: args.partyTwoAddresses,
             markers: args.markers,
-            archivist: [new ArchivistClient({ uri:context.archivists[0] })],
+            direction: Direction.Forward,
+            archivists: [new ArchivistClient({ uri:context.archivists[0] })],
             beneficiary: ''
           })
-          return q.process()
+          const res = q.process()
+          return res
         }
       }
     },
@@ -119,6 +121,8 @@ export class DivinerApi {
       seeds: this.seeds,
       signer: this.signer
     })
+
+    this.worker.start(5000, context)
 
     const config: Config & { cors?: CorsOptions | boolean } = {
       typeDefs,
@@ -154,8 +158,6 @@ export class DivinerApi {
 
     this.ipfs.on('start', () => console.log('Ipfs started!'))
 
-    this.worker.start()
-
     this.server.listen({ port }).then(({ url }: {url: any}) => {
       console.log(`XYO Diviner [${getVersion()}] ready at ${url}`)
     })
@@ -183,13 +185,13 @@ program
   .version(getVersion())
   .option('-p, --port [n]', 'The Tcp port to listen on for connections (not yet implemented)', parseInt)
   .option('-g, --graphql [n]', 'The http port to listen on for graphql connections (default=12002)', parseInt)
-  .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://archivists.xyo.network:11001/)')
+  .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://spatial-archivist.xyo.network:11001)')
 
 program
   .command('start')
   .description('Start the Diviner')
   .action(() => {
-    const xyo = new DivinerApi({ seeds: { archivists: [(program.archivist || 'http://archivists.xyo.network:11001/')], diviners: [] } })
+    const xyo = new DivinerApi({ seeds: { archivists: [(program.archivist || 'http://spatial-archivist.xyo.network:11001')], diviners: [] } })
     xyo.start(program.graphql || 12002)
   })
 

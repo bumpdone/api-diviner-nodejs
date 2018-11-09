@@ -22,11 +22,12 @@ const __1 = __importDefault(require(".."));
 const sc = __importStar(require("../../util/SmartContractService"));
 const onintersect_1 = require("../../question/onintersect");
 const intersection_1 = require("../../question/intersection");
+const archivist_1 = require("../../client/archivist");
 class QuestionList extends __1.default {
     constructor(context) {
         super();
         this.items = [];
-        this.context = context;
+        this.context = context({ req: {} });
     }
     static initialize() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -58,15 +59,13 @@ class QuestionList extends __1.default {
             if (QuestionList.contract) {
                 console.log('Reading Questions [Really]...');
                 try {
-                    const questions = yield QuestionList.contract.methods.questions(0).call();
-                    yield questions.forEach((question) => __awaiter(this, void 0, void 0, function* () {
-                        const questionObj = new onintersect_1.OnIntersectQuestion({ partyOne: question.itemA, partyTwo: question.itemB, markers: [question.marker], direction: intersection_1.Direction.Forward, archivist: this.context.archivists, beneficiary: question.beneficiary });
-                        this.items.push(questionObj);
-                    }));
+                    const question = yield QuestionList.contract.methods.questions(0).call();
+                    const questionObj = new onintersect_1.OnIntersectQuestion({ partyOne: question.itemA, partyTwo: question.itemB, markers: [question.marker], direction: intersection_1.Direction.Forward, archivists: [new archivist_1.ArchivistClient({ uri: this.context.archivists[0] })], beneficiary: question.beneficiary });
+                    this.items.push(questionObj);
                     console.log(`read[Good]: ${this.items.length}`);
                 }
                 catch (ex) {
-                    console.log(`read[Bad]: ${ex}`);
+                    console.log('read[Reverted]:', ex);
                 }
             }
             return true;

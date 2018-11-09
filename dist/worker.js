@@ -13,6 +13,7 @@ class DivinerWorker {
     start(interval = 5000, context = {}) {
         return __awaiter(this, void 0, void 0, function* () {
             console.log('Starting Looper...');
+            this.context = context;
             yield question_1.QuestionList.initialize();
             if (this.timer) {
                 console.log('Worker already started...');
@@ -40,11 +41,12 @@ class DivinerWorker {
             console.log('Looking for Questions...');
             const questions = new question_1.QuestionList(this.context);
             yield questions.read();
-            questions.items.forEach((question) => __awaiter(this, void 0, void 0, function* () {
+            yield questions.items.forEach((question) => __awaiter(this, void 0, void 0, function* () {
                 console.log(`Processing Question: ${question.name}`);
                 const intersected = yield question.process();
+                console.log(`Processed Question: ${intersected}`);
                 if (intersected) {
-                    question_1.QuestionList.reportIntersected(question.p1, question.p2, question.beneficiary);
+                    yield question_1.QuestionList.reportIntersected(question.p1, question.p2, question.beneficiary);
                 }
             }));
         });

@@ -7,7 +7,7 @@ export declare class OnIntersectQuestion extends IntersectionQuestion {
         partyTwo: string[];
         markers?: string[];
         direction?: Direction;
-        archivist: ArchivistClient[];
+        archivists: ArchivistClient[];
         beneficiary: string;
     });
     process(): Promise<any>;

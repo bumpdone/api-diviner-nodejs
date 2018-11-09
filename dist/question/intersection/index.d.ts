@@ -23,7 +23,7 @@ export declare class IntersectionQuestion extends Question {
         partyTwo: string[];
         markers?: string[];
         direction?: Direction;
-        archivist: ArchivistClient[];
+        archivists: ArchivistClient[];
     });
     publish(): Promise<string>;
     didIntersect(): Promise<boolean>;

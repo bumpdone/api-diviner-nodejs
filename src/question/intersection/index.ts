@@ -82,14 +82,14 @@ export class IntersectionQuestion extends Question {
   public direction: Direction
   public archivist: ArchivistClient
 
-  constructor(params: { partyOne: string[], partyTwo: string[], markers?: string[], direction?: Direction, archivist: ArchivistClient[] }) {
+  constructor(params: { partyOne: string[], partyTwo: string[], markers?: string[], direction?: Direction, archivists: ArchivistClient[] }) {
     super()
     this.type = 'intersection'
     this.p1 = params.partyOne
     this.p2 = params.partyTwo
     this.markers = params.markers || []
     this.direction = params.direction || Direction.Forward
-    this.archivist = params.archivist[0]
+    this.archivist = params.archivists[0]
   }
 
   // publish the question to scsc
@@ -105,7 +105,7 @@ export class IntersectionQuestion extends Question {
       p1Hashes = await this.archivist.blockHashes(this.p1)
       p2Hashes = await this.archivist.blockHashes(this.p2)
     } catch (error) {
-      throw new Error('Failed to Retreive Hashes')
+      throw new Error(`Failed to Retreive Hashes: ${error}`)
     }
 
     switch (this.direction) {

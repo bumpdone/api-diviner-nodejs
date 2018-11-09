@@ -5,12 +5,17 @@ export class DivinerWorker {
   private timer?: any
   private context: any
 
-  public start(interval = 5000, context: any = {}) {
+  public async start(interval = 5000, context: any = {}) {
+    console.log('Starting Looper...')
+    this.context = context
+    await QuestionList.initialize()
     if (this.timer) {
       console.log('Worker already started...')
     } else {
-      this.timer = setInterval(() => {
-        this.looper()
+      this.timer = setInterval(async () => {
+        console.log('Looper1')
+        await this.looper()
+        console.log('Looper2')
       }, interval)
     }
   }
@@ -24,13 +29,17 @@ export class DivinerWorker {
     }
   }
 
-  private looper() {
+  private async looper() {
     console.log('Looking for Questions...')
     const questions = new QuestionList(this.context)
-    questions.read()
-    questions.items.forEach((question) => {
+    await questions.read()
+    await questions.items.forEach(async (question: any) => {
       console.log(`Processing Question: ${question.name}`)
-      question.process()
+      const intersected = await question.process()
+      console.log(`Processed Question: ${intersected}`)
+      if (intersected) {
+        await QuestionList.reportIntersected(question.p1, question.p2, question.beneficiary)
+      }
     })
   }
 }

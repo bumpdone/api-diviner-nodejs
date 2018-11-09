@@ -90,7 +90,7 @@ class DivinerApi {
                                 partyTwo: args.partyTwoAddresses,
                                 markers: args.markers,
                                 direction,
-                                archivist: [new archivist_2.ArchivistClient({ uri: context.archivists[0] })]
+                                archivists: [new archivist_2.ArchivistClient({ uri: context.archivists[0] })]
                             });
                             return q.process();
                         });
@@ -101,9 +101,12 @@ class DivinerApi {
                                 partyOne: args.partyOneAddresses,
                                 partyTwo: args.partyTwoAddresses,
                                 markers: args.markers,
-                                archivist: [new archivist_2.ArchivistClient({ uri: context.archivists[0] })]
+                                direction: intersection_2.Direction.Forward,
+                                archivists: [new archivist_2.ArchivistClient({ uri: context.archivists[0] })],
+                                beneficiary: ''
                             });
-                            return q.process();
+                            const res = q.process();
+                            return res;
                         });
                     }
                 }
@@ -129,6 +132,7 @@ class DivinerApi {
             seeds: this.seeds,
             signer: this.signer
         });
+        this.worker.start(5000, context);
         const config = {
             typeDefs,
             resolvers: this.resolvers,
@@ -151,7 +155,6 @@ class DivinerApi {
             console.log('Something went terribly wrong!', error);
         });
         this.ipfs.on('start', () => console.log('Ipfs started!'));
-        this.worker.start();
         this.server.listen({ port }).then(({ url }) => {
             console.log(`XYO Diviner [${getVersion()}] ready at ${url}`);
         });
@@ -176,12 +179,12 @@ commander_1.default
     .version(getVersion())
     .option('-p, --port [n]', 'The Tcp port to listen on for connections (not yet implemented)', parseInt)
     .option('-g, --graphql [n]', 'The http port to listen on for graphql connections (default=12002)', parseInt)
-    .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://archivists.xyo.network:11001/)');
+    .option('-a, --archivist [s]', 'The url of the seed archivist to contact (default=http://spatial-archivist.xyo.network:11001)');
 commander_1.default
     .command('start')
     .description('Start the Diviner')
     .action(() => {
-    const xyo = new DivinerApi({ seeds: { archivists: [(commander_1.default.archivist || 'http://archivists.xyo.network:11001/')], diviners: [] } });
+    const xyo = new DivinerApi({ seeds: { archivists: [(commander_1.default.archivist || 'http://spatial-archivist.xyo.network:11001')], diviners: [] } });
     xyo.start(commander_1.default.graphql || 12002);
 });
 commander_1.default.parse(process.argv);

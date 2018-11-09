@@ -85,7 +85,7 @@ class IntersectionQuestion extends __1.Question {
         this.p2 = params.partyTwo;
         this.markers = params.markers || [];
         this.direction = params.direction || Direction.Forward;
-        this.archivist = params.archivist[0];
+        this.archivist = params.archivists[0];
     }
     // publish the question to scsc
     publish() {
@@ -102,7 +102,7 @@ class IntersectionQuestion extends __1.Question {
                 p2Hashes = yield this.archivist.blockHashes(this.p2);
             }
             catch (error) {
-                throw new Error('Failed to Retreive Hashes');
+                throw new Error(`Failed to Retreive Hashes: ${error}`);
             }
             switch (this.direction) {
                 case Direction.Forward:

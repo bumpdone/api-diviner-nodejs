@@ -20,9 +20,9 @@ class DivinerWorker {
             }
             else {
                 this.timer = setInterval(() => __awaiter(this, void 0, void 0, function* () {
-                    console.log('Looper1');
+                    console.log('========');
                     yield this.looper();
-                    console.log('Looper2');
+                    console.log('--------');
                 }), interval);
             }
         });
@@ -42,7 +42,7 @@ class DivinerWorker {
             const questions = new question_1.QuestionList(this.context);
             yield questions.read();
             yield questions.items.forEach((question) => __awaiter(this, void 0, void 0, function* () {
-                console.log(`Processing Question: ${question.name}`);
+                console.log('Processing Question...');
                 const intersected = yield question.process();
                 console.log(`Processed Question: ${intersected}`);
                 if (intersected) {

@@ -96,7 +96,7 @@ exports.refreshContracts = (netId, ipfsHash) => __awaiter(this, void 0, void 0, 
     console.log('Refreshing contracts');
     return IPFSReader_1.downloadFiles(ipfsHash)
         .then((contracts) => {
-        currentNetwork = 'kovan'; // getNetworkString(0, String(netId))
+        currentNetwork = 'mainnet'; // getNetworkString(0, String(netId))
         const sc = [];
         contracts.forEach((contract) => {
             const json = contract.data;
@@ -127,7 +127,7 @@ exports.refreshContracts = (netId, ipfsHash) => __awaiter(this, void 0, void 0, 
 const getWeb3 = (netId) => __awaiter(this, void 0, void 0, function* () {
     try {
         if (netId !== '5777') {
-            const networkString = `https://kovan.infura.io/v3/${infuraKey}`;
+            const networkString = `https://mainnet.infura.io/v3/${infuraKey}`;
             return new web3_1.default(new truffle_hdwallet_provider_1.default(mstring, networkString));
             /*
                    return new Web3(

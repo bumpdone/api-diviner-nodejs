@@ -37,35 +37,36 @@ class QuestionList extends __1.default {
     static reportTimedout(itemA, itemB, beneficiary) {
         return __awaiter(this, void 0, void 0, function* () {
             const from = sc.getCurrentUser();
-            yield QuestionList.contract.methods.refundPayment(itemA, itemB, beneficiary).send({ from });
+            console.log('Reporting Timed Out: ', from);
+            yield QuestionList.contract.methods.refundPayment(itemA, itemB, beneficiary).send({ from, gas: 6986331, gasPrice: 40000000000 });
         });
     }
     static reportIntersected(itemA, itemB, beneficiary) {
         return __awaiter(this, void 0, void 0, function* () {
             const from = sc.getCurrentUser();
-            yield QuestionList.contract.methods.payForDelivery(itemA, itemB, beneficiary).send({ from });
+            console.log('Reporting Intersected: ', from);
+            yield QuestionList.contract.methods.payForDelivery(itemA, itemB, beneficiary).send({ from, gasLimit: 6986331, gasPrice: 40000000000 });
         });
     }
     static createRunner() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield sc.reloadWeb3('42', 'QmXdwrnoWGV7uDEQ2HvrTALPoFkF39578HQzmB1CGeqDfT');
+            yield sc.reloadWeb3('1', 'QmS76L77m9Dd3esNxShUoAGW7EWpmZ2M663wdUTVhNFLpg');
             QuestionList.contract = yield sc.contractNamed('PayOnDelivery');
             console.log('Smart Contract Loaded!');
         });
     }
     read() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('Reading Questions...');
             if (QuestionList.contract) {
-                console.log('Reading Questions [Really]...');
+                console.log('... .. ...');
                 try {
                     const question = yield QuestionList.contract.methods.questions(0).call();
                     const questionObj = new onintersect_1.OnIntersectQuestion({ partyOne: question.itemA, partyTwo: question.itemB, markers: [question.marker], direction: intersection_1.Direction.Forward, archivists: [new archivist_1.ArchivistClient({ uri: this.context.archivists[0] })], beneficiary: question.beneficiary });
                     this.items.push(questionObj);
-                    console.log(`read[Good]: ${this.items.length}`);
+                    console.log(`read: ${this.items.length} Questions Found`);
                 }
                 catch (ex) {
-                    console.log('read[Reverted]:', ex);
+                    console.log('read: No Questions Found');
                 }
             }
             return true;

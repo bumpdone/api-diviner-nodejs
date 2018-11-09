@@ -132,7 +132,7 @@ class DivinerApi {
             seeds: this.seeds,
             signer: this.signer
         });
-        this.worker.start(5000, context);
+        this.worker.start(20000, context);
         const config = {
             typeDefs,
             resolvers: this.resolvers,

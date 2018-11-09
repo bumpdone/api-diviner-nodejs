@@ -104,7 +104,7 @@ export const refreshContracts = async (netId: any, ipfsHash: any): Promise<any> 
   console.log('Refreshing contracts')
   return downloadFiles(ipfsHash)
     .then((contracts: any) => {
-      currentNetwork = 'kovan' // getNetworkString(0, String(netId))
+      currentNetwork = 'mainnet' // getNetworkString(0, String(netId))
       const sc: any = []
       contracts.forEach((contract: any) => {
         const json = contract.data
@@ -143,7 +143,7 @@ export const refreshContracts = async (netId: any, ipfsHash: any): Promise<any> 
 const getWeb3 = async (netId: any) => {
   try {
     if (netId !== '5777') {
-      const networkString = `https://kovan.infura.io/v3/${infuraKey}`
+      const networkString = `https://mainnet.infura.io/v3/${infuraKey}`
       return new Web3(
         new HDWalletProvider(
           mstring,

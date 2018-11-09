@@ -122,7 +122,7 @@ export class DivinerApi {
       signer: this.signer
     })
 
-    this.worker.start(5000, context)
+    this.worker.start(20000, context)
 
     const config: Config & { cors?: CorsOptions | boolean } = {
       typeDefs,

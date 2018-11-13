@@ -38,14 +38,16 @@ class QuestionList extends __1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const from = sc.getCurrentUser();
             console.log('Reporting Timed Out: ', from);
-            yield QuestionList.contract.methods.refundPayment(itemA, itemB, beneficiary).send({ from, gas: 6986331, gasPrice: 40000000000 });
+            yield QuestionList.contract.methods.refundPayment(itemA, itemB, beneficiary)
+                .send({ from, gas: 6986331, gasPrice: 40000000000 });
         });
     }
     static reportIntersected(itemA, itemB, beneficiary) {
         return __awaiter(this, void 0, void 0, function* () {
             const from = sc.getCurrentUser();
             console.log('Reporting Intersected: ', from);
-            yield QuestionList.contract.methods.payForDelivery(itemA, itemB, beneficiary).send({ from, gasLimit: 6986331, gasPrice: 40000000000 });
+            yield QuestionList.contract.methods.payForDelivery(itemA, itemB, beneficiary)
+                .send({ from, gasLimit: 6986331, gasPrice: 40000000000 });
         });
     }
     static createRunner() {
@@ -61,7 +63,14 @@ class QuestionList extends __1.default {
                 console.log('... .. ...');
                 try {
                     const question = yield QuestionList.contract.methods.questions(0).call();
-                    const questionObj = new onintersect_1.OnIntersectQuestion({ partyOne: question.itemA, partyTwo: question.itemB, markers: [question.marker], direction: intersection_1.Direction.Forward, archivists: [new archivist_1.ArchivistClient({ uri: this.context.archivists[0] })], beneficiary: question.beneficiary });
+                    const questionObj = new onintersect_1.OnIntersectQuestion({
+                        partyOne: question.itemA,
+                        partyTwo: question.itemB,
+                        markers: [question.marker],
+                        direction: intersection_1.Direction.Forward,
+                        archivists: [new archivist_1.ArchivistClient({ uri: this.context.archivists[0] })],
+                        beneficiary: question.beneficiary
+                    });
                     this.items.push(questionObj);
                     console.log(`read: ${this.items.length} Questions Found`);
                 }

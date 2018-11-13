@@ -6,7 +6,16 @@ export class OnIntersectQuestion extends IntersectionQuestion {
 
   public beneficiary: string
 
-  constructor(params: { partyOne: string[], partyTwo: string[], markers?: string[], direction?: Direction, archivists: ArchivistClient[], beneficiary: string }) {
+  constructor(params:
+    {
+      partyOne: string[],
+      partyTwo: string[],
+      markers?: string[],
+      direction?: Direction,
+      archivists: ArchivistClient[],
+      beneficiary: string
+    }
+  ) {
     super(params)
     this.beneficiary = params.beneficiary
   }

@@ -18,13 +18,15 @@ export class QuestionList extends List {
   public static async reportTimedout(itemA: string, itemB: string, beneficiary: string) {
     const from = sc.getCurrentUser()
     console.log('Reporting Timed Out: ', from)
-    await QuestionList.contract.methods.refundPayment(itemA, itemB, beneficiary).send({ from, gas: 6986331, gasPrice: 40000000000 })
+    await QuestionList.contract.methods.refundPayment(itemA, itemB, beneficiary)
+      .send({ from, gas: 6986331, gasPrice: 40000000000 })
   }
 
   public static async reportIntersected(itemA: string, itemB: string, beneficiary: string) {
     const from = sc.getCurrentUser()
     console.log('Reporting Intersected: ', from)
-    await QuestionList.contract.methods.payForDelivery(itemA, itemB, beneficiary).send({ from, gasLimit: 6986331, gasPrice: 40000000000 })
+    await QuestionList.contract.methods.payForDelivery(itemA, itemB, beneficiary)
+      .send({ from, gasLimit: 6986331, gasPrice: 40000000000 })
   }
 
   private static async createRunner() {
@@ -51,7 +53,14 @@ export class QuestionList extends List {
       try {
         const question = await QuestionList.contract.methods.questions(0).call()
         const questionObj = new OnIntersectQuestion(
-          { partyOne: question.itemA, partyTwo: question.itemB, markers: [question.marker], direction: Direction.Forward, archivists: [new ArchivistClient({ uri:this.context.archivists[0] })], beneficiary: question.beneficiary }
+          {
+            partyOne: question.itemA,
+            partyTwo: question.itemB,
+            markers: [question.marker],
+            direction: Direction.Forward,
+            archivists: [new ArchivistClient({ uri:this.context.archivists[0] })],
+            beneficiary: question.beneficiary
+          }
         )
         this.items.push(questionObj)
         console.log(`read: ${this.items.length} Questions Found`)

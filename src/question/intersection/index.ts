@@ -82,7 +82,9 @@ export class IntersectionQuestion extends Question {
   public direction: Direction
   public archivist: ArchivistClient
 
-  constructor(params: { partyOne: string[], partyTwo: string[], markers?: string[], direction?: Direction, archivists: ArchivistClient[] }) {
+  constructor(params:
+    { partyOne: string[], partyTwo: string[], markers?: string[], direction?: Direction, archivists: ArchivistClient[] }
+  ) {
     super()
     this.type = 'intersection'
     this.p1 = params.partyOne

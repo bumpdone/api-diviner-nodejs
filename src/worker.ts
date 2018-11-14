@@ -13,9 +13,9 @@ export class DivinerWorker {
       console.log('Worker already started...')
     } else {
       this.timer = setInterval(async () => {
-        console.log('Looper1')
+        console.log('========')
         await this.looper()
-        console.log('Looper2')
+        console.log('--------')
       }, interval)
     }
   }
@@ -34,7 +34,7 @@ export class DivinerWorker {
     const questions = new QuestionList(this.context)
     await questions.read()
     await questions.items.forEach(async (question: any) => {
-      console.log(`Processing Question: ${question.name}`)
+      console.log('Processing Question...')
       const intersected = await question.process()
       console.log(`Processed Question: ${intersected}`)
       if (intersected) {

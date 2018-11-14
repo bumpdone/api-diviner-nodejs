@@ -4,7 +4,12 @@ export declare class QuestionList extends List {
     static contract: any;
     static runner: any;
     static initialize(): Promise<void>;
-    static reportTimedout(itemA: string, itemB: string, beneficiary: string): Promise<void>;
+    static sendParams(from: string): {
+        from: string;
+        gas: number;
+        gasPrice: number;
+    };
+    static reportTimeout(itemA: string, itemB: string, beneficiary: string): Promise<void>;
     static reportIntersected(itemA: string, itemB: string, beneficiary: string): Promise<void>;
     private static createRunner;
     items: Question[];

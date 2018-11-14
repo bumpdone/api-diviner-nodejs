@@ -11,8 +11,7 @@ export declare class IntersectionQuestion extends Question {
     static getStringArrayIntersection(a1: string[], a2: string[]): string[];
     static removePreceedingDataByHash(hashes: string[], marker: string): string[];
     static removeSubsequentDataByHash(hashes: string[], marker: string): string[];
-    static removePreceedingData(hashes: string[], markers: string[]): string[];
-    static removeSubsequentData(hashes: string[], markers: string[]): string[];
+    static removeData(hashes: string[], markers: string[], proc: any): string[];
     p1: string[];
     p2: string[];
     markers: string[];

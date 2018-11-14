@@ -140,20 +140,27 @@ export class ArchivistClient {
   }
 
   public async blockHashes(keys: string[]): Promise<any> {
-    const result: any = await this.client.query({
-      query: ArchivistClient.blockHashesQuery,
-      variables: {
-        publicKeys: keys
-      }
-    })
+    let result: any
+    try {
+      result = await this.client.query({
+        query: ArchivistClient.blockHashesQuery,
+        variables: {
+          publicKeys: keys
+        }
+      })
+    } catch (ex) {
+      console.error('No Hashes Found')
+    }
 
     const hashes: string[] = []
 
-    result.data.blocksByPublicKey.forEach((chain: any) => {
-      chain.blocks.forEach((block: any) => {
-        hashes.push(block.signedHash)
+    if (result) {
+      result.data.blocksByPublicKey.forEach((chain: any) => {
+        chain.blocks.forEach((block: any) => {
+          hashes.push(block.signedHash)
+        })
       })
-    })
+    }
 
     return hashes
   }

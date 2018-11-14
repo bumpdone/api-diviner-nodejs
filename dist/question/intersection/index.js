@@ -64,17 +64,10 @@ class IntersectionQuestion extends __1.Question {
         });
         return result;
     }
-    static removePreceedingData(hashes, markers) {
+    static removeData(hashes, markers, proc) {
         let prunedHashes = hashes;
         markers.forEach((marker) => {
-            prunedHashes = this.removePreceedingDataByHash(prunedHashes, marker);
-        });
-        return prunedHashes;
-    }
-    static removeSubsequentData(hashes, markers) {
-        let prunedHashes = hashes;
-        markers.forEach((marker) => {
-            prunedHashes = this.removeSubsequentDataByHash(prunedHashes, marker);
+            prunedHashes = proc(prunedHashes, marker);
         });
         return prunedHashes;
     }
@@ -104,16 +97,17 @@ class IntersectionQuestion extends __1.Question {
             catch (error) {
                 throw new Error(`Failed to Retreive Hashes: ${error}`);
             }
+            let proc;
             switch (this.direction) {
                 case Direction.Forward:
-                    p1Hashes = IntersectionQuestion.removePreceedingData(p1Hashes, this.markers);
-                    p2Hashes = IntersectionQuestion.removePreceedingData(p2Hashes, this.markers);
+                    proc = IntersectionQuestion.removePreceedingDataByHash;
                     break;
                 case Direction.Backward:
-                    p1Hashes = IntersectionQuestion.removeSubsequentData(p1Hashes, this.markers);
-                    p2Hashes = IntersectionQuestion.removeSubsequentData(p2Hashes, this.markers);
+                    proc = IntersectionQuestion.removeSubsequentDataByHash;
                     break;
             }
+            p1Hashes = IntersectionQuestion.removeData(p1Hashes, this.markers, proc);
+            p2Hashes = IntersectionQuestion.removeData(p2Hashes, this.markers, proc);
             const intersection = IntersectionQuestion.getStringArrayIntersection(p1Hashes, p2Hashes);
             if (intersection.length > 0) {
                 return true;

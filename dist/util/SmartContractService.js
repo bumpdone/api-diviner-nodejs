@@ -92,27 +92,31 @@ const validContract = (name) => __awaiter(this, void 0, void 0, function* () {
     });
 });
 exports.getCurrentUser = () => currentUser;
+const reportWrongNetwork = (json) => {
+    console.log('You are on the wrong network', web3.currentProvider.network, Object.entries(json.networks)[0]);
+};
+const reportAddingContract = (json, netId) => {
+    console.log('Adding Contract', json.contractName, json.networks[netId]);
+};
 exports.refreshContracts = (netId, ipfsHash) => __awaiter(this, void 0, void 0, function* () {
     console.log('Refreshing contracts');
     return IPFSReader_1.downloadFiles(ipfsHash)
         .then((contracts) => {
-        currentNetwork = 'kovan'; // getNetworkString(0, String(netId))
+        currentNetwork = 'mainnet'; // getNetworkString(0, String(netId))
         const sc = [];
         contracts.forEach((contract) => {
             const json = contract.data;
             if (json && json.networks[netId]) {
-                console.log('Adding Contract', json.contractName, json.networks[netId]);
+                reportAddingContract(json, netId);
                 const address = json.networks[netId].address;
                 const contract2 = new web3.eth.Contract(json.abi, address);
                 sc.push({
-                    name: json.contractName,
-                    contract: contract2,
-                    address,
-                    networks: json.networks,
+                    name: json.contractName, contract: contract2,
+                    address, networks: json.networks,
                 });
             }
             else if (Object.entries(json.networks).length > 0) {
-                console.log('You are on the wrong network', web3.currentProvider.network, Object.entries(json.networks)[0]);
+                reportWrongNetwork(json);
                 throw new Error('Wrong Network Detected');
             }
         });
@@ -120,22 +124,14 @@ exports.refreshContracts = (netId, ipfsHash) => __awaiter(this, void 0, void 0, 
         return sc;
     })
         .catch((err) => {
-        console.log('Caught here', err);
-        // throw new Error('Could not refresh', err)
+        throw new Error(`Could not refresh: ${err}`);
     });
 });
 const getWeb3 = (netId) => __awaiter(this, void 0, void 0, function* () {
     try {
         if (netId !== '5777') {
-            const networkString = `https://kovan.infura.io/v3/${infuraKey}`;
+            const networkString = `https://mainnet.infura.io/v3/${infuraKey}`;
             return new web3_1.default(new truffle_hdwallet_provider_1.default(mstring, networkString));
-            /*
-                   return new Web3(
-              new Web3.providers.HttpProvider(
-                networkString
-              ),
-              )
-            */
         }
         const provider = new truffle_hdwallet_provider_1.default(mstring, 'http://localhost:8545');
         return new web3_1.default(provider);

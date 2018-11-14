@@ -100,34 +100,40 @@ const validContract = async (name: any) => {
 
 export const getCurrentUser = () => currentUser
 
+const reportWrongNetwork = (json: any) => {
+  console.log(
+    'You are on the wrong network',
+    web3.currentProvider.network,
+    Object.entries(json.networks)[0],
+  )
+}
+
+const reportAddingContract = (json: any, netId:any) => {
+  console.log(
+    'Adding Contract',
+    json.contractName,
+    json.networks[netId],
+  )
+}
+
 export const refreshContracts = async (netId: any, ipfsHash: any): Promise<any> => {
   console.log('Refreshing contracts')
   return downloadFiles(ipfsHash)
     .then((contracts: any) => {
-      currentNetwork = 'kovan' // getNetworkString(0, String(netId))
+      currentNetwork = 'mainnet' // getNetworkString(0, String(netId))
       const sc: any = []
       contracts.forEach((contract: any) => {
         const json = contract.data
         if (json && json.networks[netId]) {
-          console.log(
-            'Adding Contract',
-            json.contractName,
-            json.networks[netId],
-          )
+          reportAddingContract(json, netId)
           const address = json.networks[netId].address
           const contract2 = new web3.eth.Contract(json.abi, address)
           sc.push({
-            name: json.contractName,
-            contract: contract2,
-            address,
-            networks: json.networks,
+            name: json.contractName, contract: contract2,
+            address, networks: json.networks,
           })
         } else if (Object.entries(json.networks).length > 0) {
-          console.log(
-            'You are on the wrong network',
-            web3.currentProvider.network,
-            Object.entries(json.networks)[0],
-          )
+          reportWrongNetwork(json)
           throw new Error('Wrong Network Detected')
         }
       })
@@ -135,29 +141,20 @@ export const refreshContracts = async (netId: any, ipfsHash: any): Promise<any> 
       return sc
     })
     .catch((err: any) => {
-      console.log('Caught here', err)
-      // throw new Error('Could not refresh', err)
+      throw new Error(`Could not refresh: ${err}`)
     })
 }
 
 const getWeb3 = async (netId: any) => {
   try {
     if (netId !== '5777') {
-      const networkString = `https://kovan.infura.io/v3/${infuraKey}`
+      const networkString = `https://mainnet.infura.io/v3/${infuraKey}`
       return new Web3(
         new HDWalletProvider(
           mstring,
           networkString
         ),
       )
-
-      /*
-             return new Web3(
-        new Web3.providers.HttpProvider(
-          networkString
-        ),
-        )
-      */
     }
     const provider = new HDWalletProvider(mstring, 'http://localhost:8545')
     return new Web3(provider)

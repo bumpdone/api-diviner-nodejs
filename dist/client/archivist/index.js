@@ -66,18 +66,26 @@ class ArchivistClient {
     }
     blockHashes(keys) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield this.client.query({
-                query: ArchivistClient.blockHashesQuery,
-                variables: {
-                    publicKeys: keys
-                }
-            });
-            const hashes = [];
-            result.data.blocksByPublicKey.forEach((chain) => {
-                chain.blocks.forEach((block) => {
-                    hashes.push(block.signedHash);
+            let result;
+            try {
+                result = yield this.client.query({
+                    query: ArchivistClient.blockHashesQuery,
+                    variables: {
+                        publicKeys: keys
+                    }
                 });
-            });
+            }
+            catch (ex) {
+                console.error('No Hashes Found');
+            }
+            const hashes = [];
+            if (result) {
+                result.data.blocksByPublicKey.forEach((chain) => {
+                    chain.blocks.forEach((block) => {
+                        hashes.push(block.signedHash);
+                    });
+                });
+            }
             return hashes;
         });
     }

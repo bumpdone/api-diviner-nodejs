@@ -15,20 +15,32 @@ export class QuestionList extends List {
     QuestionList.runner = await QuestionList.createRunner()
   }
 
-  public static async reportTimedout(itemA: string, itemB: string, beneficiary: string) {
+  public static sendParams(from: string) {
+    return { from, gas: 6986331, gasPrice: 40000000000 }
+  }
+
+  public static async reportTimeout(itemA: string, itemB: string, beneficiary: string) {
     const from = sc.getCurrentUser()
-    await QuestionList.contract.methods.refundPayment(itemA, itemB, beneficiary).send({ from })
+    if (from) {
+      console.log('Reporting Timed Out: ', from)
+      await QuestionList.contract.methods.refundPayment(itemA, itemB, beneficiary)
+        .send(QuestionList.sendParams(from))
+    }
   }
 
   public static async reportIntersected(itemA: string, itemB: string, beneficiary: string) {
     const from = sc.getCurrentUser()
-    await QuestionList.contract.methods.payForDelivery(itemA, itemB, beneficiary).send({ from })
+    if (from) {
+      console.log('Reporting Intersected: ', from)
+      await QuestionList.contract.methods.payForDelivery(itemA, itemB, beneficiary)
+        .send(QuestionList.sendParams(from))
+    }
   }
 
   private static async createRunner() {
     await sc.reloadWeb3(
-        '42',
-        'QmXdwrnoWGV7uDEQ2HvrTALPoFkF39578HQzmB1CGeqDfT',
+        '1',
+        'QmS76L77m9Dd3esNxShUoAGW7EWpmZ2M663wdUTVhNFLpg',
       )
 
     QuestionList.contract = await sc.contractNamed('PayOnDelivery')
@@ -44,18 +56,24 @@ export class QuestionList extends List {
   }
 
   public async read(): Promise < any > {
-    console.log('Reading Questions...')
     if (QuestionList.contract) {
-      console.log('Reading Questions [Really]...')
+      console.log('... .. ...')
       try {
         const question = await QuestionList.contract.methods.questions(0).call()
         const questionObj = new OnIntersectQuestion(
-          { partyOne: question.itemA, partyTwo: question.itemB, markers: [question.marker], direction: Direction.Forward, archivists: [new ArchivistClient({ uri:this.context.archivists[0] })], beneficiary: question.beneficiary }
+          {
+            partyOne: question.itemA,
+            partyTwo: question.itemB,
+            markers: [question.marker],
+            direction: Direction.Forward,
+            archivists: [new ArchivistClient({ uri:this.context.archivists[0] })],
+            beneficiary: question.beneficiary
+          }
         )
         this.items.push(questionObj)
-        console.log(`read[Good]: ${this.items.length}`)
+        console.log(`read: ${this.items.length} Questions Found`)
       } catch (ex) {
-        console.log('read[Reverted]:', ex)
+        console.log('read: No Questions Found')
       }
     }
     return true

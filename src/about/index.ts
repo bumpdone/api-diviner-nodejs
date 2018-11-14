@@ -5,7 +5,15 @@ export default class About {
   public address: string
   public seeds: { archivists: [], diviners: [] }
 
-  constructor(options: {name: string, version: string, url: string, address: string, seeds: { archivists: [], diviners: [] }}) {
+  constructor(options: {
+    name: string,
+    version: string,
+    url: string,
+    address: string,
+    seeds: {
+      archivists: [], diviners: []
+    }
+  }) {
     this.name = options.name
     this.version = options.version
     this.url = options.url

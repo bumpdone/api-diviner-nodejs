@@ -15,18 +15,26 @@ export class QuestionList extends List {
     QuestionList.runner = await QuestionList.createRunner()
   }
 
-  public static async reportTimedout(itemA: string, itemB: string, beneficiary: string) {
+  public static sendParams(from: string) {
+    return { from, gas: 6986331, gasPrice: 40000000000 }
+  }
+
+  public static async reportTimeout(itemA: string, itemB: string, beneficiary: string) {
     const from = sc.getCurrentUser()
-    console.log('Reporting Timed Out: ', from)
-    await QuestionList.contract.methods.refundPayment(itemA, itemB, beneficiary)
-      .send({ from, gas: 6986331, gasPrice: 40000000000 })
+    if (from) {
+      console.log('Reporting Timed Out: ', from)
+      await QuestionList.contract.methods.refundPayment(itemA, itemB, beneficiary)
+        .send(QuestionList.sendParams(from))
+    }
   }
 
   public static async reportIntersected(itemA: string, itemB: string, beneficiary: string) {
     const from = sc.getCurrentUser()
-    console.log('Reporting Intersected: ', from)
-    await QuestionList.contract.methods.payForDelivery(itemA, itemB, beneficiary)
-      .send({ from, gasLimit: 6986331, gasPrice: 40000000000 })
+    if (from) {
+      console.log('Reporting Intersected: ', from)
+      await QuestionList.contract.methods.payForDelivery(itemA, itemB, beneficiary)
+        .send(QuestionList.sendParams(from))
+    }
   }
 
   private static async createRunner() {

@@ -34,20 +34,27 @@ class QuestionList extends __1.default {
             QuestionList.runner = yield QuestionList.createRunner();
         });
     }
-    static reportTimedout(itemA, itemB, beneficiary) {
+    static sendParams(from) {
+        return { from, gas: 6986331, gasPrice: 40000000000 };
+    }
+    static reportTimeout(itemA, itemB, beneficiary) {
         return __awaiter(this, void 0, void 0, function* () {
             const from = sc.getCurrentUser();
-            console.log('Reporting Timed Out: ', from);
-            yield QuestionList.contract.methods.refundPayment(itemA, itemB, beneficiary)
-                .send({ from, gas: 6986331, gasPrice: 40000000000 });
+            if (from) {
+                console.log('Reporting Timed Out: ', from);
+                yield QuestionList.contract.methods.refundPayment(itemA, itemB, beneficiary)
+                    .send(QuestionList.sendParams(from));
+            }
         });
     }
     static reportIntersected(itemA, itemB, beneficiary) {
         return __awaiter(this, void 0, void 0, function* () {
             const from = sc.getCurrentUser();
-            console.log('Reporting Intersected: ', from);
-            yield QuestionList.contract.methods.payForDelivery(itemA, itemB, beneficiary)
-                .send({ from, gasLimit: 6986331, gasPrice: 40000000000 });
+            if (from) {
+                console.log('Reporting Intersected: ', from);
+                yield QuestionList.contract.methods.payForDelivery(itemA, itemB, beneficiary)
+                    .send(QuestionList.sendParams(from));
+            }
         });
     }
     static createRunner() {

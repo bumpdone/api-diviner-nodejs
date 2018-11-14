@@ -60,7 +60,15 @@ export class IntersectionQuestion extends Question {
     return result
   }
 
-  public static removePreceedingData(hashes: string[], markers: string[]) {
+  public static removeData(hashes: string[], markers: string[], proc: any) {
+    let prunedHashes = hashes
+    markers.forEach((marker: string) => {
+      prunedHashes = proc(prunedHashes, marker)
+    })
+    return prunedHashes
+  }
+
+  /*public static removePreceedingData(hashes: string[], markers: string[]) {
     let prunedHashes = hashes
     markers.forEach((marker: string) => {
       prunedHashes = this.removePreceedingDataByHash(prunedHashes, marker)
@@ -74,7 +82,7 @@ export class IntersectionQuestion extends Question {
       prunedHashes = this.removeSubsequentDataByHash(prunedHashes, marker)
     })
     return prunedHashes
-  }
+  }*/
 
   public p1: string[]
   public p2: string[]
@@ -110,16 +118,24 @@ export class IntersectionQuestion extends Question {
       throw new Error(`Failed to Retreive Hashes: ${error}`)
     }
 
+    let proc: any
+
     switch (this.direction) {
       case Direction.Forward:
-        p1Hashes = IntersectionQuestion.removePreceedingData(p1Hashes, this.markers)
-        p2Hashes = IntersectionQuestion.removePreceedingData(p2Hashes, this.markers)
+        proc = IntersectionQuestion.removePreceedingDataByHash
         break
       case Direction.Backward:
-        p1Hashes = IntersectionQuestion.removeSubsequentData(p1Hashes, this.markers)
-        p2Hashes = IntersectionQuestion.removeSubsequentData(p2Hashes, this.markers)
+        proc = IntersectionQuestion.removeSubsequentDataByHash
         break
     }
+
+    p1Hashes = IntersectionQuestion.removeData(
+      p1Hashes, this.markers, proc
+    )
+
+    p2Hashes = IntersectionQuestion.removeData(
+      p2Hashes, this.markers, proc
+    )
 
     const intersection = IntersectionQuestion.getStringArrayIntersection(p1Hashes, p2Hashes)
 

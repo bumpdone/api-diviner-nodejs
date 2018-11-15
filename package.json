@@ -76,7 +76,7 @@
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.12.7",
     "@types/web3": "^1.0.12",
-    "@xyo-network/api-originchain-graphql": "^0.1.98",
+    "@xyo-network/api-originchain-graphql": "^0.1.104",
     "@xyo-network/config-tslint": "^0.1.3",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",

@@ -11,7 +11,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-/* eslint-disable */
 const truffle_hdwallet_provider_1 = __importDefault(require("truffle-hdwallet-provider"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const web3_1 = __importDefault(require("web3"));
@@ -100,7 +99,7 @@ const reportAddingContract = (json, netId) => {
 };
 exports.refreshContracts = (netId, ipfsHash) => __awaiter(this, void 0, void 0, function* () {
     console.log('Refreshing contracts');
-    return IPFSReader_1.downloadFiles(ipfsHash)
+    return IPFSReader_1.downloadFilesFromIpfs(ipfsHash)
         .then((contracts) => {
         currentNetwork = 'mainnet'; // getNetworkString(0, String(netId))
         const sc = [];

@@ -1,1 +1,1 @@
-export declare const downloadFiles: (ipfsHash: any) => Promise<{}>;
+export declare const downloadFilesFromIpfs: (ipfsHash: any) => Promise<any[]>;

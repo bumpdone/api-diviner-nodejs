@@ -7,9 +7,9 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Use Local Program",
             "protocol": "inspector",
-            "args": ["dist/index.js", "start", "-a", "http://34.237.137.107:11001/"],
+            "args": ["dist/index.js", "start", "-a", "http://localhost:11001/"],
             "cwd": "${workspaceFolder}",
             "runtimeArgs": ["-r", "ts-node/register"],
             "internalConsoleOptions": "openOnSessionStart",
@@ -21,9 +21,23 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Use Ryan Archivist",
+            "name": "Use Spatial Archivist",
             "protocol": "inspector",
             "args": ["dist/index.js", "start", "-a", "http://spatial-archivist.xyo.network:11001"],
+            "cwd": "${workspaceFolder}",
+            "runtimeArgs": ["-r", "ts-node/register"],
+            "internalConsoleOptions": "openOnSessionStart",
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "outFiles": [
+                "${workspaceFolder}/lib/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Use Production Archivist",
+            "protocol": "inspector",
+            "args": ["dist/index.js", "start", "-a", "http://archivists.xyo.network:11001"],
             "cwd": "${workspaceFolder}",
             "runtimeArgs": ["-r", "ts-node/register"],
             "internalConsoleOptions": "openOnSessionStart",

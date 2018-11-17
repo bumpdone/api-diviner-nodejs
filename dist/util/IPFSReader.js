@@ -1,4 +1,12 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -9,27 +17,27 @@ const ipfs = new ipfs_api_1.default({
     port: 5002,
     protocol: 'https',
 });
-exports.downloadFiles = (ipfsHash) => {
+const getIpfsAsync = (hash) => __awaiter(this, void 0, void 0, function* () {
     return new Promise((resolve, reject) => {
-        const abi = [];
-        ipfs.get(ipfsHash, (err, files) => {
+        ipfs.get(hash, (err, files) => {
             if (err) {
                 reject(err);
-                return;
             }
-            try {
-                files.forEach((file) => {
-                    if (file.content) {
-                        abi.push({ data: JSON.parse(String(file.content)) });
-                    }
-                });
+            else {
+                resolve(files);
             }
-            catch (err) {
-                reject(err);
-                return;
-            }
-            resolve(abi);
         });
     });
-};
+});
+exports.downloadFilesFromIpfs = (ipfsHash) => __awaiter(this, void 0, void 0, function* () {
+    console.log('downloadFilesFromIpfs: ', ipfsHash);
+    const abi = [];
+    const files = yield getIpfsAsync(ipfsHash);
+    files.forEach((file) => {
+        if (file.content) {
+            abi.push({ data: JSON.parse(String(file.content)) });
+        }
+    });
+    return abi;
+});
 //# sourceMappingURL=IPFSReader.js.map

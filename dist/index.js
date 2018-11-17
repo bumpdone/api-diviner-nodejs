@@ -12,8 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_server_1 = require("apollo-server");
-const resolvers_1 = __importDefault(require("./list/resolvers"));
-const resolvers_2 = __importDefault(require("./scsc/block/resolvers"));
+const resolvers_1 = __importDefault(require("./SCSCInfo/resolvers"));
+const resolvers_2 = __importDefault(require("./list/resolvers"));
+const resolvers_3 = __importDefault(require("./scsc/block/resolvers"));
 const graphql_import_1 = require("graphql-import");
 const block_1 = __importDefault(require("./scsc/block"));
 const intersection_1 = require("./list/intersection");
@@ -28,9 +29,10 @@ const archivist_2 = require("./client/archivist");
 const dotenv_expand_1 = __importDefault(require("dotenv-expand"));
 const sdk_core_nodejs_1 = require("@xyo-network/sdk-core-nodejs");
 const question_1 = require("./list/question");
-const worker_1 = require("./worker");
 const onintersect_1 = require("./question/onintersect");
+const ScscInfo_1 = require("./ScscInfo");
 class DivinerApi {
+    // public worker = new DivinerWorker()
     constructor(options) {
         this.archivists = [];
         this.resolverArray = [
@@ -39,13 +41,7 @@ class DivinerApi {
                     about(parent, args, context, info) {
                         return __awaiter(this, void 0, void 0, function* () {
                             console.log('resolvers.Query.about');
-                            return new about_1.default({
-                                name: 'Diviner',
-                                version: getVersion(),
-                                url: `http:${context.req.headers.host}`,
-                                address: context.address,
-                                seeds: context.seeds
-                            });
+                            return new about_1.default(context);
                         });
                     },
                     block(parent, args, context, info) {
@@ -112,11 +108,12 @@ class DivinerApi {
                 }
             },
             resolvers_1.default(),
-            resolvers_2.default()
+            resolvers_2.default(),
+            resolvers_3.default()
         ];
-        this.address = '';
-        this.worker = new worker_1.DivinerWorker();
         this.seeds = options.seeds;
+        this.options = options;
+        this.scsc = new ScscInfo_1.ScscInfo(options.scsc);
         this.resolvers = lodash_1.merge(this.resolverArray);
         const typeDefs = apollo_server_1.gql(this.buildSchema());
         this.signer = this.getSigner();
@@ -128,11 +125,14 @@ class DivinerApi {
             ipfs: this.ipfs,
             req,
             address: this.address,
+            ethAddress: 'unknown',
             archivists: this.archivists,
             seeds: this.seeds,
-            signer: this.signer
+            signer: this.signer,
+            version: getVersion(),
+            scsc: this.scsc
         });
-        this.worker.start(20000, context);
+        // this.worker.start(20000, context)
         const config = {
             typeDefs,
             resolvers: this.resolvers,
@@ -141,22 +141,24 @@ class DivinerApi {
         this.server = new apollo_server_1.ApolloServer(config);
     }
     getSigner() {
-        const sha256HashProvider = new sdk_core_nodejs_1.XyoSha256HashProvider();
-        const signerProvider = new sdk_core_nodejs_1.XyoEcdsaSecp256k1Sha256SignerProvider(sha256HashProvider);
+        const signerProvider = new sdk_core_nodejs_1.XyoEcdsaSecp256k1Sha256SignerProvider(sdk_core_nodejs_1.getHashingProvider('sha256'));
         return signerProvider.newInstance();
     }
     start(port = 12002) {
-        console.log(' --- START ---');
-        this.ipfs = ipfs_1.createNode({ port: 1111 });
-        this.ipfs.on('ready', () => {
-            console.log('Ipfs is ready to use!');
-        });
-        this.ipfs.on('error', (error) => {
-            console.log('Something went terribly wrong!', error);
-        });
-        this.ipfs.on('start', () => console.log('Ipfs started!'));
-        this.server.listen({ port }).then(({ url }) => {
-            console.log(`XYO Diviner [${getVersion()}] ready at ${url}`);
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log(' --- START ---');
+            yield this.scsc.loadContractsFromIpfs();
+            this.ipfs = ipfs_1.createNode({ port: 1111 });
+            this.ipfs.on('ready', () => {
+                console.log('Ipfs is ready to use!');
+            });
+            this.ipfs.on('error', (error) => {
+                console.log('Something went terribly wrong!', error);
+            });
+            this.ipfs.on('start', () => console.log('Ipfs started!'));
+            this.server.listen({ port }).then(({ url }) => {
+                console.log(`XYO Diviner [${getVersion()}] ready at ${url}`);
+            });
         });
     }
     buildSchema() {
@@ -184,7 +186,17 @@ commander_1.default
     .command('start')
     .description('Start the Diviner')
     .action(() => {
-    const xyo = new DivinerApi({ seeds: { archivists: [(commander_1.default.archivist || 'http://spatial-archivist.xyo.network:11001')], diviners: [] } });
+    const xyo = new DivinerApi({
+        seeds: {
+            archivists: [(commander_1.default.archivist || 'http://spatial-archivist.xyo.network:11001')], diviners: []
+        },
+        scsc: {
+            ipfs: 'QmT7whH3riWmXcTBH67zrG7GrPJDNaZweaFJ7aY8syEGcQ',
+            name: 'XyoStakedConsensus',
+            network: 'kovan',
+            address: ''
+        }
+    });
     xyo.start(commander_1.default.graphql || 12002);
 });
 commander_1.default.parse(process.argv);

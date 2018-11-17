@@ -6,26 +6,28 @@ const ipfs = new ipfsAPI({
   protocol: 'https',
 })
 
-export const downloadFiles = (ipfsHash: any) => {
+const getIpfsAsync = async(hash: string) : Promise<any> => {
   return new Promise((resolve, reject) => {
-    const abi: any = []
-    ipfs.get(ipfsHash, (err: any, files: any) => {
+    ipfs.get(hash, (err: any, files: any) => {
       if (err) {
         reject(err)
-        return
+      } else {
+        resolve(files)
       }
-      try {
-        files.forEach((file: any) => {
-          if (file.content) {
-            abi.push({ data: JSON.parse(String(file.content)) })
-          }
-        })
-      } catch (err) {
-        reject(err)
-        return
-      }
-
-      resolve(abi)
     })
   })
+}
+
+export const downloadFilesFromIpfs = async (ipfsHash: any): Promise<any[]> => {
+  console.log('downloadFilesFromIpfs: ', ipfsHash)
+  const abi: any[] = []
+  const files = await getIpfsAsync(ipfsHash)
+
+  files.forEach((file: any) => {
+    if (file.content) {
+      abi.push({ data: JSON.parse(String(file.content)) })
+    }
+  })
+
+  return abi
 }

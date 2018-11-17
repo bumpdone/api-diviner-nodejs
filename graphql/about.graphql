@@ -3,10 +3,20 @@ type Seeds {
   diviners: [String]
 }
 
+type SCSCInfo {
+  address: String,
+  platform: String,
+  network: String,
+  abi: String,
+  bytecode: String,
+  ipfs: String
+}
+
 type About {
   name: String,
   version: String,
   url: String,
   address: String,
-  seeds: Seeds
+  seeds: Seeds,
+  scsc: SCSCInfo
 }

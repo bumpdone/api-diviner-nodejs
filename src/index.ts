@@ -1,5 +1,6 @@
 import { ApolloServer, gql, Config, CorsOptions } from 'apollo-server'
 import { IResolvers } from 'graphql-tools'
+import scscInfoResolvers from './SCSCInfo/resolvers'
 import listResolvers from './list/resolvers'
 import blockResolvers from './scsc/block/resolvers'
 import { importSchema } from 'graphql-import'
@@ -16,10 +17,11 @@ import program from 'commander'
 import { ArchivistClient } from './client/archivist'
 import dotenvExpand from 'dotenv-expand'
 
-import { IXyoSigner, XyoSha256HashProvider, XyoEcdsaSecp256k1Sha256SignerProvider } from '@xyo-network/sdk-core-nodejs'
+import { IXyoSigner, getHashingProvider, XyoEcdsaSecp256k1Sha256SignerProvider } from '@xyo-network/sdk-core-nodejs'
 import { QuestionList } from './list/question'
 import { DivinerWorker } from './worker'
 import { OnIntersectQuestion } from './question/onintersect'
+import { ScscInfo } from './ScscInfo'
 
 export class DivinerApi {
 
@@ -32,13 +34,7 @@ export class DivinerApi {
       Query: {
         async about(parent: any, args: any, context: any, info: any) {
           console.log('resolvers.Query.about')
-          return new About({
-            name: 'Diviner',
-            version: getVersion(),
-            url: `http:${context.req.headers.host}`,
-            address: context.address,
-            seeds: context.seeds
-          })
+          return new About(context)
         },
         async block(parent: any, args: any, context: any, info: any) {
           console.log(`resolvers.Query.block: ${args.hash}`)
@@ -73,7 +69,7 @@ export class DivinerApi {
             partyTwo: args.partyTwoAddresses,
             markers: args.markers,
             direction,
-            archivists: [new ArchivistClient({ uri:context.archivists[0] })]
+            archivists: [new ArchivistClient({ uri: context.archivists[0] })]
           })
           return q.process()
         },
@@ -83,7 +79,7 @@ export class DivinerApi {
             partyTwo: args.partyTwoAddresses,
             markers: args.markers,
             direction: Direction.Forward,
-            archivists: [new ArchivistClient({ uri:context.archivists[0] })],
+            archivists: [new ArchivistClient({ uri: context.archivists[0] })],
             beneficiary: ''
           })
           const res = q.process()
@@ -91,19 +87,35 @@ export class DivinerApi {
         }
       }
     },
+    scscInfoResolvers(),
     listResolvers(),
     blockResolvers()
   ]
 
   public resolvers: IResolvers
   public seeds: { archivists: string[], diviners: string[] }
-  public address = ''
+  public scsc: ScscInfo
+  public options: any
+  public address: string
   public signer: IXyoSigner
-  public worker = new DivinerWorker()
+  // public worker = new DivinerWorker()
 
-  constructor(options: { seeds: { archivists: string[], diviners: string[] } }) {
+  constructor(options:
+    {
+      seeds: {
+        archivists: string[], diviners: string[]
+      },
+      scsc: {
+        ipfs: string,
+        name: string,
+        network: string,
+        address: string
+      }
+    }) {
     this.seeds = options.seeds
-    this.resolvers =  merge(this.resolverArray)
+    this.options = options
+    this.scsc = new ScscInfo(options.scsc)
+    this.resolvers = merge(this.resolverArray)
     const typeDefs = gql(this.buildSchema())
 
     this.signer = this.getSigner()
@@ -113,16 +125,19 @@ export class DivinerApi {
       this.archivists.push(archivist)
     })
 
-    const context = ({ req }: {req: any}) => ({
+    const context = ({ req }: { req: any }) => ({
       ipfs: this.ipfs,
       req,
       address: this.address,
+      ethAddress: 'unknown',
       archivists: this.archivists,
       seeds: this.seeds,
-      signer: this.signer
+      signer: this.signer,
+      version: getVersion(),
+      scsc: this.scsc
     })
 
-    this.worker.start(20000, context)
+    // this.worker.start(20000, context)
 
     const config: Config & { cors?: CorsOptions | boolean } = {
       typeDefs,
@@ -134,17 +149,17 @@ export class DivinerApi {
   }
 
   public getSigner(): IXyoSigner {
-    const sha256HashProvider = new XyoSha256HashProvider()
     const signerProvider = new XyoEcdsaSecp256k1Sha256SignerProvider(
-      sha256HashProvider
+      getHashingProvider('sha256')
     )
 
     return signerProvider.newInstance()
   }
 
-  public start(port: number = 12002) {
-
+  public async start(port: number = 12002) {
     console.log(' --- START ---')
+
+    await this.scsc.loadContractsFromIpfs()
 
     this.ipfs = createNode({ port: 1111 })
 
@@ -158,7 +173,7 @@ export class DivinerApi {
 
     this.ipfs.on('start', () => console.log('Ipfs started!'))
 
-    this.server.listen({ port }).then(({ url }: {url: any}) => {
+    this.server.listen({ port }).then(({ url }: { url: any }) => {
       console.log(`XYO Diviner [${getVersion()}] ready at ${url}`)
     })
   }
@@ -173,8 +188,8 @@ export class DivinerApi {
 const getVersion = (): string => {
   dotenvExpand({
     parsed: {
-      APP_VERSION:'$npm_package_version',
-      APP_NAME:'$npm_package_name'
+      APP_VERSION: '$npm_package_version',
+      APP_NAME: '$npm_package_name'
     }
   })
 
@@ -193,9 +208,17 @@ program
   .command('start')
   .description('Start the Diviner')
   .action(() => {
-    const xyo = new DivinerApi(
-      { seeds: { archivists: [(program.archivist || 'http://spatial-archivist.xyo.network:11001')], diviners: [] } }
-    )
+    const xyo = new DivinerApi({
+      seeds: {
+        archivists: [(program.archivist || 'http://spatial-archivist.xyo.network:11001')], diviners: []
+      },
+      scsc: {
+        ipfs: 'QmT7whH3riWmXcTBH67zrG7GrPJDNaZweaFJ7aY8syEGcQ',
+        name: 'XyoStakedConsensus',
+        network: 'kovan',
+        address: ''
+      }
+    })
     xyo.start(program.graphql || 12002)
   })
 

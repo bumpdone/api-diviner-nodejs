@@ -3,21 +3,17 @@ export default class About {
   public version: string
   public url: string
   public address: string
+  public ethAddress: string
   public seeds: { archivists: [], diviners: [] }
+  public scsc: { address: string, platform: string, network: string, abi: string, ipfs: string}
 
-  constructor(options: {
-    name: string,
-    version: string,
-    url: string,
-    address: string,
-    seeds: {
-      archivists: [], diviners: []
-    }
-  }) {
-    this.name = options.name
-    this.version = options.version
-    this.url = options.url
-    this.address = options.address
-    this.seeds = options.seeds
+  constructor(context: any) {
+    this.name = 'Diviner'
+    this.version = context.version
+    this.url = `http:${context.req.headers.host}`
+    this.address = context.address
+    this.ethAddress = context.ethAddress
+    this.seeds = context.seeds
+    this.scsc = context.scsc
   }
 }

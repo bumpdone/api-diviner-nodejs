@@ -1,8 +1,7 @@
-/* eslint-disable */
 import HDWalletProvider from 'truffle-hdwallet-provider'
 import dotenv from 'dotenv'
 import Web3 from 'web3'
-import { downloadFiles } from './IPFSReader'
+import { downloadFilesFromIpfs } from './IPFSReader'
 import { Provider } from 'web3/providers'
 
 dotenv.config()
@@ -118,7 +117,7 @@ const reportAddingContract = (json: any, netId:any) => {
 
 export const refreshContracts = async (netId: any, ipfsHash: any): Promise<any> => {
   console.log('Refreshing contracts')
-  return downloadFiles(ipfsHash)
+  return downloadFilesFromIpfs(ipfsHash)
     .then((contracts: any) => {
       currentNetwork = 'mainnet' // getNetworkString(0, String(netId))
       const sc: any = []

@@ -3,18 +3,17 @@ export default class About {
     version: string;
     url: string;
     address: string;
+    ethAddress: string;
     seeds: {
         archivists: [];
         diviners: [];
     };
-    constructor(options: {
-        name: string;
-        version: string;
-        url: string;
+    scsc: {
         address: string;
-        seeds: {
-            archivists: [];
-            diviners: [];
-        };
-    });
+        platform: string;
+        network: string;
+        abi: string;
+        ipfs: string;
+    };
+    constructor(context: any);
 }

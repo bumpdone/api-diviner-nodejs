@@ -4,7 +4,7 @@ import Block from './scsc/block';
 import { IntersectionList } from './list/intersection';
 import About from './about';
 import { IXyoSigner } from '@xyo-network/sdk-core-nodejs';
-import { DivinerWorker } from './worker';
+import { ScscInfo } from './ScscInfo';
 export declare class DivinerApi {
     server: ApolloServer;
     ipfs: any;
@@ -25,16 +25,23 @@ export declare class DivinerApi {
         archivists: string[];
         diviners: string[];
     };
+    scsc: ScscInfo;
+    options: any;
     address: string;
     signer: IXyoSigner;
-    worker: DivinerWorker;
     constructor(options: {
         seeds: {
             archivists: string[];
             diviners: string[];
         };
+        scsc: {
+            ipfs: string;
+            name: string;
+            network: string;
+            address: string;
+        };
     });
     getSigner(): IXyoSigner;
-    start(port?: number): void;
+    start(port?: number): Promise<void>;
     private buildSchema;
 }

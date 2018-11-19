@@ -21,8 +21,8 @@ function scscInfoResolvers() {
             bytecode(parent, args, context, info) {
                 return __awaiter(this, void 0, void 0, function* () {
                     console.log('resolvers.ScscInfo.abi');
-                    const abi = yield parent.getBytecode();
-                    return abi;
+                    const bytecode = yield parent.getBytecode();
+                    return bytecode;
                 });
             }
         }

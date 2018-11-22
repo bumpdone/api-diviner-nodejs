@@ -4,7 +4,7 @@ class About {
     constructor(context) {
         this.name = 'Diviner';
         this.version = context.version;
-        this.url = `http:${context.req.headers.host}`;
+        this.url = `http://${context.req.headers.host}`;
         this.address = context.address;
         this.ethAddress = context.ethAddress;
         this.seeds = context.seeds;

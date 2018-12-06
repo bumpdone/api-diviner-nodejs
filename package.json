@@ -43,7 +43,7 @@
     "apollo-link-http": "^1.5.5",
     "apollo-server": "^2.2.2",
     "async": "^2.6.1",
-    "cids": "^0.5.5",
+    "cids": "^0.5.7",
     "commander": "^2.19.0",
     "cross-fetch": "^2.2.3",
     "dotenv": "^6.1.0",

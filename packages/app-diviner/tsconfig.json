@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+      "target": "es6",
+      "module": "commonjs",
+      "lib": ["esnext"],
+      "declaration": true,
+      "declarationMap": true,
+      "sourceMap": true,
+      "strict": true,
+      "composite": true,
+      "esModuleInterop": true,
+      "noImplicitAny": true,
+      "moduleResolution": "node",
+      "outDir": "dist",
+      "rootDir": "src"
+  },
+  "exclude": [
+    "node_modules",
+    "src/**/test/*",
+    "src/**/spec",
+    "src/**/*.spec.ts"
+  ],
+  "include": ["src/**/*"],
+  "references": [
+    {"path": "../diviner-graphql-api"},
+    {"path": "../questions"},
+    {"path": "../diviner-archivist-client"},
+    {"path": "../diviner-archivist-client.graphql"},
+    {"path": "../web3-service"},
+    {"path": "../web3-question-service"},
+    {"path": "../diviner-archivist-client.graphql"},
+    {"path": "../scsc"},
+    {"path": "../ipfs-client"},
+    {"path": "../about-diviner"}
+  ]
+}

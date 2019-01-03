@@ -11,11 +11,23 @@ Implements the the Diviner graphql API
 Using yarn
 
 ```sh
-  yarn add @xyo-network/diviner-graphql-api
+  yarn add @xyo-network/app-diviner
 ```
 
 Using npm
 
 ```sh
-  npm install @xyo-network/diviner-graphql-api --save
+  npm install @xyo-network/app-diviner --save
+```
+
+Or install globally
+
+```sh
+  yarn global add @xyo-network/app-diviner
+```
+
+then to run
+
+```sh
+  xyo-diviner
 ```

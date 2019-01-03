@@ -1,6 +1,6 @@
 {
   "name": "@xyo-network/web3-question-service",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "Provides services for retrieving questions and providing answer using web3 services",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,8 +8,8 @@
   "license": "MIT",
   "dependencies": {
     "@xyo-network/base": "^0.11.0",
-    "@xyo-network/questions": "^0.13.0",
-    "@xyo-network/web3-service": "^0.13.0"
+    "@xyo-network/questions": "^0.14.0",
+    "@xyo-network/web3-service": "^0.14.0"
   },
   "devDependencies": {
     "@types/jest": "^23.3.1",

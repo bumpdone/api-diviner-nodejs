@@ -4,7 +4,7 @@
  * @Email:  developer@xyfindables.com
  * @Filename: index.ts
  * @Last modified by: ryanxyo
- * @Last modified time: Thursday, 3rd January 2019 2:01:14 pm
+ * @Last modified time: Thursday, 3rd January 2019 2:17:25 pm
  * @License: All Rights Reserved
  * @Copyright: Copyright XY | The Findables Company
  */
@@ -147,7 +147,7 @@ export async function main(args: string[]) {
   try {
     config = await import('./configuration')
   } catch (e) {
-    console.error('There was an error during start-up. Will exit', e)
+    console.error('There was an error during start-up, will exit', e)
     process.exit(-1)
   }
 

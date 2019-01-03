@@ -4,7 +4,7 @@
  * @Email:  developer@xyfindables.com
  * @Filename: index.ts
  * @Last modified by: ryanxyo
- * @Last modified time: Friday, 21st December 2018 4:30:29 pm
+ * @Last modified time: Wednesday, 2nd January 2019 4:53:41 pm
  * @License: All Rights Reserved
  * @Copyright: Copyright XY | The Findables Company
  */
@@ -12,7 +12,7 @@
 import { XyoBase } from '@xyo-network/base'
 import createDivinerGraphqlServer from '@xyo-network/diviner-graphql-api'
 import { XyoGraphQLServer } from '@xyo-network/graphql-server'
-import { XyoAboutDiviner, IXyoSeeds } from '@xyo-network/about-diviner'
+import { XyoAboutDiviner } from '@xyo-network/about-diviner'
 import { IXyoSCSCDescriptionProvider } from '@xyo-network/scsc'
 import { XyoMetaList, XyoMeta } from '@xyo-network/meta-list'
 import { XyoQuestionService, IXyoHasIntersectedQuestion, IXyoQuestionService, QuestionsWorker } from '@xyo-network/questions'
@@ -21,6 +21,7 @@ import { XyoDivinerArchivistGraphQLClient } from '@xyo-network/diviner-archivist
 import { XyoIpfsClient, IXyoIpfsClient } from '@xyo-network/ipfs-client'
 import { XyoWeb3Service } from '@xyo-network/web3-service'
 import { Web3QuestionService } from '@xyo-network/web3-question-service'
+import { IDivinerLauncherConfig } from './@types'
 
 class DivinerLauncher extends XyoBase {
 
@@ -69,7 +70,11 @@ class DivinerLauncher extends XyoBase {
 
     this.server.start()
 
-    const web3Service = new XyoWeb3Service('http://localhost:7545', process.env.WALLET as string)
+    const web3Service = new XyoWeb3Service(
+      this.divinerConfig.web3.host,
+      this.divinerConfig.about.ethAddress,
+      this.divinerConfig.ethereumContracts
+    )
     const web3QuestionService = new Web3QuestionService(web3Service)
     const worker = new QuestionsWorker(web3QuestionService, this.getQuestionsService())
     worker.start()
@@ -93,7 +98,11 @@ class DivinerLauncher extends XyoBase {
 
   public getDivinerArchivistClient(): IXyoDivinerArchivistClient {
     return this.getOrCreate('IXyoDivinerArchivistClient', () => {
-      return new XyoDivinerArchivistGraphQLClient('http://127.0.0.1:11001')
+      if (this.divinerConfig.about.seeds.archivists.length === 0) {
+        throw new Error('At least one archivist seed is required')
+      }
+
+      return new XyoDivinerArchivistGraphQLClient(this.divinerConfig.about.seeds.archivists[0])
     })
   }
 
@@ -134,53 +143,18 @@ class DivinerLauncher extends XyoBase {
   }
 }
 
-export async function main(args: string[]) {
-  XyoBase.logger.info('Launching archivist')
-  const launcher = new DivinerLauncher({
-    graphQLPort: 12001,
-    about: {
-      version: '0.1.0',
-      url: 'http://127.0.0.1',
-      address: 'abc',
-      ethAddress: 'def',
-      seeds: { archivists: [], diviners: [] }
-    },
-    ipfs: {
-      host: 'localhost',
-      port: '5001',
-      protocol: 'http'
-    },
-    stakedConsensus: {
-      ipfsHash: 'QmeFQ55jVbtuVoFYXJdZWKoWMjjs9DZ9teCQhrhTLofGP2',
-      network: 'kovan',
-      platform: 'ethereum'
-    }
-  })
-
-  await launcher.start()
-}
-
 if (require.main === module) {
-  main(process.argv)
-}
+  import('./configuration')
+    .then(async (config) => {
+      XyoBase.logger.info(`Launching archivist with config
+        ${JSON.stringify(config, null, 2)}
+      `)
+      const launcher = new DivinerLauncher(config.default)
 
-interface IDivinerLauncherConfig {
-  graphQLPort: number,
-  about: {
-    version: string,
-    url: string,
-    address: string,
-    ethAddress: string,
-    seeds: IXyoSeeds
-  },
-  ipfs: {
-    host: string,
-    port: string,
-    protocol: 'http' | 'https'
-  },
-  stakedConsensus: {
-    ipfsHash: string
-    network: 'kovan' // consider adding main and other networks if appropriate
-    platform: 'ethereum' // once other platforms are available this can be extended
-  }
+      await launcher.start()
+    })
+    .catch((err) => {
+      console.error('There was an error during start-up. Will exit', err)
+      process.exit(-1)
+    })
 }

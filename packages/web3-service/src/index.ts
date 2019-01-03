@@ -4,7 +4,7 @@
  * @Email:  developer@xyfindables.com
  * @Filename: index.ts
  * @Last modified by: ryanxyo
- * @Last modified time: Friday, 21st December 2018 4:23:02 pm
+ * @Last modified time: Wednesday, 2nd January 2019 4:12:01 pm
  * @License: All Rights Reserved
  * @Copyright: Copyright XY | The Findables Company
  */
@@ -18,7 +18,11 @@ export class XyoWeb3Service extends XyoBase {
 
   private web3: Web3 | undefined
 
-  constructor (private readonly web3ProviderArgs: any, public readonly currentUser: string) {
+  constructor (
+    private readonly web3ProviderArgs: any,
+    public readonly currentUser: string,
+    private readonly existingContracts: {[contractName: string]: IContractData}
+  ) {
     super()
   }
 
@@ -45,12 +49,12 @@ export class XyoWeb3Service extends XyoBase {
   }
 
   public async getAddressOfContract(name: string): Promise<string> {
-    const address = process.env.PAY_ON_DELIVERY_ADDRESS
-    if (!address) {
-      throw new Error('Not yet implemented')
+    const contract = this.existingContracts[name]
+    if (!contract) {
+      throw new XyoError(`Could not find contract with name ${name}`, XyoErrors.CRITICAL)
     }
 
-    return address
+    return contract.address
   }
 
   private async getOrInitializeWeb3(): Promise<Web3> {
@@ -455,3 +459,7 @@ const payForDeliveryABI = [
     type: 'function'
   }
 ]
+
+export interface IContractData {
+  address: string
+}

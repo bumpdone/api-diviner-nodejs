@@ -1,0 +1,22 @@
+graphQLPort: GRAPHQL_PORT
+about:
+  version: ABOUT__VERSION
+  url: ABOUT__URL
+  address: ABOUT__ADDRESS
+  ethAddress: ABOUT__ETH_ADDRESS
+  seeds:
+    archivists: ABOUT__SEEDS__ARCHIVISTS
+    diviners: ABOUT__SEEDS__DIVINERS
+ipfs:
+  host: IPFS__HOST
+  port: IPFS__PORT
+  protocol: IPFS__PROTOCOL
+stakedConsensus:
+  ipfsHash: STAKED_CONSENSUS__IPFS_HASH
+  network: STAKED_CONSENSUS__NETWORK
+  platform: STAKED_CONSENSUS__PLATFORM
+web3:
+  host: WEB3__HOST
+ethereumContracts:
+  PayOnDelivery:
+    address: ETHEREUM_CONTRACTS__PAY_ON_DELIVERY__ADDRESS

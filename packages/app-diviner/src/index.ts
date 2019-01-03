@@ -4,7 +4,7 @@
  * @Email:  developer@xyfindables.com
  * @Filename: index.ts
  * @Last modified by: ryanxyo
- * @Last modified time: Wednesday, 2nd January 2019 4:53:41 pm
+ * @Last modified time: Thursday, 3rd January 2019 2:01:14 pm
  * @License: All Rights Reserved
  * @Copyright: Copyright XY | The Findables Company
  */
@@ -142,19 +142,20 @@ class DivinerLauncher extends XyoBase {
     })
   }
 }
+export async function main(args: string[]) {
+  let config: any | undefined
+  try {
+    config = await import('./configuration')
+  } catch (e) {
+    console.error('There was an error during start-up. Will exit', e)
+    process.exit(-1)
+  }
+
+  XyoBase.logger.info(`Launching archivist with config\n${JSON.stringify(config, null, 2)}`)
+  const launcher = new DivinerLauncher(config.default)
+  await launcher.start()
+}
 
 if (require.main === module) {
-  import('./configuration')
-    .then(async (config) => {
-      XyoBase.logger.info(`Launching archivist with config
-        ${JSON.stringify(config, null, 2)}
-      `)
-      const launcher = new DivinerLauncher(config.default)
-
-      await launcher.start()
-    })
-    .catch((err) => {
-      console.error('There was an error during start-up. Will exit', err)
-      process.exit(-1)
-    })
+  main(process.argv)
 }

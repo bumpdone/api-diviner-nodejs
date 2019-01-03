@@ -1,12 +1,11 @@
 {
   "name": "@xyo-network/scsc",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "Interfaces and utilities relating to the SCSC contracts",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "Ryan Pillsbury",
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
     "@types/jest": "^23.3.1",
     "@types/node": "^10.7.1",

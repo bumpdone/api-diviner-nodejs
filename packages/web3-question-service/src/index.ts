@@ -4,7 +4,7 @@
  * @Email:  developer@xyfindables.com
  * @Filename: index.ts
  * @Last modified by: ryanxyo
- * @Last modified time: Friday, 21st December 2018 4:18:30 pm
+ * @Last modified time: Thursday, 3rd January 2019 1:01:50 pm
  * @License: All Rights Reserved
  * @Copyright: Copyright XY | The Findables Company
  */
@@ -58,7 +58,7 @@ export class Web3QuestionService extends XyoBase implements IQuestionsProvider {
         return formattedQuestion
       },
       answer: (a) => {
-        if (a !== true) {
+        if (a !== true) { // tslint:disable-line
           return
         }
 

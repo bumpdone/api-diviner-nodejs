@@ -1,6 +1,6 @@
 {
   "name": "@xyo-network/web3-question-service",
-  "version": "0.15.0",
+  "version": "0.15.1",
   "description": "Provides services for retrieving questions and providing answer using web3 services",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

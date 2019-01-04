@@ -1,6 +1,6 @@
 {
   "name": "@xyo-network/app-diviner",
-  "version": "0.15.0",
+  "version": "0.15.1",
   "description": "The application to run a diviner on the XYO network",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,7 +20,7 @@
     "@xyo-network/meta-list": "^0.11.0",
     "@xyo-network/questions": "^0.15.0",
     "@xyo-network/scsc": "^0.15.0",
-    "@xyo-network/web3-question-service": "^0.15.0",
+    "@xyo-network/web3-question-service": "^0.15.1",
     "@xyo-network/web3-service": "^0.15.0",
     "config": "^2.0.1",
     "js-yaml": "^3.12.0"

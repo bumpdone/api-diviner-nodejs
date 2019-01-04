@@ -4,7 +4,7 @@
  * @Email:  developer@xyfindables.com
  * @Filename: index.ts
  * @Last modified by: ryanxyo
- * @Last modified time: Thursday, 3rd January 2019 1:01:50 pm
+ * @Last modified time: Friday, 4th January 2019 10:15:16 am
  * @License: All Rights Reserved
  * @Copyright: Copyright XY | The Findables Company
  */
@@ -40,7 +40,19 @@ export class Web3QuestionService extends XyoBase implements IQuestionsProvider {
 
   private async tryGetQuestion() {
     const contract = await this.web3Service.getContractByName(Web3QuestionService.INTERSECTION_CONTRACT_NAME)
-    const question = await contract.methods.questions(0).call() as ISCSCHasIntersectedQuestion
+    let question: ISCSCHasIntersectedQuestion
+
+    try {
+      question = await contract.methods.questions(0).call() as ISCSCHasIntersectedQuestion
+      if (!question) {
+        this.logInfo('No questions exist in smart contract')
+        return
+      }
+    } catch (err) {
+      this.logInfo('No questions exist in smart contract')
+      return
+    }
+
     if (this.alreadyFetchedQuestions[question.questionId]) {
       return
     }

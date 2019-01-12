@@ -5,7 +5,8 @@ about:
   address: ABOUT__ADDRESS
   ethAddress: ABOUT__ETH_ADDRESS
   seeds:
-    archivists: ABOUT__SEEDS__ARCHIVISTS
+    archivists: 
+      - ABOUT__SEEDS__ARCHIVISTS
     diviners: ABOUT__SEEDS__DIVINERS
 ipfs:
   host: IPFS__HOST

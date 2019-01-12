@@ -21,3 +21,4 @@ web3:
 ethereumContracts:
   PayOnDelivery:
     address: ETHEREUM_CONTRACTS__PAY_ON_DELIVERY__ADDRESS
+    

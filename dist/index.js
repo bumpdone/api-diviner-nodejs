@@ -141,7 +141,7 @@ class DivinerApi {
         this.server = new apollo_server_1.ApolloServer(config);
     }
     getSigner() {
-        const sha256HashProvider = new sdk_core_nodejs_1.XyoSha256HashProvider();
+        const sha256HashProvider = sdk_core_nodejs_1.getHashingProvider('sha256');
         const signerProvider = new sdk_core_nodejs_1.XyoEcdsaSecp256k1Sha256SignerProvider(sha256HashProvider);
         return signerProvider.newInstance();
     }
